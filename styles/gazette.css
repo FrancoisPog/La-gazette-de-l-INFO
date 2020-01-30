@@ -60,6 +60,19 @@ em {
     font-style: italic;
 }
 
+a{
+    color: #00D;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+a[href^=http]:hover::after{
+    content: " ("attr(href)") " url(../images/lien_externe.gif);
+}
+
 strong{
     font-weight: 800;
 }
@@ -168,6 +181,7 @@ nav ul li{
 
 nav ul a:hover{
     background-color: black;
+    text-decoration: none;
     color: white;
 }
 
@@ -214,11 +228,6 @@ nav ul a:hover{
 
 #liensVote li:before{
     content: "\2611\00A0";
-}
-
-main a{
-    color: blue;
-    text-decoration: none;
 }
 
 main footer{
