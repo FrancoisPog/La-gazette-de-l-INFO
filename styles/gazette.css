@@ -1,6 +1,7 @@
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
+   RESET
 */
 
 html, body, div, span, applet, object, iframe,
@@ -52,6 +53,7 @@ table {
 /* STYLE DU SITE */
 p {
     margin-top:  10px;
+    font-size: 16px;
 }
 
 em {
@@ -59,7 +61,7 @@ em {
 }
 
 strong{
-    font-weight: bold;
+    font-weight: 800;
 }
 
 body > header, main, body > footer{
@@ -105,7 +107,7 @@ header h1{
     position: absolute;
     right: 10px;
     bottom: 10px;
-    font-size: 1.3em;
+    font-size: 24px;
 
 }
 
@@ -117,6 +119,8 @@ header img{
 /* Footer */
 
 footer{
+    margin-top: 15px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: center;
 }
@@ -132,6 +136,10 @@ nav {
     width: 100%;
     background-color: rgba(255,255,255,0.8);
     
+}
+
+nav:hover{
+    background-color: white;
 }
 
 nav a {
@@ -150,7 +158,7 @@ nav ul {
 
 #accueil{
     position: absolute;
-    left: 10px;
+    left: 0px;
 }
 
 nav ul li{
@@ -163,6 +171,8 @@ nav ul a:hover{
     color: white;
 }
 
+
+
 /* PAGE ARTICLE */
 
 /* Vote */
@@ -170,7 +180,7 @@ nav ul a:hover{
     background-color: white;
     padding: 15px;
     border-radius: 10px 0px;
-    box-shadow: 6px 6px  20px 4px black;
+    box-shadow: 5px 5px  15px 4px black;
     margin-bottom: 20px;
 }
 
@@ -222,3 +232,35 @@ main footer p{
     margin: 0px;
     font-size: 0.9em;
 }
+
+/* Reactions */
+
+#reactions {
+    margin-top: 50px;
+    position: relative;
+    background-color: white;
+    padding:  10px 20px;
+    box-shadow: 5px 5px  15px 4px black;
+    border-radius: 0px 10px 10px 10px;
+}
+
+#reactions ul {
+    list-style-type: circle ;
+}
+
+#reactions li {
+    margin-left: 25px;
+}
+
+#reactions h3{
+    position: absolute ;
+    top: -29px;
+    left: 0px;
+    color: white;
+    background-color: red;
+    padding: 5px 10px ;
+    font-weight: bold;
+    border-radius: 0px 12px 0px 0px;
+}
+
+
