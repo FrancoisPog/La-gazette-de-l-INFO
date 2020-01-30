@@ -47,10 +47,27 @@ table {
 	border-spacing: 0;
 }
 
+/* FIN DU RESET */
 
+/* STYLE DU SITE */
+p {
+    margin-top:  10px;
+}
+
+em {
+    font-style: italic;
+}
+
+strong{
+    font-weight: bold;
+}
+
+body > header, main, body > footer{
+    width: 900px;
+}
 
 body{
-    font-family: Trebuchet, Arial, Verdana, sans-serif;
+    font-family: "Trebuchet MS", Arial, Verdana, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -58,6 +75,55 @@ body{
     background: linear-gradient(to bottom right, #E0E0E0, #909090);
 }
 
+blockquote {
+    margin: 20px;
+    text-align: justify;
+    quotes: "« " " »" "‹" "›";
+    font-style: italic;
+}
+
+blockquote:before{
+    content: open-quote;
+}
+
+blockquote:after{
+    content: close-quote;
+}
+
+/* Header */
+
+header{
+    margin-top: 45px;
+    margin-bottom: 10px;
+    position: relative;
+    background: url(../images/fond.png);
+    height: 200px;
+}
+
+header h1{
+    font-weight: bold;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 1.3em;
+
+}
+
+header img{
+    margin-top: 30px;
+    margin-left: 10px;
+}
+
+/* Footer */
+
+footer{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+/* Menu  */
 nav {
     position: fixed;
     top: 0px;
@@ -97,39 +163,62 @@ nav ul a:hover{
     color: white;
 }
 
+/* PAGE ARTICLE */
 
-header, main, footer{
-    width: 900px;
-}
-
-header{
-    margin-top: 45px;
-    margin-bottom: 10px;
-    position: relative;
-    background: url(../images/fond.png);
-    height: 200px;
-}
-
-footer{
-    display: flex;
-    justify-content: center;
-}
-
-header h1{
-    font-weight: bold;
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    font-size: 1.3em;
-
-}
-
-header img{
-    margin-top: 30px;
-    margin-left: 10px;
-}
-
+/* Vote */
 #vote{
     background-color: white;
     padding: 15px;
+    border-radius: 10px 0px;
+    box-shadow: 6px 6px  20px 4px black;
+    margin-bottom: 20px;
+}
+
+#hymne{
+    float: right;
+    margin: 0px 0px 20px 20px ;
+}
+
+#vote h3{
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 20px;
+}
+
+#videos{
+    display: flex;
+    justify-content: space-around;
+}
+
+#videos figcaption{
+    text-align: center;
+}
+
+#liensVote{
+    margin-left: 30px;
+}
+
+#liensVote li{
+    margin-top: 4px;
+}
+
+#liensVote li:before{
+    content: "\2611\00A0";
+}
+
+main a{
+    color: blue;
+    text-decoration: none;
+}
+
+main footer{
+    border-top: #909090 solid 2px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+main footer p{
+    margin: 0px;
+    font-size: 0.9em;
 }
