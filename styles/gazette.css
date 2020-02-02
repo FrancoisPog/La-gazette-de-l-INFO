@@ -54,6 +54,10 @@ table {
 p {
     text-align: justify;
     font-size: 16px;
+    
+}
+
+p + p {
     margin-top : 10px;
 }
 
@@ -313,14 +317,12 @@ main footer p{
     margin-top: 10px;
     
 }
-
-
-
-
-
-#redaction article:last-child{
-    padding-bottom: 0px;
+#redaction article:only-of-type{
+    padding : 10px 0px;
 }
+
+
+
 
 
 #redaction article h4 {
@@ -352,9 +354,7 @@ main footer p{
     
 }
 
-#redaction article:only-of-type p{
-    margin: 10px auto;
-}
+
 
 #redaction article:not(:only-of-type) p {
     padding-left: 170px;
