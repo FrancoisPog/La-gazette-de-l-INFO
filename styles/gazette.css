@@ -52,8 +52,9 @@ table {
 
 /* STYLE DU SITE */
 p {
-    margin-top:  10px;
+    text-align: justify;
     font-size: 16px;
+    margin-top : 10px;
 }
 
 em {
@@ -275,15 +276,86 @@ main footer p{
 
 /* PAGE REDACTION */
 
-article {
-    position: relative;
-    background-color: white;
-    margin: 30px 0px;
-    padding: 20px;
-    border-radius: 0px 5px 5px 5px;
+#redaction p{
+    text-align: justify;
 }
 
-article h2{
+#redaction section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin-top: 30px ;
+    padding: 10px 20px;
+    border-radius: 0px 8px 8px 8px;
+}
+
+#redaction section:not(:last-child){
+    margin-bottom: 50px;
+}
+
+#redaction section h2{
     position: absolute;
-    top: -25px;
+    top: -29px;
+    left: 0px;
+    color: white;
+    background-color: red;
+    padding: 5px 10px ;
+    font-weight: bold;
+    border-radius: 0px 12px 0px 0px;
+    
+}
+
+#redaction article:not(:only-of-type) {
+    position: relative;
+    border-top : 2px solid black;
+    padding: 20px 0px 0px 0px;
+    margin-top: 10px;
+    
+}
+
+
+
+
+
+#redaction article:last-child{
+    padding-bottom: 0px;
+}
+
+
+#redaction article h4 {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    color: white;
+    background-color: black;
+    padding: 3px 6px ;
+    font-weight: bold;
+}
+
+
+
+
+#redaction article h3{
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#redaction article:only-of-type h3{
+    margin-top: 0px;
+}
+
+
+#redaction article img{
+    float: left;
+    margin: 0px 20px 0px 0px;
+    
+}
+
+#redaction article:only-of-type p{
+    margin: 10px auto;
+}
+
+#redaction article:not(:only-of-type) p {
+    padding-left: 170px;
 }
