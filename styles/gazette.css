@@ -48,36 +48,30 @@ table {
 	border-spacing: 0;
 }
 
-/* FIN DU RESET */
+/* --------------------- FIN DU RESET ---------------------*/
 
-/* STYLE DU SITE */
+/* --------------------- STYLE GENERAL ---------------------*/
 p {
     text-align: justify;
     font-size: 16px;
     
 }
-
 p + p {
     margin-top : 10px;
 }
-
 em {
     font-style: italic;
 }
-
 a{
     color: #00D;
     text-decoration: none;
 }
-
 a:hover{
     text-decoration: underline;
 }
-
 a[href^=http]:hover::after{
     content: " ("attr(href)") " url(../images/lien_externe.gif);
 }
-
 strong{
     font-weight: 800;
 }
@@ -87,7 +81,7 @@ body > header, main, body > footer{
 }
 
 body{
-    font-family: "Trebuchet MS", Arial, Verdana, sans-serif;
+    font-family: Trebuchet, Arial, Verdana, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -96,7 +90,7 @@ body{
 }
 
 blockquote {
-    margin: 20px;
+    margin: 20px 30px;
     text-align: justify;
     quotes: "« " " »" "‹" "›";
     font-style: italic;
@@ -105,22 +99,45 @@ blockquote {
 blockquote:before{
     content: open-quote;
 }
-
 blockquote:after{
     content: close-quote;
 }
 
-/* Header */
+/* --- Section TYPE 1 --- */
+section.type1 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 0px 8px 8px 8px;
+    box-shadow: 10px 10px 15px 4px black;
+    margin-top: 30px ;
+    padding:20px;
+    
+}
 
-header{
+section.type1 h2{
+    position: absolute;
+    top: -29.5px;
+    left: 0px;
+    color: white;
+    background-color: red;
+    padding: 5px 10px ;
+    font-weight: bold;
+    border-radius: 0px 12px 0px 0px;
+    
+}
+
+
+/* --- Header --- */
+body > header{
     margin-top: 45px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     position: relative;
     background: url(../images/fond.png);
     height: 200px;
 }
-
-header h1{
+body > header h1{
     font-weight: bold;
     position: absolute;
     right: 10px;
@@ -128,24 +145,21 @@ header h1{
     font-size: 24px;
 
 }
-
-header img{
+body > header img{
     margin-top: 30px;
     margin-left: 10px;
 }
 
-/* Footer */
-
-footer{
-    margin-top: 15px;
+/* --- Footer --- */
+body > footer{
+    margin-top: 30px;
     margin-bottom: 10px;
     display: flex;
     justify-content: center;
+
 }
 
-
-
-/* Menu  */
+/* --- Menu --- */
 nav {
     position: fixed;
     top: 0px;
@@ -153,13 +167,10 @@ nav {
     height: 40px;
     width: 100%;
     background-color: rgba(255,255,255,0.8);
-    
 }
-
 nav:hover{
     background-color: white;
 }
-
 nav a {
     text-decoration: none;
     font-weight: bold;
@@ -173,10 +184,12 @@ nav ul {
     display: flex;
     justify-content: flex-end;
 }
-
-#accueil{
+nav ul li:first-child{
     position: absolute;
     left: 0px;
+}
+nav ul li:last-child a::before{
+    content: "\2630\0020";
 }
 
 nav ul li{
@@ -192,37 +205,43 @@ nav ul a:hover{
 
 
 
-/* PAGE ARTICLE */
+/* --------------------- PAGE ARTICLE ---------------------*/
 
-/* Vote */
-#vote{
+/* --- Article principal --- */
+
+#article article {
     background-color: white;
-    padding: 15px;
-    border-radius: 10px 0px;
     box-shadow: 5px 5px  15px 4px black;
-    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px 0px;
+    padding-bottom: 5px;
 }
-
+/* Image */
 #hymne{
     float: right;
     margin: 0px 0px 20px 20px ;
 }
 
-#vote h3{
+/* Titre de l'article */
+#vote h2{
     font-weight: bold;
     text-decoration: underline;
     margin-bottom: 20px;
+    font-size: 1.1em;
 }
 
-#videos{
+/* Vidéos */
+aside{
     display: flex;
     justify-content: space-around;
+    margin-bottom: 20px;
 }
 
-#videos figcaption{
+aside figcaption{
     text-align: center;
 }
 
+/* Liens des votes */
 #liensVote{
     margin-left: 30px;
 }
@@ -232,9 +251,10 @@ nav ul a:hover{
 }
 
 #liensVote li:before{
-    content: "\2611\00A0";
+    content: "\2611\0020";
 }
 
+/* Footer dans le main */
 main footer{
     border-top: #909090 solid 2px;
     margin-top: 20px;
@@ -247,17 +267,12 @@ main footer p{
     font-size: 0.9em;
 }
 
-/* Reactions */
-
+/* --- Réactions --- */
 #reactions {
     margin-top: 50px;
-    position: relative;
-    background-color: white;
-    padding:  10px 20px;
-    box-shadow: 5px 5px  15px 4px black;
     border-radius: 0px 10px 10px 10px;
 }
-
+/* Liste de commentaires */
 #reactions ul {
     list-style-type: circle ;
 }
@@ -266,96 +281,50 @@ main footer p{
     margin-left: 25px;
 }
 
-#reactions h3{
-    position: absolute ;
-    top: -29px;
-    left: 0px;
-    color: white;
-    background-color: red;
-    padding: 5px 10px ;
-    font-weight: bold;
-    border-radius: 0px 12px 0px 0px;
-}
 
+/* --------------------- PAGE REDACTION ---------------------*/
 
-/* PAGE REDACTION */
-
-#redaction p{
-    text-align: justify;
-}
-
-#redaction section {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    margin-top: 30px ;
-    padding: 10px 20px;
-    border-radius: 0px 8px 8px 8px;
-}
-
+/* Toutes les sections sauf la dernière */
 #redaction section:not(:last-child){
-    margin-bottom: 50px;
+    margin-bottom: 60px;
 }
 
-#redaction section h2{
-    position: absolute;
-    top: -29px;
-    left: 0px;
-    color: white;
-    background-color: red;
-    padding: 5px 10px ;
-    font-weight: bold;
-    border-radius: 0px 12px 0px 0px;
-    
-}
-
+/* Tout les articles qui ne sont pas seul dans leur section */
 #redaction article:not(:only-of-type) {
     position: relative;
     border-top : 2px solid black;
-    padding: 20px 0px 0px 0px;
-    margin-top: 10px;
-    
-}
-#redaction article:only-of-type{
-    padding : 10px 0px;
+    padding: 20px 0px 20px 0px;
 }
 
+/* Les derniers articles d'une sections (s'il y en a d'autres) */
+#redaction article:not(:only-of-type):last-child{
+    padding-bottom: 0px;
+}
 
-
-
-
+/* Titres */
 #redaction article h4 {
     position: absolute;
     right: 0px;
     top: 0px;
-    color: white;
     background-color: black;
-    padding: 3px 6px ;
+    padding: 5px 6px ;
+    color: white;
+    font-size: 0.9em;
     font-weight: bold;
 }
-
-
-
-
 #redaction article h3{
     font-weight: bold;
     margin-bottom: 20px;
 }
 
-#redaction article:only-of-type h3{
-    margin-top: 0px;
-}
-
-
+/* Images */
 #redaction article img{
     float: left;
     margin: 0px 20px 0px 0px;
     
 }
 
-
-
+/* Empecher que le texte entoure les images */
 #redaction article:not(:only-of-type) p {
     padding-left: 170px;
 }
