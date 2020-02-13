@@ -1,9 +1,150 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Index</title>
-    </head>
-    <body>
-        
-    </body>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Accueil</title>
+    <link rel="stylesheet" href="styles/gazette.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="html/actus.html">Toute l'actu</a></li>
+            <li><a href="php/recherche.php">Recherche</a></li>
+            <li><a href="html/redaction.html">La rédac'</a></li>
+            <li><a href="php/connexion.php">Se connecter</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <img src="images/titre.png" alt="Titre : La gazette de l'info">
+        <h1>Le site de désinformation n°1 des étudiants en Licence info</h1>
+    </header>
+
+    <main id="accueil">
+        <section class="type1">
+            <h2>À la une</h2>
+            <a href="php/article.php?id=1">
+                <figure>
+                    <img src="images/hacker.jpg" alt="Photo d'un hacker">
+                    <figcaption>Un mouchard dans un corrigé de Langages du Web</figcaption>
+                </figure>
+            </a>
+            <a href="html/article.html">
+                <figure>
+                    <img src="images/hymne.jpg" alt="Hymne de la licence">
+                    <figcaption>Votez pour l'hymne de la Licence</figcaption>
+                </figure>
+            </a>
+            <a href="article.php?id=1">
+                <figure>
+                    <img src="images/melenchon.jpg" alt="Melanchon choqué">
+                    <figcaption>L'amphi Sciences Naturelles bientôt renommé amphi Mélenchon</figcaption>
+                </figure>
+            </a>
+
+        </section>
+        <section class="type1">
+            <h2>L'info brûlante</h2>
+            <a href="php/article.php?id=1">
+                <figure>
+                    <img src="images/walkingdead.jpg" alt="L'enseignant relaxé">
+                    <figcaption>Il leur avait annoncé "Je vais vous défoncer" l'enseignant relaxé</figcaption>
+                </figure>
+            </a>
+            <a href="html/article.html">
+                <figure>
+                    <img src="images/pingouins.jpg" alt="Une famille de pingouins">
+                    <figcaption>Toute une famille de pingouins découverte dans l'amphi B</figcaption>
+                </figure>
+            </a>
+            <a href="article.php?id=1">
+                <figure>
+                    <img src="images/macron.jpg" alt="Macron content">
+                    <figcaption>Emmanuel Macron obtient sa Licence Info en EAD</figcaption>
+                </figure>
+            </a>
+
+        </section>
+        <section class="type1">
+            <h2>Les incontournables</h2>
+            <a href="php/article.php?id=1">
+                <figure>
+                    <img src="images/arnaque.jpg" alt="Photo d'arnaqueur">
+                    <figcaption>Une arnarque au corrigé de TL mise à jour</figcaption>
+                </figure>
+            </a>
+            <a href="html/article.html">
+                <figure>
+                    <img src="images/calendrier.jpg" alt="Photo de calendrier">
+                    <figcaption>Le calendier des Dieux de la Licence bientôt disponible</figcaption>
+                </figure>
+            </a>
+            <a href="article.php?id=1">
+                <figure>
+                    <img src="images/sondage.jpg" alt="Image de statistiques">
+                    <figcaption>Résultat de notre sondage : allez-vous réussir votre année ?</figcaption>
+                </figure>
+            </a>
+        </section>
+
+        <section id="horoscope" class="type1">
+            <h2>Horoscope de la semaine</h2>
+            <p>Vous l'attendiez tous, voici l'horoscope du semestre pair de l'année 2019-2020. Sans surprise, il n'est
+                pas terrible...</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Signe</th>
+                        <th>Date</th>
+                        <th>Votre horoscope</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&#9800; Bélier</td>
+                        <td>du 21 mars au 19 avril</td>
+                        <td rowspan="4">
+                            <p>Après des vacances bien méritées, l'année reprend sur les chapeaux de roues.
+                                Tous les signes sont concernés.</p>
+
+                            <p>Jupiter s'aligne avec Saturne, péremptoirement à Venus, et nous promet un semestre qui ne
+                                sera pas de tout repos. Février sera le mois le plus tranquille puisqu'il ne comporte
+                                que 29
+                                jours.</p>
+
+                            <p>Les fins de mois seront douloureuses pour les natifs du 2e décan au moment où tomberont
+                                les
+                                tant-attendus résultats du module <em>d'Algorithmique et Structures de Données</em> du
+                                semestre
+                                3.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&#9801; Taureau</td>
+                        <td>du 20 avril au 20 mai</td>
+                    </tr>
+                    <tr>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <td>&#9811; Poisson</td>
+                        <td>du 20 février au 20 mars</td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <p>Malgré cela, notre équipe d'astrologues de choc vous souhaite à tous un bon semestre, et bon courage pour
+                le module de <em>Système et Programmation Système</em></p>
+        </section>
+
+    </main>
+    <footer>
+        <p> &copy; Licence Informatique - Janvier 2020 - Tous droits réservés</p>
+    </footer>
+</body>
+
 </html>

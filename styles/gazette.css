@@ -103,6 +103,51 @@ blockquote:after{
     content: close-quote;
 }
 
+figcaption{
+    text-align: center;
+    margin-top: 7px;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+    max-width: 270px;
+    
+}
+
+figure{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+figure img{
+   width: 90%;
+   border: black solid 1px;
+}
+
+figure img:hover{
+   box-shadow: 0px 0px 15px 5px rgb(243, 124, 124);
+}
+
+table th, table td, table{
+    border: black 1px solid;
+    text-align: left;
+}
+
+th{
+    font-weight: bold;
+    padding: 7px;
+}
+
+td{
+    padding: 5px ;
+    
+}
+
+tbody{
+    padding: 10px;
+}
+
 /* --- Section TYPE 1 --- */
 section.type1 {
     position: relative;
@@ -125,7 +170,10 @@ section.type1 h2{
     padding: 5px 10px ;
     font-weight: bold;
     border-radius: 0px 12px 0px 0px;
-    
+}
+
+section.type1:not(:last-child){
+    margin-bottom: 60px;
 }
 
 
@@ -184,6 +232,11 @@ nav ul {
     display: flex;
     justify-content: flex-end;
 }
+nav li a:hover{
+    background-color: black;
+    text-decoration: none;
+    color: white;
+}
 nav ul li:first-child{
     position: absolute;
     left: 0px;
@@ -197,11 +250,7 @@ nav ul li{
     display: flex;
 }
 
-nav ul a:hover{
-    background-color: black;
-    text-decoration: none;
-    color: white;
-}
+
 
 
 
@@ -237,10 +286,6 @@ aside{
     margin-bottom: 20px;
 }
 
-aside figcaption{
-    text-align: center;
-}
-
 /* Liens des votes */
 #liensVote{
     margin-left: 30px;
@@ -254,7 +299,7 @@ aside figcaption{
     content: "\2611\0020";
 }
 
-/* Footer dans le main */
+/* Footer du main */
 main footer{
     border-top: #909090 solid 2px;
     margin-top: 20px;
@@ -283,11 +328,6 @@ main footer p{
 
 
 /* --------------------- PAGE REDACTION ---------------------*/
-
-/* Toutes les sections sauf la dernière */
-#redaction section:not(:last-child){
-    margin-bottom: 60px;
-}
 
 /* Tout les articles qui ne sont pas seul dans leur section */
 #redaction article:not(:only-of-type) {
@@ -328,3 +368,43 @@ main footer p{
 #redaction article:not(:only-of-type) p {
     padding-left: 170px;
 }
+
+
+/* --------------------- PAGE ACCUEIL ---------------------*/
+
+#accueil section.type1:not(#horoscope){
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#accueil a:hover{
+    text-decoration: none;
+}
+
+#horoscope table{
+    margin:  10px auto;
+    width: 700px;
+    font-size: 0.8em;
+}
+
+#horoscope table p{
+    font-size: 1em;
+}
+
+#horoscope th:nth-child(1){
+    width: 105px;
+}
+
+#horoscope th:nth-child(2){
+    width: 110px;
+}
+
+#horoscope td:nth-child(2){
+    padding-right: 45px;
+}
+
+#horoscope td:nth-child(3){
+    padding: 10px 10px;
+    
+}
+
