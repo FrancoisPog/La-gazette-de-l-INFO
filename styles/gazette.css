@@ -352,7 +352,7 @@ main footer p{
     font-size: 0.9em;
     font-weight: bold;
 }
-#redaction article h3{
+h3{
     font-weight: bold;
     margin-bottom: 20px;
 }
@@ -408,3 +408,34 @@ main footer p{
     
 }
 
+/* --------------------- PAGE ACTUS ---------------------*/
+
+#actus article{
+    position: relative;
+    background-color: #E5E5E5;
+    padding: 10px;
+}
+
+#actus article + article{
+    margin-top: 10px;
+}
+
+#actus article:first-of-type, #actus article:first-of-type img {
+    border-radius: 7px 7px 0px 0px;
+}
+#actus article:last-of-type, #actus article:last-of-type img{
+    border-radius:0px 0px 7px 7px ;
+}
+
+#actus article a {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+#actus section article img{
+    float: left;
+    width: 160px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
