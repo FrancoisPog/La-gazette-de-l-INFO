@@ -8,4 +8,4 @@ This website is developed step by step to learn web languages.
 - PHP
 - MySQL
 
-#### [ University Project | February 2020 ]
+#### <em>[ University Project | February 2020 ]</em>
