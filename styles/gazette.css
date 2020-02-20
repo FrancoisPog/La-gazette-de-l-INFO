@@ -73,7 +73,7 @@ a[href^=http]:hover::after{
     content: " ("attr(href)") " url(../images/lien_externe.gif);
 }
 strong{
-    font-weight: 800;
+    font-weight: bold;
 }
 
 body > header, main, body > footer{
@@ -132,6 +132,10 @@ figure img:hover{
 table th, table td, table{
     border: black 1px solid;
     text-align: left;
+}
+
+table{
+    margin:  10px auto;
 }
 
 th{
@@ -222,32 +226,69 @@ nav:hover{
 nav a {
     text-decoration: none;
     font-weight: bold;
-    padding: 10px 30px;
     color: black;
     width: 100%;
+    padding: 10px 30px;
 }
-nav ul {
+nav>ul {
     position: relative;
     width: 100%;
     display: flex;
     justify-content: flex-end;
 }
-nav li a:hover{
-    background-color: black;
-    text-decoration: none;
-    color: white;
-}
-nav ul li:first-child{
-    position: absolute;
-    left: 0px;
-}
-nav ul li:last-child a::before{
-    content: "\2630\0020";
-}
-
+/* Elements de la liste principale */
 nav ul li{
     height: 40px;
     display: flex;
+}
+
+nav li:hover{
+    background-color: black;
+}
+
+nav li:hover>a{
+    text-decoration: none;
+    color: white;
+}
+
+nav>ul>li:first-child{
+    position: absolute;
+    left: 0px;
+}
+nav>ul>li:last-child>a::before{
+    content: "\2630\0020";
+}
+
+nav>ul>li:last-child>a{
+    padding-left: 40px;
+    padding-right: 70px;
+}
+
+
+nav>ul>li:last-child{
+    position: relative;
+}
+
+/* Affichage de la sous liste */
+nav>ul>li:last-child:hover > ul{
+    display: flex;
+}
+
+/* Sous liste */
+nav ul>li>ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top :40px;
+    left: 0px;
+    width: 100%;
+    
+}
+
+/* Element de la sous liste */
+nav ul>li>ul>li{
+    background-color: white;
+    width: 100%;
 }
 
 
@@ -382,7 +423,7 @@ h3{
 }
 
 #horoscope table{
-    margin:  10px auto;
+    
     width: 700px;
     font-size: 0.8em;
 }
@@ -421,10 +462,12 @@ h3{
 }
 
 #actus article:first-of-type, #actus article:first-of-type img {
-    border-radius: 7px 7px 0px 0px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
 }
 #actus article:last-of-type, #actus article:last-of-type img{
-    border-radius:0px 0px 7px 7px ;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
 }
 
 #actus article a {
@@ -438,4 +481,25 @@ h3{
     width: 160px;
     margin-right: 10px;
     margin-bottom: 15px;
+}
+
+
+/* --------------------- PAGE INSCRIPTION ---------------------*/
+
+#inscription section.type1 table td, #inscription section.type1 table {
+   border: 0px;
+}
+
+#inscription section.type1 table td:first-child{
+    text-align: right;
+}
+
+#inscription section.type1 table td:last-child{
+    display: flex;
+    justify-content: space-between;
+}
+
+#inscription input[type="text"],#inscription input[type="password"]{
+    width: 200px;
+    padding: 3px;
 }
