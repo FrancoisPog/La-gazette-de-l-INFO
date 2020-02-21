@@ -87,6 +87,7 @@ body{
     align-items: center;
     line-height: 1.2;
     background: linear-gradient(to bottom right, #E0E0E0, #909090);
+    min-height: max-content;
 }
 
 blockquote {
@@ -204,6 +205,7 @@ body > header img{
 
 /* --- Footer --- */
 body > footer{
+    
     margin-top: 30px;
     margin-bottom: 10px;
     display: flex;
@@ -494,12 +496,37 @@ h3{
     text-align: right;
 }
 
-#inscription section.type1 table td:last-child{
+#inscription section.type1 table td:last-child:not(:only-child){
     display: flex;
     justify-content: space-between;
 }
 
+#inscription section.type1 table td[colspan="2"]{
+    text-align: left;
+    font-size: 0.95em;
+}
+
+
 #inscription input[type="text"],#inscription input[type="password"]{
     width: 200px;
     padding: 3px;
+}
+
+#inscription input[type="submit"], #inscription input[type="reset"]{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 4px;
+    font-weight: bold;
+    margin: 0px 5px;
+}
+
+#inscription input[type="submit"]:hover, #inscription input[type="reset"]:hover{
+    background-color: red;
+    color :white;
+}
+
+#inscription select{
+    border: 1px solid grey;
+    border-radius: 5px;
+    
 }

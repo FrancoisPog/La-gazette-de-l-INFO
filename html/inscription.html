@@ -18,7 +18,7 @@
                 <ul>
                     <li><a href="../php/compte.php">Mon profil</a></li>
                     <li><a href="../php/nouveau.php">Nouvel article</a></li>
-                    <li><a href="../php/nouveau.php">Se deconnecter</a></li>
+                    <li><a href="../php/deconnexion.php">Se deconnecter</a></li>
                 </ul>
             </li>
         </ul>
@@ -26,7 +26,7 @@
 
     <header>
         <img src="../images/titre.png" alt="Titre : La gazette de l'info">
-        <h1>L'actu</h1>
+        <h1>Inscription</h1>
     </header>
 
     <main id="inscription">
@@ -227,8 +227,18 @@
                     <tr>
                         <td colspan="2">
                             <input type="checkbox" name="gazCGU" id="gazCGU">
-                            <label for="gazCGU">J'ai lu et j'accepte les conditions générales d'utilisation :</label>
+                            <label for="gazCGU">J'ai lu et j'accepte les conditions générales d'utilisation</label>
                         </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="checkbox" name="gazSpam" id="gazSpam" checked>
+                            <label for="gazSpam">J'accepte de recevoir des tonnes de mails pourris</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="S'inscrire"></td>
+                        <td><input type="reset" value="Réinitialiser"></td>
                     </tr>
                 </table>
             </form>
