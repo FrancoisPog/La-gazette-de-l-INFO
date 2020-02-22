@@ -86,7 +86,7 @@ body{
     flex-direction: column;
     align-items: center;
     line-height: 1.2;
-    background: linear-gradient(to bottom right, #E0E0E0, #909090);
+    background: linear-gradient(to bottom right, #E0E0E0, #909090) fixed;
     min-height: max-content;
 }
 
