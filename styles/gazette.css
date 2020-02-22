@@ -312,6 +312,8 @@ nav ul>li>ul>li{
 #hymne{
     float: right;
     margin: 0px 0px 20px 20px ;
+    width: 250px;
+    height: 187.5px;
 }
 
 /* Titre de l'article */
@@ -404,7 +406,8 @@ h3{
 #redaction article img{
     float: left;
     margin: 0px 20px 0px 0px;
-    
+    width: 150px;
+    height: 200px;
 }
 
 /* Empecher que le texte entoure les images */
@@ -451,6 +454,11 @@ h3{
     
 }
 
+#accueil img{
+    min-width: 260px;
+    min-height: 195.5px;
+}
+
 /* --------------------- PAGE ACTUS ---------------------*/
 
 #actus article{
@@ -481,6 +489,7 @@ h3{
 #actus section article img{
     float: left;
     width: 160px;
+    height: 120px;
     margin-right: 10px;
     margin-bottom: 15px;
 }
