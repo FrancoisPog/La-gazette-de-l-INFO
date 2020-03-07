@@ -154,7 +154,7 @@ tbody{
 }
 
 /* --- Section TYPE 1 --- */
-section.type1 {
+section {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -166,7 +166,7 @@ section.type1 {
     
 }
 
-section.type1 h2{
+section h2{
     position: absolute;
     top: -29.5px;
     left: 0px;
@@ -177,7 +177,7 @@ section.type1 h2{
     border-radius: 0px 12px 0px 0px;
 }
 
-section.type1:not(:last-child){
+section:not(:last-child){
     margin-bottom: 60px;
 }
 
@@ -418,7 +418,7 @@ h3{
 
 /* --------------------- PAGE ACCUEIL ---------------------*/
 
-#accueil section.type1:not(#horoscope){
+#accueil section:not(#horoscope){
     flex-direction: row;
     justify-content: space-between;
 }
@@ -497,20 +497,20 @@ h3{
 
 /* --------------------- PAGE INSCRIPTION ---------------------*/
 
-#inscription section.type1 table td, #inscription section.type1 table {
+#inscription section table td, #inscription section.type1 table {
    border: 0px;
 }
 
-#inscription section.type1 table td:first-child{
+#inscription section table td:first-child{
     text-align: right;
 }
 
-#inscription section.type1 table td:last-child:not(:only-child){
+#inscription section table td:last-child:not(:only-child){
     display: flex;
     justify-content: space-between;
 }
 
-#inscription section.type1 table td[colspan="2"]{
+#inscription section table td[colspan="2"]{
     text-align: left;
     font-size: 0.95em;
 }
