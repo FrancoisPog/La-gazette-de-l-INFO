@@ -2,6 +2,8 @@
 
 require_once("bibli_gazette.php");
 
+// FONCTIONS BASE DE DONNEES 
+
 //____________________________________________________________________________
 /** 
  *  Ouverture de la connexion à la base de données
@@ -58,7 +60,6 @@ function fp_bd_erreur_exit($msg) {
     exit(1);		// ==> ARRET DU SCRIPT
 }
 
-
 //____________________________________________________________________________
 /**
  * Gestion d'une erreur de requête à la base de données.
@@ -99,6 +100,24 @@ function fp_bd_erreur($bd, $sql) {
 }
 
 /**
+ * Execute une requete 'SELECT' et retourne le résultat dans un tableau de tableau associatif
+ * @param Object $db : L'identifiant de la base de données
+ * @param String $query : La requête à executer
+ * @return Array Un tableau contenant les résultats, null si aucun résultat
+ */
+function fp_queryToArray($db,$query){
+    $query = mysqli_query($db,$query) or fp_bd_erreur($db,$query);
+    $array = null;
+    while($data = mysqli_fetch_assoc($query)){
+        $array[] = $data;
+    }
+    mysqli_free_result($query);
+    return $array;
+}
+
+// FONCTION DE GENERATION CODE HTML
+
+/**
  * Affiche le head d'un site
  * @param String $title : Le titre de la page
  * @param String $stylesheet : Le lien vers la feuille de style
@@ -119,11 +138,21 @@ function fp_make_head($title,$stylesheet){
 function fp_begin_tag($tagName,$attributs=[]){
     echo '<',$tagName,' ';
     foreach($attributs as $key => $value){
-        echo $key,'=\'',$value,'\' ';
+        echo $key,'="'.$value.'" ';
     }
     echo '>';
 }
 
+/**
+ * Affiche la balise fermante d'un tag donné
+ * @param String $tagName Le nom du tag 
+ */
 function fp_end_tag($tagName){
     echo '</',$tagName,'>';
+}
+
+// AUTRES FONCTIONS
+
+function fp_str_isInt($str){
+    return preg_match('/^[[:digit:]]+$/',$str);
 }

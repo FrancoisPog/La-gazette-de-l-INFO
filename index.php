@@ -3,15 +3,17 @@
 ob_start();
 require_once("php/bibli_generale.php");
 
+// --- Fonction locales ---
+
 /**
  * Affiche un article
  * @param Array $articleData : Les données de l'article (id+nom)
  */
-function make_article($articleData){
-    echo '<a href="php/article.php?id=',$articleData['arID'],'">',
+function fpl_make_article($articleData){
+    echo '<a href="php/article.php?id=',htmlspecialchars($articleData['arID']),'">',
             '<figure>',
-                '<img src="upload/',$articleData['arID'],'.jpg','" alt="',$articleData['arTitre'],'">',
-                '<figcaption>',$articleData['arTitre'],'</figcaption>',
+                '<img src="upload/',htmlspecialchars($articleData['arID']),'.jpg','" alt="',htmlspecialchars($articleData['arTitre']),'">',
+                '<figcaption>',htmlspecialchars($articleData['arTitre']),'</figcaption>',
             '</figure>',
         '</a>';
 }
@@ -20,16 +22,16 @@ function make_article($articleData){
  * Affiche un block d'articles
  * @param Array $articles : La liste des articles à afficher
  */
-function make_article_block($articles){
+function fpl_make_article_block($articles){
     foreach($articles as $article){
-        make_article($article);
+        fpl_make_article($article);
     }
 }
 
 /**
  * Affiche l'horoscope
  */
-function make_horoscope(){
+function fpl_make_horoscope(){
     echo    '<p>',
                 'Vous l\'attendiez tous, voici l\'horoscope du semestre pair de l\'année 2019-2020. Sans surprise, il n\'est',
             '    pas terrible...',
@@ -88,38 +90,62 @@ function make_horoscope(){
 
 
 
-$aLaUne[] = array('arTitre'=>'Un mouchard dans un corrigé de Langages du Web','arID'=>'10');
-$aLaUne[] = array('arTitre'=>'Votez pour l\'hymne de la Licence','arID'=>'9');
-$aLaUne[] = array('arTitre'=>'L\'amphi Sciences Naturelles bientôt renommé Amphi Mélenchon','arID'=>'8');
+// --- Interaction base de données --- 
 
-$infoBrulante[] = array('arTitre'=>'Sondage : allez-vous réussir votre année ?', 'arID'=>'1');
-$infoBrulante[] = array('arTitre'=>'Une famille de pingouins s\'installe dans l\'amphi B', 'arID'=>'7');
-$infoBrulante[] = array('arTitre'=>'Le Président Macron obtient sa Licence d\'Informatique en EAD', 'arID'=>'3');
+$db = fp_bd_connecter();
 
-$incontournables[] = array('arTitre'=>'Il leur avait annoncé "Je vais vous défoncer" l\'enseignant relaxés','arID'=>'2');
-$incontournables[] = array('arTitre'=>'Donald Trump veut importer les CMI aux Etats-Unis','arID'=>'4');
-$incontournables[] = array('arTitre'=>'Le calendier des Dieux de la Licence bientôt disponible','arID'=>'5');
+$query = 'SELECT arID,arTitre 
+            FROM article
+            ORDER BY arDatePublication DESC
+            LIMIT 3';
+
+$aLaUne = fp_queryToArray($db,$query);
+
+$query = 'SELECT arTitre, COUNT(coID), arID
+            FROM article INNER JOIN commentaire
+            ON arID = coArticle
+            GROUP BY arTitre
+            ORDER BY 2 DESC, rand()
+            LIMIT 3';
+
+$infoBrulante = fp_queryToArray($db,$query);
+
+$query = 'SELECT arTitre, arID
+            FROM article
+            WHERE arID <>'. mysqli_real_escape_string($db,$aLaUne[0]['arID']).' '.
+            'AND arID <>'. mysqli_real_escape_string($db,$aLaUne[1]['arID']).' '.
+            'AND arID <>'. mysqli_real_escape_string($db,$aLaUne[2]['arID']).' '.
+            'AND arID <>'. mysqli_real_escape_string($db,$infoBrulante[0]['arID']).' '.
+            'AND arID <>'. mysqli_real_escape_string($db,$infoBrulante[1]['arID']).' '.
+            'AND arID <>'. mysqli_real_escape_string($db,$infoBrulante[2]['arID']).' '.
+            'ORDER BY rand()
+            LIMIT 3';
+$incontournables = fp_queryToArray($db,$query);
+            
+mysqli_close($db);
 
 
+
+// --- Génération de la page ---
 
 fp_begin_gaz_page("Accueil","Le site de désinformation n°1 des étudiants en Licence info",0,"styles/gazette.css",2);
 
     fp_begin_tag('main',['id'=>'accueil']);
 
         fp_begin_gaz_section("A la une");
-            make_article_block($aLaUne);
+            fpl_make_article_block($aLaUne);
         fp_end_gaz_section();
 
         fp_begin_gaz_section("L'info brûlante");
-            make_article_block($infoBrulante);
+            fpl_make_article_block($infoBrulante);
         fp_end_gaz_section();
 
         fp_begin_gaz_section("Les incontournables");
-            make_article_block($incontournables);
+            fpl_make_article_block($incontournables);
         fp_end_gaz_section();
 
         fp_begin_gaz_section("Horoscope de la semaine",['id'=>'horoscope']);
-            make_horoscope();
+            fpl_make_horoscope();
         fp_end_gaz_section();
 
     fp_end_tag('main');

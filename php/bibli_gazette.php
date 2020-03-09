@@ -30,7 +30,7 @@ function fp_make_gaz_nav(int $deepness, int $status){
                         '<ul>',
                             '<li><a href="',$path,'php/compte.php">Mon profil</a></li>',
                             ($status > 0 && $status != 2) ? "<li><a href=\"'$path'php/nouveau.php\">Nouvel article</a></li>":'',
-                            ($status > 1) ? "<li><a href=\"'$path'php/administration.php\">Administration</a></li>":'',
+                            ($status > 1) ? "<li><a href=\"$path"."php/administration.php\">Administration</a></li>":'',
                             '<li><a href="',$path,'php/deconnexion.php">Se deconnecter</a></li>',
                         '</ul>',
                     '</li>';
@@ -75,7 +75,7 @@ function fp_make_gaz_footer(){
  */
 function fp_begin_gaz_page($titleHead,$titleHeader,$deepness,$stylesheet,$status){
     fp_begin_tag('!DOCTYPE html');
-    fp_begin_tag('html lang="fr"');
+    fp_begin_tag('html',['lang'=>'fr']);
     fp_make_head($titleHead,$stylesheet);
     fp_begin_tag('body');
     fp_make_gaz_nav($deepness,$status);
@@ -86,6 +86,7 @@ function fp_begin_gaz_page($titleHead,$titleHeader,$deepness,$stylesheet,$status
  * Affiche la fin d'une page du site
  */
 function fp_end_gaz_page(){
+    fp_make_gaz_footer();
     fp_end_tag('body');
     fp_end_tag('html');
 }

@@ -97,6 +97,10 @@ blockquote {
     font-style: italic;
 }
 
+/* blockquote:last-child {
+    margin-bottom: 0px;
+} */
+
 blockquote:before{
     content: open-quote;
 }
@@ -153,7 +157,7 @@ tbody{
     padding: 10px;
 }
 
-/* --- Section TYPE 1 --- */
+/* --- Section --- */
 section {
     position: relative;
     display: flex;
@@ -309,15 +313,16 @@ nav ul>li>ul>li{
     padding-bottom: 5px;
 }
 /* Image */
-#hymne{
+#article article img{
     float: right;
     margin: 0px 0px 20px 20px ;
     width: 250px;
     height: 187.5px;
+    border: solid 1px black;
 }
 
 /* Titre de l'article */
-#vote h2{
+#article article h2{
     font-weight: bold;
     text-decoration: underline;
     margin-bottom: 20px;
@@ -345,29 +350,29 @@ aside{
 }
 
 /* Footer du main */
-main footer{
+article footer{
     border-top: #909090 solid 2px;
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
 }
 
-main footer p{
+article footer p{
     margin: 0px;
     font-size: 0.9em;
 }
 
 /* --- Réactions --- */
-#reactions {
+#article section {
     margin-top: 50px;
     border-radius: 0px 10px 10px 10px;
 }
 /* Liste de commentaires */
-#reactions ul {
+#article section ul {
     list-style-type: circle ;
 }
 
-#reactions li {
+#article section li {
     margin-left: 25px;
 }
 
