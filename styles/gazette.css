@@ -51,6 +51,50 @@ table {
 /* --------------------- FIN DU RESET ---------------------*/
 
 /* --------------------- STYLE GENERAL ---------------------*/
+
+body{
+    /* Dégradé du fond */
+    --backgroud-color1: #E0E0E0;
+    --background-color2 : #909090;
+    /* Fond du titre des sections */
+    --colorSectionTitle : red;
+    /* Couleur du menu */
+    --navColorDflt : rgba(255,255,255,0.8);
+    /* Couleur du menu au survol */
+    --navColorHvr : white;
+    /* Couleur du texte du menu */
+    --navLiColor : black;
+    /* Couleur du texte du menu au survol */
+    --navLiColorHvr : white; 
+    /* Couleur du fond de l'item du menu au survol */
+    --navLiColorBckgrdHvr: black;
+    /* Couleur de l'ombre au survol des articles (index) */
+    --colorShdwFigHvr : rgb(243, 124, 124);
+}
+
+
+/* Theme alternatif */
+body[class='theme'] {
+    /* Dégradé du fond */
+    --backgroud-color1: rgba(238, 241, 248, 0.5);
+    --background-color2 : rgba(183, 197, 238,0.5);
+    /* Fond du titre des sections */
+    --colorSectionTitle : rgb(15, 31, 133);
+    /* Couleur du menu */
+    --navColorDflt : rgba(78, 116, 231, 0.8);
+    /* Couleur du menu au survol */
+    --navColorHvr : rgb(78, 116, 231);
+    /* Couleur du texte du menu */
+    --navLiColor : rgba(230, 230, 241, 1);
+    /* Couleur du texte du menu au survol */
+    --navLiColorHvr : white; 
+    /* Couleur du fond de l'item du menu au survol */
+    --navLiColorBckgrdHvr : rgb(17, 17, 105);
+    /* Couleur de l'ombre au survol des articles (index) */
+    --colorShdwFigHvr : rgb(148, 148, 238);
+}
+
+
 p {
     text-align: justify;
     font-size: 16px;
@@ -86,7 +130,7 @@ body{
     flex-direction: column;
     align-items: center;
     line-height: 1.2;
-    background: linear-gradient(to bottom right, #E0E0E0, #909090) fixed;
+    background: linear-gradient(to bottom right, var(--backgroud-color1),var(--background-color2)) fixed;
     min-height: max-content;
 }
 
@@ -97,9 +141,7 @@ blockquote {
     font-style: italic;
 }
 
-/* blockquote:last-child {
-    margin-bottom: 0px;
-} */
+
 
 blockquote:before{
     content: open-quote;
@@ -125,14 +167,7 @@ figure{
     
 }
 
-figure img{
-   width: 90%;
-   border: black solid 1px;
-}
 
-figure img:hover{
-   box-shadow: 0px 0px 15px 5px rgb(243, 124, 124);
-}
 
 table th, table td, table{
     border: black 1px solid;
@@ -172,10 +207,10 @@ section {
 
 section h2{
     position: absolute;
-    top: -29.5px;
+    top: -29.3px;
     left: 0px;
     color: white;
-    background-color: red;
+    background-color: var(--colorSectionTitle);
     padding: 5px 10px ;
     font-weight: bold;
     border-radius: 0px 12px 0px 0px;
@@ -224,15 +259,19 @@ nav {
     z-index: 5;
     height: 40px;
     width: 100%;
-    background-color: rgba(255,255,255,0.8);
+    
+    background-color: var(--navColorDflt);
+    transition-property: background-color;
+    transition-duration: 0.5s;
 }
 nav:hover{
-    background-color: white;
+    background-color:var(--navColorHvr);
+    
 }
 nav a {
     text-decoration: none;
     font-weight: bold;
-    color: black;
+    color: var(--navLiColor);
     width: 100%;
     padding: 10px 30px;
 }
@@ -246,15 +285,16 @@ nav>ul {
 nav ul li{
     height: 40px;
     display: flex;
+    transition-duration: 0.3s;
 }
 
 nav li:hover{
-    background-color: black;
+    background-color: var(--navLiColorBckgrdHvr);
 }
 
 nav li:hover>a{
     text-decoration: none;
-    color: white;
+    color: var(--navLiColorHvr);
 }
 
 nav>ul>li:first-child{
@@ -277,23 +317,29 @@ nav>ul>li:last-child{
 
 /* Affichage de la sous liste */
 nav>ul>li:last-child:hover > ul{
-    display: flex;
+    height: 160px;
+  
 }
 
 /* Sous liste */
 nav ul>li>ul {
-    display: none;
+    display: flex;
+    height: 0px;
+    overflow: hidden;
     flex-direction: column;
     position: absolute;
     top :40px;
     left: 0px;
     width: 100%;
+    transition-property: height;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
     
 }
 
 /* Element de la sous liste */
 nav ul>li>ul>li{
-    background-color: white;
+    background-color: var(--navColorHvr);
     width: 100%;
 }
 
@@ -422,6 +468,15 @@ h3{
 
 
 /* --------------------- PAGE ACCUEIL ---------------------*/
+
+#accueil figure img{
+    width: 90%;
+    border: black solid 1px;
+ }
+ 
+ #accueil figure img:hover{
+    box-shadow: 0px 0px 15px 5px var(--colorShdwFigHvr);
+ }
 
 #accueil section:not(#horoscope){
     flex-direction: row;

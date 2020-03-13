@@ -152,7 +152,52 @@ function fp_end_tag($tagName){
 }
 
 // AUTRES FONCTIONS
-
+/**
+ * Check is a string is an int
+ * @param String $str The string to test
+ * @return True if the string is an int, else false
+ */
 function fp_str_isInt($str){
     return preg_match('/^[[:digit:]]+$/',$str);
+}
+
+/**
+ * Parse une date au format AAAAMMJJHHmm 
+ * @param int $date La date à parser
+ * @return String 
+ */
+function fp_date_format($date){
+    setlocale(LC_TIME, "fr_FR");
+    return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
+}
+
+function parseBbCode($arg){
+    $exp = array();
+    $exp[] = '/\[(p|citation|gras|it|item|liste)\](.+?)\[\/\1\]/i';
+    $exp[] = '/\[(br|youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+ [^\]]*)\]/i';
+    
+    if(is_string($arg)){
+        return preg_replace_callback($exp,'parseBbCode',$arg);
+    }
+
+    //var_dump($arg);
+    switch ($arg[1]) {
+        case "br":
+            return "<br>";
+        case 'p' :
+            return preg_replace_callback($exp,'parseBbCode','<p>'.$arg[2].'</p>');
+        case 'citation' : 
+            return preg_replace_callback($exp,'parseBbCode','<blockquote>'.$arg[2].'</blockquote>');
+        case 'liste' : 
+            return preg_replace_callback($exp,'parseBbCode','<ul>'.$arg[2].'</ul>');
+        case 'item' : 
+            return preg_replace_callback($exp,'parseBbCode','<li>'.$arg[2].'</li>');
+        case 'it' : 
+            return preg_replace_callback($exp,'parseBbCode','<em>'.$arg[2].'</em>');
+        case 'gras' : 
+            return preg_replace_callback($exp,'parseBbCode','<strong>'.$arg[2].'</strong>');
+    }
+
+    echo 'erreur';
+    
 }

@@ -1,5 +1,6 @@
 <?php
 
+ob_start();
 require_once("bibli_generale.php");
 
 // --- Fonctions locales ---
@@ -21,7 +22,7 @@ function fpl_make_comments($articleData){
     foreach($articleData as $comment){
         fp_begin_tag('li');
             fp_begin_tag('p');
-                echo 'Commentaire de <strong>',htmlspecialchars($comment['coAuteur']),'</strong>, le ',htmlspecialchars($comment['coDate']);
+                echo 'Commentaire de <strong>',htmlspecialchars($comment['coAuteur']),'</strong>, le ',fp_date_format(htmlspecialchars($comment['coDate']));
             fp_end_tag('p');
 
             fp_begin_tag('blockquote');
@@ -33,8 +34,8 @@ function fpl_make_comments($articleData){
     fp_end_tag('ul');
 }
 
-// --- Vérification de l'id et intéractions base de données
 
+// --- Vérification de l'id et intéractions base de données ---
 
 if(count($_GET) != 1 || !isset($_GET['id'])){ // Si d'autres clés sont présentes ou que la clé 'id' est absente -> piratage
     header('Location: ../index.php');
@@ -51,18 +52,20 @@ if(!fp_str_isInt($id)){
     $query = 'SELECT * 
             FROM article INNER JOIN utilisateur
             ON utPseudo = arAuteur LEFT JOIN commentaire ON coArticle = arID
-            WHERE arID = '.mysqli_escape_string($db,$id);
+            WHERE arID = '.mysqli_escape_string($db,$id).
+            ' ORDER BY coDate DESC';
     $data = fp_queryToArray($db,$query );
     if($data == null){
         $codeErr = 2;
     }
+    mysqli_close($db);
 }
 
 
 
 // --- Génération de la page ---
 
-fp_begin_gaz_page("L'actu",'L\'actu',1,'../styles/gazette.css',1);
+fp_begin_gaz_page("L'actu",'L\'actu',1,'../styles/gazette.css',0);
 
     fp_begin_tag('main',['id'=>'article']);
 
@@ -70,9 +73,16 @@ fp_begin_gaz_page("L'actu",'L\'actu',1,'../styles/gazette.css',1);
 
             $titre = htmlspecialchars($data[0]['arTitre']);
             $texte = htmlspecialchars($data[0]['arTexte']);
-            $initPrenom = strtoupper(substr(htmlspecialchars($data[0]['utPrenom']),0,1));
-            $nom = htmlspecialchars($data[0]['utNom']);
-            $dateP = htmlspecialchars($data[0]['arDatePublication']);
+            $initPrenom = mb_strtoupper(mb_substr(htmlspecialchars($data[0]['utPrenom']),0,1,ENCODE),ENCODE);
+            $nom = mb_convert_case(htmlspecialchars($data[0]['utNom']),MB_CASE_TITLE,ENCODE);
+
+            $dateP = fp_date_format(htmlspecialchars($data[0]['arDatePublication']));
+            $dateM = htmlspecialchars($data[0]['arDateModification']);
+            $dateM = ($dateM == null)?false:fp_date_format($dateM);
+            
+            $status = htmlspecialchars($data[0]['utStatut']);
+            $link = ($status == 3 || $status == 1) ? 'redaction.php#'.htmlspecialchars($data[0]['utPseudo']):false;
+            
            
             fp_begin_tag('article');
 
@@ -83,13 +93,23 @@ fp_begin_gaz_page("L'actu",'L\'actu',1,'../styles/gazette.css',1);
                 if(file_exists('../upload/'.$id.'.jpg')){
                     fp_begin_tag('img',['src'=>'../upload/'.$id.'.jpg' , 'alt'=>$titre]);
                 }
-
-                echo $texte;
+                
+                
+                echo parseBbCode($texte);
 
                 fp_begin_tag('footer');
+
                     fp_begin_tag('p');
-                        echo 'Par <a href="redaction.php">',$initPrenom,'.',$nom,'</a>. Publié le ',$dateP;
+                        if($link){
+                            echo 'Par <a href="',$link,'">',$initPrenom,'.',$nom,'</a>. Publié le ',$dateP;
+                        }else{
+                            echo 'Par ',$initPrenom,'.',$nom,'. Publié le ',$dateP;
+                        }
+                        if($dateM){
+                            echo ', modifié le ',$dateM;
+                        }
                     fp_end_tag('p');
+
                 fp_end_tag('footer');
 
             fp_end_tag('article');

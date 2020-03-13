@@ -10,12 +10,30 @@ require_once("php/bibli_generale.php");
  * @param Array $articleData : Les données de l'article (id+nom)
  */
 function fpl_make_article($articleData){
-    echo '<a href="php/article.php?id=',htmlspecialchars($articleData['arID']),'">',
-            '<figure>',
-                '<img src="upload/',htmlspecialchars($articleData['arID']),'.jpg','" alt="',htmlspecialchars($articleData['arTitre']),'">',
-                '<figcaption>',htmlspecialchars($articleData['arTitre']),'</figcaption>',
-            '</figure>',
-        '</a>';
+    $titre = htmlspecialchars($articleData['arTitre']);
+    if(file_exists('upload/'.htmlspecialchars($articleData['arID']).'.jpg')){
+        $picture = 'upload/'.htmlspecialchars($articleData['arID']).'.jpg';
+    }else{
+        $picture = 'images/none.jpg';
+    }
+
+    fp_begin_tag('a',['href'=>'php/article.php?id='.urlencode(htmlspecialchars($articleData['arID'])).'']);
+
+        fp_begin_tag('figure');
+
+            fp_begin_tag('img',['src'=>$picture,'alt'=>$titre]);
+
+            fp_begin_tag('figcaption');
+                echo $titre;
+            fp_end_tag('figcaption');
+
+        fp_end_tag('figure');
+
+    fp_end_tag('a');
+
+
+
+ 
 }
 
 /**
@@ -129,10 +147,10 @@ mysqli_close($db);
 // --- Génération de la page ---
 
 fp_begin_gaz_page("Accueil","Le site de désinformation n°1 des étudiants en Licence info",0,"styles/gazette.css",2);
-
+    
     fp_begin_tag('main',['id'=>'accueil']);
 
-        fp_begin_gaz_section("A la une");
+        fp_begin_gaz_section("&Agrave; la une");
             fpl_make_article_block($aLaUne);
         fp_end_gaz_section();
 

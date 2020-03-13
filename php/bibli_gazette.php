@@ -4,7 +4,7 @@ define("BD_SERVER","localhost");
 define("BD_NAME","poguet_gazette");
 define("BD_USER","poguet_u");
 define("BD_PASS","poguet_p");
-
+define("ENCODE","UTF-8");
 /**
  * Affiche le menu de navigation
  * @param int $deepness : La profondeur du fichier par rapport au dossier gazette 
@@ -29,7 +29,7 @@ function fp_make_gaz_nav(int $deepness, int $status){
         echo        '<li><a href="',$path,'php/compte.php">jbigoude</a>',
                         '<ul>',
                             '<li><a href="',$path,'php/compte.php">Mon profil</a></li>',
-                            ($status > 0 && $status != 2) ? "<li><a href=\"'$path'php/nouveau.php\">Nouvel article</a></li>":'',
+                            ($status > 0 && $status != 2) ? "<li><a href=\"$path"."php/nouveau.php\">Nouvel article</a></li>":'',
                             ($status > 1) ? "<li><a href=\"$path"."php/administration.php\">Administration</a></li>":'',
                             '<li><a href="',$path,'php/deconnexion.php">Se deconnecter</a></li>',
                         '</ul>',
@@ -76,10 +76,10 @@ function fp_make_gaz_footer(){
 function fp_begin_gaz_page($titleHead,$titleHeader,$deepness,$stylesheet,$status){
     fp_begin_tag('!DOCTYPE html');
     fp_begin_tag('html',['lang'=>'fr']);
-    fp_make_head($titleHead,$stylesheet);
-    fp_begin_tag('body');
-    fp_make_gaz_nav($deepness,$status);
-    fp_make_gaz_header($deepness,$titleHeader);
+        fp_make_head($titleHead,$stylesheet);
+        fp_begin_tag('body');
+            fp_make_gaz_nav($deepness,$status);
+            fp_make_gaz_header($deepness,$titleHeader);
 }
 
 /**
