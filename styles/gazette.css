@@ -98,9 +98,9 @@ body[class='theme'] {
 p {
     text-align: justify;
     font-size: 16px;
-    
 }
-p + p {
+
+p + p, ul + p {
     margin-top : 10px;
 }
 em {
@@ -160,12 +160,6 @@ figcaption{
     
 }
 
-figure{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    
-}
 
 
 
@@ -202,7 +196,6 @@ section {
     box-shadow: 10px 10px 15px 4px black;
     margin-top: 30px ;
     padding:20px;
-    
 }
 
 section h2{
@@ -316,9 +309,15 @@ nav>ul>li:last-child{
 }
 
 /* Affichage de la sous liste */
-nav>ul>li:last-child:hover > ul{
+nav>ul>li:last-child:hover > ul.all{
     height: 160px;
-  
+}
+nav>ul>li:last-child:hover > ul.redacOrAdmin{
+    height: 120px;
+}
+
+nav>ul>li:last-child:hover > ul.simpleUser{
+    height: 80px;
 }
 
 /* Sous liste */
@@ -363,7 +362,7 @@ nav ul>li>ul>li{
     float: right;
     margin: 0px 0px 20px 20px ;
     width: 250px;
-    height: 187.5px;
+    height: 187px;
     border: solid 1px black;
 }
 
@@ -375,29 +374,33 @@ nav ul>li>ul>li{
     font-size: 1.1em;
 }
 
-/* Vidéos */
-aside{
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+#article figure{
+    display: inline-block;
+    margin: 16px;  
 }
 
-/* Liens des votes */
-#liensVote{
+/* Listes */
+article ul, #article section blockquote ul{
     margin-left: 30px;
 }
 
-#liensVote li{
+#article section blockquote ul{
+    list-style-type: disc;
+}
+article ul li{
     margin-top: 4px;
 }
 
-#liensVote li:before{
+article ul li:before{
     content: "\2611\0020";
 }
+
+
 
 /* Footer du main */
 article footer{
     border-top: #909090 solid 2px;
+    padding-top: 4px;
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
@@ -407,6 +410,8 @@ article footer p{
     margin: 0px;
     font-size: 0.9em;
 }
+
+
 
 /* --- Réactions --- */
 #article section {
@@ -470,8 +475,14 @@ h3{
 /* --------------------- PAGE ACCUEIL ---------------------*/
 
 #accueil figure img{
-    width: 90%;
     border: black solid 1px;
+ }
+
+ #accueil figure {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     width: 270px;
  }
  
  #accueil figure img:hover{
@@ -480,7 +491,7 @@ h3{
 
 #accueil section:not(#horoscope){
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 #accueil a:hover{
@@ -515,8 +526,8 @@ h3{
 }
 
 #accueil img{
-    min-width: 260px;
-    min-height: 195.5px;
+    width: 250px;
+    height: 187px;
 }
 
 /* --------------------- PAGE ACTUS ---------------------*/

@@ -22,11 +22,11 @@ function fpl_make_comments($articleData){
     foreach($articleData as $comment){
         fp_begin_tag('li');
             fp_begin_tag('p');
-                echo 'Commentaire de <strong>',htmlspecialchars($comment['coAuteur']),'</strong>, le ',fp_date_format(htmlspecialchars($comment['coDate']));
+                echo 'Commentaire de <strong>',$comment['coAuteur'],'</strong>, le ',fp_date_format($comment['coDate']);
             fp_end_tag('p');
 
             fp_begin_tag('blockquote');
-                echo htmlspecialchars($comment['coTexte']);
+                echo fp_parseBbCode($comment['coTexte']);
             fp_end_tag('blockquote');
         fp_end_tag('li');
     }
@@ -37,7 +37,7 @@ function fpl_make_comments($articleData){
 
 // --- Vérification de l'id et intéractions base de données ---
 
-if(count($_GET) != 1 || !isset($_GET['id'])){ // Si d'autres clés sont présentes ou que la clé 'id' est absente -> piratage
+if(!fp_check_param('get',['id'])){ // Si d'autres clés sont présentes ou que la clé 'id' est absente -> piratage
     header('Location: ../index.php');
     exit(); // --> EXIT : Redirection vers index.php
 }
@@ -45,16 +45,18 @@ if(count($_GET) != 1 || !isset($_GET['id'])){ // Si d'autres clés sont présent
 $codeErr = 0;
 
 $id = $_GET['id'];
+
 if(!fp_str_isInt($id)){
     $codeErr = 1;
 }else{
+    $id = (int)$id;
     $db = fp_bd_connecter();
     $query = 'SELECT * 
             FROM article INNER JOIN utilisateur
             ON utPseudo = arAuteur LEFT JOIN commentaire ON coArticle = arID
             WHERE arID = '.mysqli_escape_string($db,$id).
             ' ORDER BY coDate DESC';
-    $data = fp_queryToArray($db,$query );
+    $data = fp_queryToArray($db,$query);
     if($data == null){
         $codeErr = 2;
     }
@@ -65,23 +67,23 @@ if(!fp_str_isInt($id)){
 
 // --- Génération de la page ---
 
-fp_begin_gaz_page("L'actu",'L\'actu',1,'../styles/gazette.css',0);
+fp_begin_gaz_page('L\'actu','L\'actu',1,'../styles/gazette.css',0);
 
     fp_begin_tag('main',['id'=>'article']);
 
         if($codeErr == 0){ // Affichage de l'article
 
-            $titre = htmlspecialchars($data[0]['arTitre']);
-            $texte = htmlspecialchars($data[0]['arTexte']);
-            $initPrenom = mb_strtoupper(mb_substr(htmlspecialchars($data[0]['utPrenom']),0,1,ENCODE),ENCODE);
-            $nom = mb_convert_case(htmlspecialchars($data[0]['utNom']),MB_CASE_TITLE,ENCODE);
+            $titre = $data[0]['arTitre'];
+            $texte = $data[0]['arTexte'];
+            $initPrenom = mb_strtoupper(mb_substr($data[0]['utPrenom'],0,1,ENCODE),ENCODE);
+            $nom = mb_convert_case($data[0]['utNom'],MB_CASE_TITLE,ENCODE);
 
-            $dateP = fp_date_format(htmlspecialchars($data[0]['arDatePublication']));
-            $dateM = htmlspecialchars($data[0]['arDateModification']);
+            $dateP = fp_date_format($data[0]['arDatePublication']);
+            $dateM = $data[0]['arDateModification'];
             $dateM = ($dateM == null)?false:fp_date_format($dateM);
             
-            $status = htmlspecialchars($data[0]['utStatut']);
-            $link = ($status == 3 || $status == 1) ? 'redaction.php#'.htmlspecialchars($data[0]['utPseudo']):false;
+            $status = $data[0]['utStatut'];
+            $link = ($status == 3 || $status == 1) ? 'redaction.php#'.$data[0]['utPseudo']:false;
             
            
             fp_begin_tag('article');
@@ -95,7 +97,7 @@ fp_begin_gaz_page("L'actu",'L\'actu',1,'../styles/gazette.css',0);
                 }
                 
                 
-                echo parseBbCode($texte);
+                echo fp_parseBbCode(str_replace("\r\n"," ",$texte));
 
                 fp_begin_tag('footer');
 
@@ -105,6 +107,7 @@ fp_begin_gaz_page("L'actu",'L\'actu',1,'../styles/gazette.css',0);
                         }else{
                             echo 'Par ',$initPrenom,'.',$nom,'. Publié le ',$dateP;
                         }
+                        
                         if($dateM){
                             echo ', modifié le ',$dateM;
                         }
@@ -126,21 +129,9 @@ fp_begin_gaz_page("L'actu",'L\'actu',1,'../styles/gazette.css',0);
 
         }else{ // Affichage de la page d'erreur
             
-            fp_begin_gaz_section('Oups, il y a une erreur...');
-
-                fp_begin_tag('p');
-                    echo 'La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :';
-                fp_end_tag('p');
-
-                fp_begin_tag('blockquote');
-                    if($codeErr == 1){
-                        echo 'Identifiant d\'article non reconnu';
-                    }elseif($codeErr == 2){
-                        echo 'Aucun article ne correspond à l\'identifiant';
-                    }
-                fp_end_tag('blockquote');
-
-            fp_end_gaz_section();
+           $errorMsg = ($codeErr == 1) ? "Identifiant d'article invalide"  :"Aucun n'article ne correspond à cet identifiant";
+            
+           fp_make_error($errorMsg);
         }
 
     fp_end_tag('main');

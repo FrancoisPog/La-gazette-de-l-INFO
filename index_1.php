@@ -10,7 +10,7 @@ require_once("php/bibli_generale.php");
 function make_article($articleData){
     echo '<a href="php/article.php?id=',$articleData['arID'],'">',
             '<figure>',
-                '<img src="upload/',$articleData['arID'],'.jpg','" alt="',$articleData['arTitre'],'">',
+                '<img src="upload/',$articleData['arID'],'.jpg','" alt="', preg_replace("(\")","\\\"" ,$articleData['arTitre']),'">',
                 '<figcaption>',$articleData['arTitre'],'</figcaption>',
             '</figure>',
         '</a>';
@@ -96,7 +96,7 @@ $infoBrulante[] = array('arTitre'=>'Sondage : allez-vous réussir votre année ?
 $infoBrulante[] = array('arTitre'=>'Une famille de pingouins s\'installe dans l\'amphi B', 'arID'=>'7');
 $infoBrulante[] = array('arTitre'=>'Le Président Macron obtient sa Licence d\'Informatique en EAD', 'arID'=>'3');
 
-$incontournables[] = array('arTitre'=>'Il leur avait annoncé "Je vais vous défoncer" l\'enseignant relaxés','arID'=>'2');
+$incontournables[] = array('arTitre'=>"Il leur avait annoncé &#x22;Je vais vous défoncer&#x22; l'enseignant relaxés",'arID'=>'2');
 $incontournables[] = array('arTitre'=>'Donald Trump veut importer les CMI aux Etats-Unis','arID'=>'4');
 $incontournables[] = array('arTitre'=>'Le calendier des Dieux de la Licence bientôt disponible','arID'=>'5');
 

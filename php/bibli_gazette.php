@@ -5,6 +5,7 @@ define("BD_NAME","poguet_gazette");
 define("BD_USER","poguet_u");
 define("BD_PASS","poguet_p");
 define("ENCODE","UTF-8");
+
 /**
  * Affiche le menu de navigation
  * @param int $deepness : La profondeur du fichier par rapport au dossier gazette 
@@ -16,6 +17,13 @@ function fp_make_gaz_nav(int $deepness, int $status){
         $path.="../";
     }
     
+    if($status == 3){
+        $height = "all";
+    }else if($status == 2 || $status == 1){
+        $height = "redacOrAdmin";
+    }else{
+        $height = "simpleUser";
+    }
     echo    '<nav>',
                 '<ul>',
                     '<li><a href="',$path,'index.php">Accueil</a></li>',
@@ -27,7 +35,7 @@ function fp_make_gaz_nav(int $deepness, int $status){
         echo        '<li><a href="',$path,'php/connexion.php">Se connecter</a></li>';
     }else{
         echo        '<li><a href="',$path,'php/compte.php">jbigoude</a>',
-                        '<ul>',
+                        '<ul class="'.$height.'">',
                             '<li><a href="',$path,'php/compte.php">Mon profil</a></li>',
                             ($status > 0 && $status != 2) ? "<li><a href=\"$path"."php/nouveau.php\">Nouvel article</a></li>":'',
                             ($status > 1) ? "<li><a href=\"$path"."php/administration.php\">Administration</a></li>":'',
@@ -86,8 +94,8 @@ function fp_begin_gaz_page($titleHead,$titleHeader,$deepness,$stylesheet,$status
  * Affiche la fin d'une page du site
  */
 function fp_end_gaz_page(){
-    fp_make_gaz_footer();
-    fp_end_tag('body');
+            fp_make_gaz_footer();
+        fp_end_tag('body');
     fp_end_tag('html');
 }
 
@@ -98,7 +106,9 @@ function fp_end_gaz_page(){
  */
 function fp_begin_gaz_section($title,$attributs=[]){
     fp_begin_tag('section',$attributs);
-    echo '<h2>',$title,'</h2>';
+        fp_begin_tag('h2');
+            echo $title;
+        fp_end_tag('h2');
 }
 
 /**
@@ -106,4 +116,19 @@ function fp_begin_gaz_section($title,$attributs=[]){
  */
 function fp_end_gaz_section(){
     fp_end_tag('section');
+}
+
+
+function fp_make_error($msg){
+    fp_begin_gaz_section('Oups, il y a une erreur...');
+
+    fp_begin_tag('p');
+        echo 'La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :';
+    fp_end_tag('p');
+
+    fp_begin_tag('blockquote');
+        echo $msg;
+    fp_end_tag('blockquote');
+
+fp_end_gaz_section();
 }

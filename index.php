@@ -10,14 +10,14 @@ require_once("php/bibli_generale.php");
  * @param Array $articleData : Les données de l'article (id+nom)
  */
 function fpl_make_article($articleData){
-    $titre = htmlspecialchars($articleData['arTitre']);
-    if(file_exists('upload/'.htmlspecialchars($articleData['arID']).'.jpg')){
-        $picture = 'upload/'.htmlspecialchars($articleData['arID']).'.jpg';
+    $titre = $articleData['arTitre'];
+    if(file_exists('upload/'.$articleData['arID']).'.jpg'){
+        $picture = 'upload/'.$articleData['arID'].'.jpg';
     }else{
         $picture = 'images/none.jpg';
     }
 
-    fp_begin_tag('a',['href'=>'php/article.php?id='.urlencode(htmlspecialchars($articleData['arID'])).'']);
+    fp_begin_tag('a',['href'=>'php/article.php?id='.urlencode($articleData['arID']).'']);
 
         fp_begin_tag('figure');
 
@@ -106,47 +106,72 @@ function fpl_make_horoscope(){
             '</p>';
 }
 
+/**
+ * Fonction retournant un tableau de 3 articles différents de ceux des deux premieres sections
+ * @param Array $articles La liste d'articles
+ * @param Array $aLaUne Les articles présents dans la première section
+ * @param Array $infoBrulante Les articles présents dans la deuxième section
+ * @return Array Les 3 articles choisis
+ */
+function fp_select_articles_incontournable($articles,$aLaUne,$infoBrulante){
+    foreach($articles as $value){
+        foreach($aLaUne as $article){
+            if($article['arID'] == $value['arID']){
+                continue 2;
+            }
+        }
+        foreach($infoBrulante as $article){
+            if($article['arID'] == $value['arID']){
+                continue 2;
+            }
+        }
+        $incontournables[] = $value;
+        if(count($incontournables)==3){
+            break;
+        }
+    }
+    return $incontournables;
+}
 
 
-// --- Interaction base de données --- 
+// --- Interactions base de données --- 
 
 $db = fp_bd_connecter();
 
-$query = 'SELECT arID,arTitre 
-            FROM article
-            ORDER BY arDatePublication DESC
-            LIMIT 3';
+$query = '('.'SELECT arID, arTitre, 1 AS type
+                FROM article
+                ORDER BY arDatePublication DESC
+                LIMIT 0, 3)
+                UNION
+                    (SELECT arID, arTitre, 2 AS type
+                    FROM article
+                    LEFT OUTER JOIN commentaire ON coArticle = arID
+                    GROUP BY arID
+                    ORDER BY COUNT(coArticle) DESC, rand()
+                    LIMIT 0, 3)
+                    UNION
+                        (SELECT arID, arTitre, 3 AS type
+                        FROM article
+                        ORDER BY rand()
+                        LIMIT 0,9) 
+                ORDER BY type ';
 
-$aLaUne = fp_queryToArray($db,$query);
-
-$query = 'SELECT arTitre, COUNT(coID), arID
-            FROM article INNER JOIN commentaire
-            ON arID = coArticle
-            GROUP BY arTitre
-            ORDER BY 2 DESC, rand()
-            LIMIT 3';
-
-$infoBrulante = fp_queryToArray($db,$query);
-
-$query = 'SELECT arTitre, arID
-            FROM article
-            WHERE arID <>'. mysqli_real_escape_string($db,$aLaUne[0]['arID']).' '.
-            'AND arID <>'. mysqli_real_escape_string($db,$aLaUne[1]['arID']).' '.
-            'AND arID <>'. mysqli_real_escape_string($db,$aLaUne[2]['arID']).' '.
-            'AND arID <>'. mysqli_real_escape_string($db,$infoBrulante[0]['arID']).' '.
-            'AND arID <>'. mysqli_real_escape_string($db,$infoBrulante[1]['arID']).' '.
-            'AND arID <>'. mysqli_real_escape_string($db,$infoBrulante[2]['arID']).' '.
-            'ORDER BY rand()
-            LIMIT 3';
-$incontournables = fp_queryToArray($db,$query);
-            
+$res = fp_queryToArray($db,$query);
 mysqli_close($db);
+
+$aLaUne = array_slice($res,0,3);
+$infoBrulante = array_slice($res,3,3);
+$incontournables = fp_select_articles_incontournable(array_slice($res,6,9),$aLaUne,$infoBrulante);
+
+
+            
+
 
 
 
 // --- Génération de la page ---
 
-fp_begin_gaz_page("Accueil","Le site de désinformation n°1 des étudiants en Licence info",0,"styles/gazette.css",2);
+fp_begin_gaz_page("Accueil","Le site de désinformation n°1 des étudiants en Licence info",0,"styles/gazette.css",1);
     
     fp_begin_tag('main',['id'=>'accueil']);
 

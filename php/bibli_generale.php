@@ -2,8 +2,9 @@
 
 require_once("bibli_gazette.php");
 
-// FONCTIONS BASE DE DONNEES 
-
+// **************************************************************************
+//                      FONCTIONS BASE DE DONNEES 
+// **************************************************************************
 //____________________________________________________________________________
 /** 
  *  Ouverture de la connexion à la base de données
@@ -101,22 +102,30 @@ function fp_bd_erreur($bd, $sql) {
 
 /**
  * Execute une requete 'SELECT' et retourne le résultat dans un tableau de tableau associatif
- * @param Object $db : L'identifiant de la base de données
- * @param String $query : La requête à executer
+ * @param Object $db L'identifiant de la base de données
+ * @param String $query La requête à executer
  * @return Array Un tableau contenant les résultats, null si aucun résultat
  */
 function fp_queryToArray($db,$query){
     $query = mysqli_query($db,$query) or fp_bd_erreur($db,$query);
     $array = null;
     while($data = mysqli_fetch_assoc($query)){
-        $array[] = $data;
+        $array[] = fp_protect_exits($data);
     }
     mysqli_free_result($query);
     return $array;
 }
 
-// FONCTION DE GENERATION CODE HTML
 
+
+
+
+
+
+
+// **************************************************************************
+//                  FONCTION DE GENERATION CODE HTML
+// **************************************************************************
 /**
  * Affiche le head d'un site
  * @param String $title : Le titre de la page
@@ -133,7 +142,7 @@ function fp_make_head($title,$stylesheet){
 /**
  * Affiche la balise ouvrante d'un tag donné
  * @param String $tagName : Le nom de la balise
- * @param Array $attributs : La liste des attributs et leur valeurs de la balise
+ * @param AssociativeArray $attributs : La liste des attributs et leur valeurs de la balise
  */
 function fp_begin_tag($tagName,$attributs=[]){
     echo '<',$tagName,' ';
@@ -151,7 +160,16 @@ function fp_end_tag($tagName){
     echo '</',$tagName,'>';
 }
 
-// AUTRES FONCTIONS
+
+
+
+
+
+
+
+// **************************************************************************
+//                               AUTRES FONCTIONS
+// **************************************************************************
 /**
  * Check is a string is an int
  * @param String $str The string to test
@@ -162,7 +180,7 @@ function fp_str_isInt($str){
 }
 
 /**
- * Parse une date au format AAAAMMJJHHmm 
+ * Parse une date du format AAAAMMJJHHmm au format "14 mai 2000 à 19h15"
  * @param int $date La date à parser
  * @return String 
  */
@@ -171,33 +189,97 @@ function fp_date_format($date){
     return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
 }
 
-function parseBbCode($arg){
+
+/**
+ * Fonction d'analyse syntaxique d'un texte BBCode pour le parser en html (IN PROGRESS)
+ * @param String $arg Le texte en BBCode.
+ * N.B. Cette fonction est récursive et lors d'un appel interne, $arg est un tableau de String.
+ * @return String Le texte en html
+ */
+function fp_parseBbCode($arg){
     $exp = array();
     $exp[] = '/\[(p|citation|gras|it|item|liste)\](.+?)\[\/\1\]/i';
-    $exp[] = '/\[(br|youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+ [^\]]*)\]/i';
+    $exp[] = '/\[(br|youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+( [^\]]*)?)\]/i';
+    $exp[] = '/\[(a):([^\]]*)\][^\[]+\[\/\1\]/i';
+    $exp[] = '/\[#x?[0-9a-fA-F]+\]/';
     
     if(is_string($arg)){
-        return preg_replace_callback($exp,'parseBbCode',$arg);
+        return preg_replace_callback($exp,'fp_parseBbCode',$arg);
+    }
+    
+    // youtube avec legende
+    if(preg_match('/^\[youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+ [^\]]+\]$/i',$arg[0])){
+        return preg_replace('/youtube:(\d+):(\d+):((https:\/\/)?(www\.)?youtube\.com\/[^ \]]+) ([^\]]*)$/i','<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\6</figcaption></figure>',$arg[1]);
+        
     }
 
-    //var_dump($arg);
+    // youtube sans légende
+    if(preg_match('/^\[youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+\]/i',$arg[0])){
+        return preg_replace('/youtube:(\d+):(\d+):((https:\/\/)?(www\.)?youtube\.com\/[^ \]]+)/i','<iframe width="\1" height="\2" src="\3" allowfullscreen></iframe>',$arg[1]);
+        
+    }
+
+    // Lien
+    if(preg_match('/^\[a:([^\]])*\][^\[]+\[\/a\]$/i',$arg[0])){
+        return preg_replace_callback($exp,'fp_parseBbCode',preg_replace('/\[a:([^\]]*)\]([^\[]+)\[\/a\]/i','<a href="\1">\2</a>',$arg[0]));
+       
+    }
+
+    // Code unicode 
+    if(preg_match('/^\[#x?[0-9a-fA-F]+\]$/',$arg[0])){
+        return preg_replace('/\[#(x)?([0-9a-fA-F]+)\]/','&#\1\2;',$arg[0]);
+    }
+
+    
+    // Balises simples
     switch ($arg[1]) {
         case "br":
             return "<br>";
         case 'p' :
-            return preg_replace_callback($exp,'parseBbCode','<p>'.$arg[2].'</p>');
+            return preg_replace_callback($exp,'fp_parseBbCode','<p>'.$arg[2].'</p>');
         case 'citation' : 
-            return preg_replace_callback($exp,'parseBbCode','<blockquote>'.$arg[2].'</blockquote>');
+            return preg_replace_callback($exp,'fp_parseBbCode','<blockquote>'.$arg[2].'</blockquote>');
         case 'liste' : 
-            return preg_replace_callback($exp,'parseBbCode','<ul>'.$arg[2].'</ul>');
+            return preg_replace_callback($exp,'fp_parseBbCode','<ul>'.$arg[2].'</ul>');
         case 'item' : 
-            return preg_replace_callback($exp,'parseBbCode','<li>'.$arg[2].'</li>');
+            return preg_replace_callback($exp,'fp_parseBbCode','<li>'.$arg[2].'</li>');
         case 'it' : 
-            return preg_replace_callback($exp,'parseBbCode','<em>'.$arg[2].'</em>');
+            return preg_replace_callback($exp,'fp_parseBbCode','<em>'.$arg[2].'</em>');
         case 'gras' : 
-            return preg_replace_callback($exp,'parseBbCode','<strong>'.$arg[2].'</strong>');
+            return preg_replace_callback($exp,'fp_parseBbCode','<strong>'.$arg[2].'</strong>');
     }
 
     echo 'erreur';
     
+}
+
+function fp_protect_exits($content, $i=0) {
+    if (is_array($content)) {
+        foreach ($content as &$value) { 
+            $value = fp_protect_exits($value, ++$i);   
+        }
+        unset ($value); // à ne pas oublier (de façon générale)
+        return $content;
+    }
+    if (is_string($content)){
+        $protected_content = htmlspecialchars($content);
+        return $protected_content;
+    }
+    return $content;
+}
+
+function fp_check_param($tab_global, $cles_obligatoires, $cles_facultatives = array()){
+    $x = strtolower($tab_global) == 'post' ? $_POST : $_GET;
+
+    $x = array_keys($x);
+    // $cles_obligatoires doit être inclus dans $x
+    if (count(array_diff($cles_obligatoires, $x)) > 0){
+        return false;
+    }
+    // $x doit être inclus dans $cles_obligatoires Union $cles_facultatives
+    if (count(array_diff($x, array_merge($cles_obligatoires,$cles_facultatives))) > 0){
+        return false;
+    }
+    
+    return true;
 }
