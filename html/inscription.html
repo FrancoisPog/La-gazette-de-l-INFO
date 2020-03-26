@@ -36,30 +36,30 @@
             <form action="../php/inscription.php" method="POST">
                 <table>
                     <tr>
-                        <td><label for="gazPseudo">Choisissez un pseudo :</label></td>
-                        <td><input type="text" id="gazPseudo" name="gazPseudo" placeholder="6 caractère minimum"></td>
+                        <td><label for="pseudo">Choisissez un pseudo :</label></td>
+                        <td><input type="text" id="pseudo" name="pseudo" placeholder="6 caractère minimum" required></td>
                     </tr>
                     <tr>
                         <td><label>Votre civilité : </label></td>
                         <td>
-                            <input type="radio" name="gazCivilite" id="monsieur" value="Monsieur" checked>
+                            <input type="radio" name="radSexe" id="monsieur" value="h" required >
                             <label for="monsieur">Monsieur</label>
-                            <input type="radio" name="gazCivilite" id="madame" value="Madame">
+                            <input type="radio" name="radSexe" id="madame" value="f">
                             <label for="madame">Madame</label>
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="gazNom">Votre nom :</label></td>
-                        <td><input type="text" id="gazNom" name="gazNom"></td>
+                        <td><label for="nom">Votre nom :</label></td>
+                        <td><input type="text" id="nom" name="nom" required></td>
                     </tr>
                     <tr>
-                        <td><label for="gazPrenom">Votre prénom :</label></td>
-                        <td><input type="text" id="gazPrenom" name="gazPrenom"></td>
+                        <td><label for="prenom">Votre prénom :</label></td>
+                        <td><input type="text" id="prenom" name="prenom" required></td>
                     </tr>
                     <tr>
                         <td><label>Votre date de naissance :</label></td>
                         <td>
-                            <select name="gazNaissanceJour">
+                            <select name="naissance_j" required>
                                 <option value="1" selected>1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -93,7 +93,7 @@
                                 <option value="31">31</option>
 
                             </select>
-                            <select name="gazNaissanceMois">
+                            <select name="naissance_m" required>
                                 <option value="1" selected>Janvier</option>
                                 <option value="2">Février</option>
                                 <option value="3">Mars</option>
@@ -107,7 +107,7 @@
                                 <option value="11">Novembre</option>
                                 <option value="12">Décembre</option>
                             </select>
-                            <select name="gazNaissanceAnnee">
+                            <select name="naissance_a" required>
                                 <option value="2020" selected>2020</option>
                                 <option value="2019">2019</option>
                                 <option value="2018">2018</option>
@@ -213,31 +213,31 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="gazMail">Votre email :</label></td>
-                        <td><input type="text" id="gazMail" name="gazMail"></td>
+                        <td><label for="email">Votre email :</label></td>
+                        <td><input type="email" id="email" name="email" required></td>
                     </tr>
                     <tr>
-                        <td><label for="gazPassword">Choisissez un mot de passe :</label></td>
-                        <td><input type="password" id="gazPassword" name="gazPassword"></td>
+                        <td><label for="passe1">Choisissez un mot de passe :</label></td>
+                        <td><input type="password" id="passe1" name="passe1" required></td>
                     </tr>
                     <tr>
-                        <td><label for="gazPasswordConf">Répétez le mot de passe :</label></td>
-                        <td><input type="password" id="gazPasswordConf" name="gazPasswordConf"></td>
+                        <td><label for="passe2">Répétez le mot de passe :</label></td>
+                        <td><input type="password" id="passe2" name="passe2" required></td>
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <input type="checkbox" name="gazCGU" id="gazCGU">
-                            <label for="gazCGU">J'ai lu et j'accepte les conditions générales d'utilisation</label>
+                            <input type="checkbox" name="cbCGU" id="cbCGU" required>
+                            <label for="cbCGU">J'ai lu et j'accepte les conditions générales d'utilisation</label>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <input type="checkbox" name="gazSpam" id="gazSpam" checked>
-                            <label for="gazSpam">J'accepte de recevoir des tonnes de mails pourris</label>
+                            <input type="checkbox" name="cbSpam" id="cbSpam" checked>
+                            <label for="cbSpam">J'accepte de recevoir des tonnes de mails pourris</label>
                         </td>
                     </tr>
                     <tr>
-                        <td><input type="submit" value="S'inscrire"></td>
+                        <td><input type="submit" value="S'inscrire" name="btnInscription"></td>
                         <td><input type="reset" value="Réinitialiser"></td>
                     </tr>
                 </table>

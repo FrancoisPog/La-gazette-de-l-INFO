@@ -587,7 +587,7 @@ h3{
 }
 
 
-#inscription input[type="text"],#inscription input[type="password"]{
+#inscription input[type="text"],#inscription input[type="password"], #inscription input[type="email"]{
     width: 200px;
     padding: 3px;
 }
