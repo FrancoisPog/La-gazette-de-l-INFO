@@ -32,7 +32,7 @@ function fp_db_connecter() {
         //mysqli_set_charset() définit le jeu de caractères par défaut à utiliser lors de l'envoi
         //de données depuis et vers le serveur de base de données.
         mysqli_set_charset($conn, 'utf8') 
-        or fp_db_erreur_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
+        or fp_db_error_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
         return $conn;     // ===> Sortie connexion OK
     }
     // Erreur de connexion
@@ -47,7 +47,7 @@ function fp_db_connecter() {
             //appel de htmlentities() pour que les éventuels accents s'affiche correctement
             .'<br>'.htmlentities(mysqli_connect_error(), ENT_QUOTES, 'ISO-8859-1')  
             .'</div>';
-    fp_db_erreur_exit($msg);
+    fp_db_error_exit($msg);
 }
 
 /**
@@ -60,7 +60,7 @@ function fp_db_connecter() {
  *
  * @param string	$msg	Message d'erreur à afficher
  */
-function fp_db_erreur_exit($msg) {
+function fp_db_error_exit($msg) {
     ob_end_clean();	// Suppression de tout ce qui a pu être déja généré
 
     echo    '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">',
@@ -83,7 +83,7 @@ function fp_db_erreur_exit($msg) {
  * @param objet		$bd		Connecteur sur la bd ouverte
  * @param string	$sql	requête SQL provoquant l'erreur
  */
-function fp_db_erreur($bd, $sql) {
+function fp_db_error($bd, $sql) {
     $errNum = mysqli_errno($bd);
     $errTxt = mysqli_error($bd);
 
@@ -109,7 +109,7 @@ function fp_db_erreur($bd, $sql) {
 
     $msg .= '</table>';
 
-    fp_db_erreur_exit($msg);	// ==> ARRET DU SCRIPT
+    fp_db_error_exit($msg);	// ==> ARRET DU SCRIPT
 }
 
 /**
@@ -119,10 +119,10 @@ function fp_db_erreur($bd, $sql) {
  * @return Array        The result in an array
  */
 function fp_db_execute($db,$query,$protect = true,$insert = false){
-    $query = mysqli_query($db,$query) or fp_db_erreur($db,$query);
+    $query = mysqli_query($db,$query) or fp_db_error($db,$query);
     
     if($insert){
-        mysqli_free_result($query);
+        //mysqli_free_result($query);
         return $query;
     }
 
@@ -238,6 +238,86 @@ function fp_html_parseBbCode($arg){
 
     echo 'erreur';
     
+}
+
+
+// FORMS
+function fp_print_numbersList($name,$min,$max,$step,$default){  
+    if($min > $max ){
+        throw new Exception('[fp_print_numbersList] : The min value can\'t be greater than the max.');
+    }
+    if($step == 0){
+        throw new Exception('[fp_print_numbersList] : The step value can\'t be 0.');
+    }
+    echo '<select name="',$name,'">';
+    $i = ($step > 0)?$min:$max;
+    while(($step > 0) ? ($i <= $max) : ($i >= $min)){
+        echo '<option value="',$i,'" ',($default == $i)?'selected':'','>',$i,'</option>';
+        $i = $i + $step;
+    }
+    echo '</select>';
+}
+
+function fp_print_list($name,$values,$default){
+    echo '<select name="',$name,'">';
+    foreach($values as $key => $value){
+        echo '<option value="',$value,'" ',($default == $value)?'selected':'','>',$key,'</option>';
+    }
+    echo '</select>';
+}
+
+
+function fp_print_monthsList($name,$default){
+    fp_print_list($name,['Janvier' => 1, 'Février' => 2,'Mars' => 3, 'Avril' => 4,'Mai' => 5, 'Juin' => 6,'Juillet' => 7, 'Août' => 8,'Septembre' => 9, 'Octobre' => 10,'Novembre' => 11, 'Décembre' => 12,],$default);
+}
+
+function fp_print_datesList($name,$minYear,$maxYear,$defaultDay, $defaultMonth,$defaultYear,$yearsStep){
+    $today=  explode('-',date('d-m-Y'));
+
+    fp_print_numbersList($name.'_j',1,31,1,($defaultDay==0)?$today[0]:$defaultDay);
+    fp_print_monthsList($name.'_m',($defaultMonth==0)?$today[1]:$defaultMonth);
+    fp_print_numbersList($name.'_a',$minYear,($maxYear == 0)?$today[2]:$maxYear,$yearsStep,($defaultYear==0)?$today[2]:$defaultYear);
+}
+
+function fp_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay, $defaultMonth,$defaultYear,$yearsStep){
+    echo '<tr>',
+            '<td><label>',$label,'</label></td>',
+            '<td>';
+                fp_print_datesList($name,$minYear,$maxYear,$defaultDay,$defaultMonth,$defaultYear,$yearsStep);
+    echo    '</td>',
+        '</tr>';
+
+
+}
+
+function fp_print_inputLine($label,$type,$name,$required =true,$placeholder = false,$value = false){
+    if($type != 'text' && $type != 'password' && $type != 'email'){
+        throw new Exception('[fp_print_inputLine] : The input type must be "text", "password" or "email".');
+    }
+    echo '<tr>',
+            '<td><label for="',$name,'">',$label,'</label></td>',
+            '<td><input id="',$name,'" type="',$type,'" name="',$name,'" ',($required)?'required':'',' ',($placeholder)?('placeholder="'.$placeholder.'"'):(''),' ',($value)?('value="'.$value.'"'):(''),'>',
+        '</tr>';
+}
+
+function fp_print_inputRadio($name,$values,$required,$default){
+    foreach($values as $label => $value){
+        echo    '<label for="',$value,'"><input type="radio" name="',$name,'" id="',$value,'" value="',$value,'" ',($required)?'required':'',' ',($value == $default)?'checked':'','>',$label,'</label>';        
+    }
+}
+
+function fp_print_inputRadioLine($label,$name,$values,$required = true,$default = false){
+    echo    '<tr>',
+                '<td><label>',$label,'</label></td>',
+                '<td>';
+                    fp_print_inputRadio($name,$values,$required,$default);
+    echo        '</td>',
+            '</tr>';
+}
+
+function fp_print_inputCheckbox($name,$label,$required = true,$checked = false){
+    echo '<input type="checkbox" name="',$name,'" id="',$name,'" ',($required)?'required':'',' ',($checked)?'checked':'','>',
+            '<label for="',$name,'">',$label,'</label>';
 }
 
 // STR

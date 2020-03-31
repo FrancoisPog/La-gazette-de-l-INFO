@@ -1,2 +1,4 @@
-- gerer retour ligne article
-
+inscription.php
+- Réafficher valeurs saisies en cas d'erreurs : htmlentities()
+- Vérifier la taille des champs < taille db
+- Optimiser requetes enregistrement

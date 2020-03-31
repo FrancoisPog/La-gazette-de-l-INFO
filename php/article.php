@@ -9,7 +9,7 @@ require_once("bibli_generale.php");
  * Affiche la liste des commentaires d'un article
  * @param Array $articleData Les données de l'article
  */
-function fpl_make_comments($articleData){
+function fpl_print_comments($articleData){
     if($articleData[0]['coID'] == null){
         echo '<p>Il n\'y a pas encore de commentaire pour cette article !</p>';
         return;
@@ -27,7 +27,7 @@ function fpl_make_comments($articleData){
     echo '</ul>';
 }
 
-function fpl_make_article($data){
+function fpl_print_article($data){
     $auteur =  mb_strtoupper(mb_substr($data[0]['utPrenom'],0,1,ENCODE),ENCODE).'.'.mb_convert_case($data[0]['utNom'],MB_CASE_TITLE,ENCODE);
 
     $auteur = fp_db_protect_exits($auteur);
@@ -47,36 +47,33 @@ function fpl_make_article($data){
     echo    '<article>',
                 '<h2>',$titre,'</h2>';
 
-    if(file_exists('../upload/'.$data[0]['arID'].'.jpg')){
-            echo '<img src="../upload/',$data[0]['arID'],'.jpg" alt="',$titre,'" >';
-    }
+                    if(file_exists('../upload/'.$data[0]['arID'].'.jpg')){
+                        echo '<img src="../upload/',$data[0]['arID'],'.jpg" alt="',$titre,'" >';
+                    }
         
-    echo fp_html_parseBbCode(str_replace("\r\n"," ",$texte));
+                echo fp_html_parseBbCode(str_replace("\r\n"," ",$texte)),
 
+                '<footer>',
+                    '<p>';
 
-    echo    '<footer>',
-                '<p>';
+                        if($link){
+                            echo 'Par <a href="',$link,'">',$auteur,'</a>. Publié le ',$dateP;
+                        }else{
+                            echo 'Par ',$auteur,'. Publié le ',$dateP;
+                        }
+                        
+                        if($dateM){
+                            echo ', modifié le ',$dateM;
+                        }
 
-    if($link){
-        echo 'Par <a href="',$link,'">',$auteur,'</a>. Publié le ',$dateP;
-    }else{
-        echo 'Par ',$auteur,'. Publié le ',$dateP;
-    }
-    
-    if($dateM){
-        echo ', modifié le ',$dateM;
-    }
-
-    echo        '</p>',
-            '</footer>',
-        '</article>',
-        '<section>',
-            '<h2>Réactions</h2>';
-
-            fpl_make_comments($data);
-
-    echo    '<p><a href="connexion.php"> Connectez-vous</a> ou <a href="inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p>',
-        '</section>';
+    echo            '</p>',
+                '</footer>',
+            '</article>',
+            '<section>',
+                '<h2>Réactions</h2>',
+                fpl_print_comments($data),
+                '<p><a href="connexion.php"> Connectez-vous</a> ou <a href="inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p>',
+            '</section>';
                 
 
            
@@ -118,7 +115,7 @@ if(!fp_str_isInt($id)){
 fp_print_beginPage('article','L\'actu',1,0);
 
     if($codeErr == 0){ // Affichage de l'article
-        fpl_make_article($data);
+        fpl_print_article($data);
     }else{ // Affichage de la page d'erreur
         $errorMsg = ($codeErr == 1) ? "Identifiant d'article invalide"  :"Aucun n'article ne correspond à cet identifiant";
         fp_make_error($errorMsg);

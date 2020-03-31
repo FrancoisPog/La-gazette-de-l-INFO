@@ -1,22 +1,22 @@
 <?php
 require_once("bibli_generale.php");
 
-// Affichage de $_POST avec foreach
+// Print $_POST with foreach
 foreach($_POST as $key => $value){
     echo $key.' : '.$value.'<br/>';
 }
 
-// Affichage de $_POST avec var_dump()
+// Print $_POST with var_dump()
 var_dump($_POST);
 
-// Affichage de $_POST avec print_r
+// Print $_POST with print_r
 echo '<pre>',print_r($_POST),'</pre>';
 
 
-/* Vérification des arguments
-    Seule la clé de la checkbox concernant les spams peut être absente, en effet toutes les autres
-    sont obligatoire à l'inscription et l'attribut 'required' est positionné.
-    Donc si elles sont absentes, --> piratage .
+/* 
+    Only the 'spam check box' key may be missing, 
+    indeed all others are required for registration and the "required" attribute is set.
+    So, if they are absent, -> hacking.
 */
 
 $mandatoryKeys = ['pseudo','nom','prenom','naissance_j','naissance_m', 'naissance_a','email','passe1','passe2', 'cbCGU','btnInscription','radSexe'];

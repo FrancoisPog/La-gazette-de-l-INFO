@@ -1,0 +1,32 @@
+function vpl_extract_articles() {
+  // Connexion à la base de donnée et requête
+  $bd = vp_bd_connecter();
+  $sql = 'blabla la requête';
+  $res = mysqli_query($bd,$sql) or vp_bd_erreur($bd,$sql);
+
+  $result = array();
+  $arIDs = array();
+  $ar_number = 0;
+  while($data = mysqli_fetch_assoc($res)) {
+    switch($data['type']) {
+      case 1:
+        $result[0][] = $data;
+        $arIDs[] = $data['arID'];
+        break;
+      case 2:
+        $result[1][] = $data;
+        $arIDs[] = $data['arID'];
+        break;
+      case 3:
+        if(!in_array($data['arID'], $arIDs) && $ar_number++ < 3) {
+          $result[2][] = $data;
+        }
+        break;
+    }
+  }
+
+  mysqli_free_result($res);
+  mysqli_close($bd);
+
+  return $result;
+}

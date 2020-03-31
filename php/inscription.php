@@ -2,10 +2,7 @@
 require_once("bibli_generale.php");
 ob_start();
 
-
 // --- Local functions
-
-
 
 /**
  * Check is an integer is include between two others
@@ -19,31 +16,6 @@ function fpl_intIsBetween($number,$min,$max){
     }
 
     return $number >= $min && $number <= $max;
-}
-
-/**
- * Print the errors of registration 
- */
-function fpl_print_Errors($errors){
-    echo '<!DOCTYPE html >',
-        '<html lang="fr">',
-            '<head>',
-                '<title>Inscription</title>',
-                '<meta charset="utf-8">',
-            '</head>',
-            '<body>',
-                '<h1>Réception du formulaire \'Inscription utilisateur\'</h1>',
-                '<p>Les erreurs suivantes ont été relevées lors de votre inscription :</p>',
-                '<ul>';
-
-                foreach($errors as $error){
-                    echo '<li>',$error,'</li>';
-                }
-
-
-    echo        '</ul>',
-            '</body>',
-        '</html>';
 }
 
 /**
@@ -83,8 +55,6 @@ function fpl_hackGuard(){
 function fpl_checkInputsError(){
     $_POST = array_map('trim',$_POST);
     $errors = array();
-
-    
 
     // Pseudo
     if(!preg_match("/^[0-9a-z]{4,20}$/",$_POST['pseudo'])){
@@ -172,15 +142,15 @@ function fpl_checkAlreadyUsed($db,$pseudo,$email){
 /**
  * Register a user in the database
  * @param Object $db        The database connecter
- * @param Array $userData   The user's data
+ * @param Array $userData   The user's data (must be protected before the call to this function !)
  * @return Boolean          True is the registration is a success  
  */
 function fpl_registerUser($db,$userData){
     extract($userData);
-
     $dateNaissance = $naissance_a*10000+$naissance_m*100+$naissance_j;
     $spam = (isset($cbSpam)) ? 1:0;
     $passe = password_hash($passe1,PASSWORD_DEFAULT);
+
 
     $query = "INSERT INTO utilisateur SET 
                 utPseudo = '$pseudo', 
@@ -199,47 +169,108 @@ function fpl_registerUser($db,$userData){
 }
 
 
+/**
+ * Execute the registerion 
+ * @return Boolean 0 if there are no error, else it returning an array with the errors
+ */
+function fpl_registeringProcess(){
+    
+    fpl_hackGuard();
+
+    if(($errors = fpl_checkInputsError()) != 0){
+        return $errors;
+    }
 
 
+    // --- Check if the pseudo and email isn't already used
 
+    $db = fp_db_connecter();
 
-// --- Arguments check 
-fpl_hackGuard();
+    $userData = fp_db_protect_entries($db,$_POST);
 
-if(($errors = fpl_checkInputsError()) != 0){
-    fpl_print_Errors($errors);
-    exit(0);
-}
+    if(($errors = fpl_checkAlreadyUsed($db,$userData['pseudo'],$userData['email'])) != 0){
+        mysqli_close($db);
+        return $errors;
+    }
 
+    // Registering of new user
 
-// --- Check if the pseudo and email isn't already used
+    fpl_registerUser($db,$userData);
 
-$db = fp_db_connecter();
-
-$userData = fp_db_protect_entries($db,$_POST);
-
-if(($errors = fpl_checkAlreadyUsed($db,$userData['pseudo'],$userData['email'])) != 0){
-    fpl_print_Errors($errors);
     mysqli_close($db);
-    exit(0);
+
+    header('Location: protegee.php');
+    return 0;
+}
+
+/**
+ * Print the errors of registration 
+ */
+function fpl_print_Errors($errors){
+    echo '<aside id="errors">',
+            '<p>Les erreurs suivantes ont été relevées lors de votre inscription :</p>',
+            '<ul>';
+                foreach($errors as $error){
+                    echo '<li>',$error,'</li>';
+                }
+    echo    '</ul>',
+        '</aside>';
+}
+
+/**
+ * Print the registration forms in the page
+ */
+function fpl_print_Forms($errors = []){
+    
+    //var_dump($_POST);
+    fp_print_beginPage('inscription','Inscription',1,2);
+    echo '<section>',
+            '<h2>Formulaire d\'inscription</h2>',
+            '<p>Pour vous inscrire, remplissez le formulaire ci-dessous.</p>',
+            (count($errors)!=0) ? fpl_print_Errors($errors):'',
+            '<form method="POST" action="inscription.php">',
+                '<table>',
+                    fp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',true,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):false),
+                    fp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],true,($errors)?htmlentities($_POST['radSexe']):false),
+                    fp_print_inputLine('Votre nom :',"text",'nom',true,false,($errors)?htmlentities($_POST['nom']):false),
+                    fp_print_inputLine('Votre prénom :',"text",'prenom',true,false,($errors)?htmlentities($_POST['prenom']):false),
+                    fp_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1),
+                    fp_print_inputLine('Votre email :',"email",'email',true,false,($errors)?htmlentities($_POST['email']):false),
+                    fp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',true,false,($errors)?htmlentities($_POST['passe1']):false),
+                    fp_print_inputLine('Répétez le mot de passe :',"password",'passe2',true,false,($errors)?htmlentities($_POST['passe2']):false),
+                    '<tr>',
+                        '<td colspan="2">',
+                            fp_print_inputCheckbox('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",false,isset($_POST['cbCGU'])),
+                        '</td>',
+                    '</tr>',
+                    '<tr>',
+                        '<td colspan="2">',
+                            fp_print_inputCheckbox('cbSpam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['cbSpam'])),
+                    '</td>',
+                    '</tr>',
+                    '<tr>',
+                        '<td><input type="submit" value="S\'inscrire" name="btnInscription"></td>',
+                        '<td><input type="reset" value="Réinitialiser"></td>',
+                    '</tr>',
+                '</table>',
+            '</form>',
+        '</section>';
+    fp_print_endPage();
 }
 
 
-// Registering of new user
 
-fpl_registerUser($db,$userData);
 
-mysqli_close($db);
 
-echo '<!DOCTYPE html >',
-        '<html lang="fr">',
-            '<head>',
-                '<title>Inscription</title>',
-                '<meta charset="utf-8">',
-            '</head>',
-            '<body>',
-                '<h1>Réception du formulaire d\'inscription</h1> ',
-                '<p>Un nouvel utilisateur a bien été enregistré</p>',
-            '</body>',
-        '</html>';
+// MAIN
 
+if(isset($_POST['btnInscription'])){
+    $res = fpl_registeringProcess();
+    
+    if($res != 0){
+        fpl_print_Forms($res);
+    }
+}else{
+    fpl_print_forms();
+}
+    

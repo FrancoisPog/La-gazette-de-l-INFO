@@ -52,6 +52,11 @@ table {
 
 /* --------------------- STYLE GENERAL ---------------------*/
 
+html{
+    scroll-behavior: smooth;
+}
+
+
 body{
     /* Dégradé du fond */
     --backgroud-color1: #E0E0E0;
@@ -568,17 +573,19 @@ h3{
 
 /* --------------------- PAGE INSCRIPTION ---------------------*/
 
-#inscription section table td, #inscription section.type1 table {
+/* Suppression des bordures */
+#inscription section table td, #inscription section table {
    border: 0px;
 }
 
+/* Alignement à droite de la colonne de gauche */
 #inscription section table td:first-child{
     text-align: right;
 }
 
 #inscription section table td:last-child:not(:only-child){
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 #inscription section table td[colspan="2"]{
@@ -609,4 +616,26 @@ h3{
     border: 1px solid grey;
     border-radius: 5px;
     
+}
+
+
+#errors{
+    margin-top: 10px;
+    border: 2px red solid;
+    font-weight: 600;
+    color : red;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    width: 70%;
+}
+
+#errors ul{
+    list-style: circle;
+}
+
+#errors ul li{
+    margin-left: 30px;
 }

@@ -104,36 +104,41 @@ function fpl_print_horoscope(){
 }
 
 /**
- * Function returning an array of 3different articles from those of the first two sections
- * @param Array $articles       The articles list
- * @param Array $aLaUne         The first section articles
- * @param Array $infoBrulante   The second section articles
- * @return Array                The three selected articles
+ * Division of articles in three sections 
+ * @param Array $articles The articles from database
+ * @return Array Articles distributed in three array
  */
-function fpl_select_articles_incontournable($articles,$aLaUne,$infoBrulante){
-    foreach($articles as $value){
-        foreach($aLaUne as $article){
-            if($article['arID'] == $value['arID']){
-                continue 2;
-            }
-        }
-        foreach($infoBrulante as $article){
-            if($article['arID'] == $value['arID']){
-                continue 2;
-            }
-        }
-        $incontournables[] = $value;
-        if(count($incontournables)==3){
-            break;
-        }
+function fpl_select_articles($articles) {
+    $result = array([],[],[]);
+    $idAlreadyUsed = array();
+
+    foreach($articles as $article){
+      switch($article['type']) {
+        case 1:
+          $result[0][] = $article;
+          $idAlreadyUsed[] = $article['arID'];
+          break;
+        case 2:
+          $result[1][] = $article;
+          $idAlreadyUsed[] = $article['arID'];
+          break;
+        case 3:
+          if(!in_array($article['arID'], $idAlreadyUsed) && count($result[2]) < 3) {
+            $result[2][] = $article;
+          }
+          break;
+      }
     }
-    return $incontournables;
-}
+    return $result;
+  }
 
 
-// --- Database interactions  --- 
+  // --- Database interactions  --- 
 
 $db = fp_db_connecter();
+
+
+// --- Database Interactions ---
 
 $query = '('.'SELECT arID, arTitre, 1 AS type
                 FROM article
@@ -150,25 +155,21 @@ $query = '('.'SELECT arID, arTitre, 1 AS type
                         (SELECT arID, arTitre, 3 AS type
                         FROM article
                         ORDER BY rand()
-                        LIMIT 0,9) 
-                ORDER BY type ';
+                        LIMIT 0,9)';
 
 $res = fp_db_execute($db,$query);
 mysqli_close($db);
 
-$aLaUne = array_slice($res,0,3);
-$infoBrulante = array_slice($res,3,3);
-$incontournables = fpl_select_articles_incontournable(array_slice($res,6,9),$aLaUne,$infoBrulante);
-
+$articles = fpl_select_articles($res);
 
             
 // ---Page generation ---
 
 fp_print_beginPage('accueil',"Le site de désinformation n°1 des étudiants en Licence info",0,1);
     
-fpl_print_articleBlock($aLaUne,"&Agrave; la une");
-fpl_print_articleBlock($infoBrulante,"L'info brûlante");
-fpl_print_articleBlock($incontournables,"Les incontournables");
+fpl_print_articleBlock($articles[0],"&Agrave; la une");
+fpl_print_articleBlock($articles[1],"L'info brûlante");
+fpl_print_articleBlock($articles[2],"Les incontournables");
 fpl_print_horoscope();
 
 fp_print_endPage();
