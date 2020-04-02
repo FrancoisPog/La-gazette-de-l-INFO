@@ -2,8 +2,11 @@
 require_once("bibli_generale.php");
 ob_start();
 
+// This script is a beta version, many functions will be improved in the final version of inscription.php
 
-// --- Fonctions locales
+
+
+// --- Local functions 
 
 /**
  * Check is an integer is include between two others
@@ -46,7 +49,8 @@ function fpl_print_Errors($errors){
 
 /**
  * Check if it's a hacking case
- * Exit the script if it's a hacking case
+ * Exit the script if it's a hacking case 
+ * (this function will be improved in the final version of inscription.php)
  */
 function fpl_hackGuard(){
     /*
@@ -79,11 +83,8 @@ function fpl_hackGuard(){
  * @return 0 if there are no error, else it returning an array with the errors
  */
 function fpl_checkInputsError(){
-    
     $_POST = array_map('trim',$_POST);
     $errors = array();
-
-    
 
     // Pseudo
     if(!preg_match("/^[0-9a-z]{4,20}$/",$_POST['pseudo'])){
@@ -113,7 +114,7 @@ function fpl_checkInputsError(){
         }
     }
 
-    // Passe1 et Passe2
+    // Passe1 / Passe2
     if(strlen($_POST['passe1']) == 0){
         $errors[] = 'Le mot de passe ne doit pas être vide';
     }else if($_POST['passe1'] != $_POST['passe2'] ){
@@ -122,6 +123,7 @@ function fpl_checkInputsError(){
         $errors[] = 'Le mot de passe doit contenir moins de 256 caractères';
     }
 
+    // Age
     if(date('Ymd') - ($_POST['naissance_a']*10000+$_POST['naissance_m']*100+$_POST['naissance_j']) < 180000){
         $errors[] = 'Vous devez avoir plus de 18 ans pour vous inscrire';
     }
@@ -133,12 +135,62 @@ function fpl_checkInputsError(){
     }
 }
 
+/**
+ * Check if the email or pseudo specified is already used 
+ * @param Object $db        The database connecter
+ * @param String $pseudo    The specified pseudo
+ * @param String $email     The specified email
+ * @return 0 if there are no error, else it returning an array with the errors
+ */
+function fpl_checkAlreadyUsed($db,$pseudo,$email){
+    
+
+    $query = '('."SELECT utPseudo, 1 AS type
+                    FROM utilisateur
+                    WHERE utPseudo = '$pseudo') 
+                    UNION 
+                    (SELECT utPseudo, 2 AS type 
+                        FROM utilisateur
+                        WHERE utEmail = '$email' )";
+
+    $res = fp_db_execute($db,$query);
+
+
+    // Si le pseudo ou le mail est déjà utilisé
+    if($res != null){
+        foreach($res as $value){
+            if($value['type'] == 1){
+                $errors[] = 'Le pseudo est déjà utilisé';
+            }else{
+                $errors[] = 'L\'adresse mail est déjà utilisée';
+            }
+        }
+        return $errors;
+    }
+    return 0;
+}
 
 
 
-// --- Arguments check
+// --- Arguments check 
 fpl_hackGuard();
 
 if(($errors = fpl_checkInputsError()) != 0){
     fpl_print_Errors($errors);
+    exit(0);
 }
+
+
+// --- Check if the pseudo and email isn't already used
+
+$db = fp_db_connecter();
+
+$userData = fp_db_protect_inputs($db,$_POST);
+
+if(($errors = fpl_checkAlreadyUsed($db,$userData['pseudo'],$userData['email'])) != 0){
+    fpl_print_Errors($errors);
+    mysqli_close($db);
+    exit(0);
+}
+
+mysqli_close($db);

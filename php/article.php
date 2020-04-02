@@ -1,13 +1,13 @@
 <?php
-
+session_start();
 ob_start();
 require_once("bibli_generale.php");
 
-// --- Fonctions locales ---
+// --- Local functions ---
 
 /**
- * Affiche la liste des commentaires d'un article
- * @param Array $articleData Les données de l'article
+ * Print article's comments
+ * @param Array $articleData The article's data
  */
 function fpl_print_comments($articleData){
     if($articleData[0]['coID'] == null){
@@ -27,11 +27,17 @@ function fpl_print_comments($articleData){
     echo '</ul>';
 }
 
+/**
+ * Print an article
+ * @param Array $data The article data (not yet protected)
+ */
 function fpl_print_article($data){
+    // author name formatting
     $auteur =  mb_strtoupper(mb_substr($data[0]['utPrenom'],0,1,ENCODE),ENCODE).'.'.mb_convert_case($data[0]['utNom'],MB_CASE_TITLE,ENCODE);
 
-    $auteur = fp_db_protect_exits($auteur);
-    $data = fp_db_protect_exits($data);
+    // data protection
+    $auteur = fp_db_protect_outputs($auteur);
+    $data = fp_db_protect_outputs($data);
 
     $titre = $data[0]['arTitre'];
     $texte = $data[0]['arTexte'];
@@ -45,7 +51,7 @@ function fpl_print_article($data){
 
 
     echo    '<article>',
-                '<h2>',$titre,'</h2>';
+                '<h3>',$titre,'</h3>';
 
                     if(file_exists('../upload/'.$data[0]['arID'].'.jpg')){
                         echo '<img src="../upload/',$data[0]['arID'],'.jpg" alt="',$titre,'" >';
@@ -80,11 +86,12 @@ function fpl_print_article($data){
 }
 
 
-// --- Vérification de l'id et intéractions base de données ---
+// --- ID verification and database interactions ---
 
-if(!fp_check_param($_GET,['id'])){ // Si d'autres clés sont présentes ou que la clé 'id' est absente -> piratage
+// if invalid keys -> index
+if(!fp_check_param($_GET,['id'])){
     header('Location: ../index.php');
-    exit(); // --> EXIT : Redirection vers index.php
+    exit(); 
 }
 
 $codeErr = 0;
@@ -92,7 +99,7 @@ $codeErr = 0;
 $id = $_GET['id'];
 
 if(!fp_str_isInt($id)){
-    $codeErr = 1;
+    $codeErr = 1; // The id key isn't an integer
 }else{
     $id = (int)$id;
     $db = fp_db_connecter();
@@ -103,20 +110,22 @@ if(!fp_str_isInt($id)){
             ' ORDER BY coDate DESC';
     $data = fp_db_execute($db,$query,false);
     if($data == null){
-        $codeErr = 2;
+        $codeErr = 2; // No article for this id
     }
     mysqli_close($db);
 }
 
 
 
-// --- Génération de la page ---
+// --- Page generation ---
 
-fp_print_beginPage('article','L\'actu',1,0);
+$isLogged = fp_is_logged();
 
-    if($codeErr == 0){ // Affichage de l'article
+fp_print_beginPage('article','L\'actu',1,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
+
+    if($codeErr == 0){ // print article
         fpl_print_article($data);
-    }else{ // Affichage de la page d'erreur
+    }else{ // print error page
         $errorMsg = ($codeErr == 1) ? "Identifiant d'article invalide"  :"Aucun n'article ne correspond à cet identifiant";
         fp_make_error($errorMsg);
     }

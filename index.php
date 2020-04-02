@@ -1,16 +1,17 @@
 <?php
-
+session_start();
 ob_start();
 require_once("php/bibli_generale.php");
 
 // --- local functions ---
 
 /**
- * Printing an article
- * @param Array $articleData The article data
+ * Printing an article link
+ * @param Array $articleData The article data (already protected)
  */
-function fpl_print_article($articleData){
+function fpl_print_articleLink($articleData){
     $titre = $articleData['arTitre'];
+
     if(file_exists('upload/'.$articleData['arID']).'.jpg'){
         $picture = 'upload/'.$articleData['arID'].'.jpg';
     }else{
@@ -28,14 +29,15 @@ function fpl_print_article($articleData){
 }
 
 /**
- * Printing an articles block
- * @param Array $articles The articles to print
+ * Printing an articles link block
+ * @param Array $articles   The articles to print
+ * @param String $title     The section title
  */
 function fpl_print_articleBlock($articles,$title){
     echo '<section>',
             '<h2>',$title,'</h2>';
                 foreach($articles as $article){
-                    fpl_print_article($article);
+                    fpl_print_articleLink($article);
                 }
     echo '</section>';
 }
@@ -130,15 +132,13 @@ function fpl_select_articles($articles) {
       }
     }
     return $result;
-  }
+}
 
 
-  // --- Database interactions  --- 
+
+// --- Database interactions  --- 
 
 $db = fp_db_connecter();
-
-
-// --- Database Interactions ---
 
 $query = '('.'SELECT arID, arTitre, 1 AS type
                 FROM article
@@ -158,6 +158,7 @@ $query = '('.'SELECT arID, arTitre, 1 AS type
                         LIMIT 0,9)';
 
 $res = fp_db_execute($db,$query);
+
 mysqli_close($db);
 
 $articles = fpl_select_articles($res);
@@ -165,7 +166,9 @@ $articles = fpl_select_articles($res);
             
 // ---Page generation ---
 
-fp_print_beginPage('accueil',"Le site de désinformation n°1 des étudiants en Licence info",0,1);
+$isLogged = fp_is_logged();
+
+fp_print_beginPage('accueil',"Le site de désinformation n°1 des étudiants en Licence info",0,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
     
 fpl_print_articleBlock($articles[0],"&Agrave; la une");
 fpl_print_articleBlock($articles[1],"L'info brûlante");

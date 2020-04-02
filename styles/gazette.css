@@ -17,45 +17,48 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
-	display: block;
+    display: block;
 }
 body {
-	line-height: 1;
+    line-height: 1;
 }
 ol, ul {
-	list-style: none;
+    list-style: none;
 }
 blockquote, q {
-	quotes: none;
+    quotes: none;
 }
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+    content: '';
+    content: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
-/* --------------------- FIN DU RESET ---------------------*/
+/*################################################################
+ *
+ *              STYLE SHEET FOR GAZETTE
+ *
+ ###############################################################*/
 
-/* --------------------- STYLE GENERAL ---------------------*/
+/* --------------------- GENERAL ---------------------*/
 
 html{
     scroll-behavior: smooth;
 }
-
 
 body{
     /* Dégradé du fond */
@@ -99,6 +102,12 @@ body[class='theme'] {
     --colorShdwFigHvr : rgb(148, 148, 238);
 }
 
+h3{
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
 
 p {
     text-align: justify;
@@ -165,7 +174,13 @@ figcaption{
     
 }
 
+ul{
+    list-style: circle;
+}
 
+ul li{
+    margin-left: 30px;
+}
 
 
 table th, table td, table{
@@ -189,6 +204,19 @@ td{
 
 tbody{
     padding: 10px;
+}
+
+.error{
+    margin-top: 10px;
+    border: 2px red solid;
+    font-weight: 600;
+    color : red;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    width: 70%;
 }
 
 /* --- Section --- */
@@ -284,6 +312,7 @@ nav ul li{
     height: 40px;
     display: flex;
     transition-duration: 0.3s;
+    margin-left: 0px;
 }
 
 nav li:hover{
@@ -311,6 +340,7 @@ nav>ul>li:last-child>a{
 
 nav>ul>li:last-child{
     position: relative;
+    min-width: 200px;
 }
 
 /* Affichage de la sous liste */
@@ -371,22 +401,14 @@ nav ul>li>ul>li{
     border: solid 1px black;
 }
 
-/* Titre de l'article */
-#article article h2{
-    font-weight: bold;
-    text-decoration: underline;
-    margin-bottom: 20px;
-    font-size: 1.1em;
-}
-
 #article figure{
     display: inline-block;
     margin: 16px;  
 }
 
 /* Listes */
-article ul, #article section blockquote ul{
-    margin-left: 30px;
+article ul{
+    list-style-type: none;
 }
 
 #article section blockquote ul{
@@ -400,9 +422,6 @@ article ul li:before{
     content: "\2611\0020";
 }
 
-
-
-/* Footer du main */
 article footer{
     border-top: #909090 solid 2px;
     padding-top: 4px;
@@ -417,15 +436,10 @@ article footer p{
 }
 
 
-
 /* --- Réactions --- */
 #article section {
     margin-top: 50px;
     border-radius: 0px 10px 10px 10px;
-}
-/* Liste de commentaires */
-#article section ul {
-    list-style-type: circle ;
 }
 
 #article section li {
@@ -571,71 +585,60 @@ h3{
 }
 
 
-/* --------------------- PAGE INSCRIPTION ---------------------*/
+/* --------------------- PAGE INSCRIPTION / CONNEXION ---------------------*/
 
 /* Suppression des bordures */
-#inscription section table td, #inscription section table {
+table.form td,  table.form {
    border: 0px;
 }
 
 /* Alignement à droite de la colonne de gauche */
-#inscription section table td:first-child{
+table.form td:first-child{
     text-align: right;
 }
 
-#inscription section table td:last-child:not(:only-child){
+table.form td:last-child:not(:only-child){
     display: flex;
     justify-content: space-around;
 }
 
-#inscription section table td[colspan="2"]{
+table.form td[colspan="2"]{
     text-align: left;
     font-size: 0.95em;
 }
 
 
-#inscription input[type="text"],#inscription input[type="password"], #inscription input[type="email"]{
+table.form input[type="text"],table.form input[type="password"], table.form input[type="email"]{
     width: 200px;
     padding: 3px;
 }
 
-#inscription input[type="submit"], #inscription input[type="reset"]{
+table.form input[type="submit"], table.form input[type="reset"]{
     border: 1px solid black;
     border-radius: 5px;
     padding: 4px;
     font-weight: bold;
     margin: 0px 5px;
+    justify-content: center;
 }
 
-#inscription input[type="submit"]:hover, #inscription input[type="reset"]:hover{
+table.form input[type="submit"]:hover, table.form input[type="reset"]:hover{
     background-color: red;
     color :white;
 }
 
-#inscription select{
+table.form select{
     border: 1px solid grey;
     border-radius: 5px;
     
 }
 
+/* --------------------- PAGE PROTEGEE ---------------------*/
 
-#errors{
-    margin-top: 10px;
-    border: 2px red solid;
-    font-weight: 600;
-    color : red;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-self: center;
-    width: 70%;
+#protegee li:not(:last-child){
+    margin-bottom: 10px;
 }
 
-#errors ul{
-    list-style: circle;
-}
-
-#errors ul li{
-    margin-left: 30px;
+#protegee h3{
+    margin-top : 10px;
 }

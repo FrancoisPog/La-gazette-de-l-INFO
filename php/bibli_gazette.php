@@ -31,18 +31,18 @@
  * @param int $deepness The deepness between the page file and the website root
  * @param int $status   The user status (-1 if unlogged)
  */
-function fp_print_beginPage($id,$title,$deepness,$status){
+function fp_print_beginPage($id,$title,$deepness,$status,$pseudo = false){
     $path="";
     for($i = 0 ; $i < $deepness ; $i++){
         $path.="../";
     }
     
     if($status == 3){
-        $height = "all";
+        $statusClass = "all";
     }else if($status == 2 || $status == 1){
-        $height = "redacOrAdmin";
+        $statusClass = "redacOrAdmin";
     }else{
-        $height = "simpleUser";
+        $statusClass = "simpleUser";
     }       
 
     echo    '<!DOCTYPE html>',
@@ -56,15 +56,15 @@ function fp_print_beginPage($id,$title,$deepness,$status){
                         '<nav>',
                             '<ul>',
                                 '<li><a href="',$path,'index.php">Accueil</a></li>',
-                                '<li><a href="',$path,'html/actus.html">Toute l\'actu</a></li>',
+                                '<li><a href="',$path,'php/actus.php">Toute l\'actu</a></li>',
                                 '<li><a href="',$path,'php/recherche.php">Recherche</a></li>',
-                                '<li><a href="',$path,'html/redaction.html">La rédac\'</a></li>';
+                                '<li><a href="',$path,'php/redaction.php">La rédac\'</a></li>';
 
     if($status == -1){
         echo                    '<li><a href="',$path,'php/connexion.php">Se connecter</a></li>';
     }else{
-        echo                       '<li><a href="',$path,'php/compte.php">jbigoude</a>',
-                                        '<ul class="'.$height.'">',
+        echo                       '<li><a href="',$path,'php/compte.php">',($pseudo)?$pseudo:'Se connecter','</a>',
+                                        '<ul class="'.$statusClass.'">',
                                             '<li><a href="',$path,'php/compte.php">Mon profil</a></li>',
             ($status > 0 && $status != 2) ? "<li><a href=\"$path"."php/nouveau.php\">Nouvel article</a></li>":'',
                             ($status > 1) ? "<li><a href=\"$path"."php/administration.php\">Administration</a></li>":'',
