@@ -14,7 +14,7 @@ $db = fp_db_connecter();
 // fetching user data
 $query = 'SELECT * FROM utilisateur WHERE utPseudo = "'.mysqli_real_escape_string($db,$pseudo).'"';
 $userData = fp_db_execute($db,$query)[0];
-
+// N.B. $userData is protected in fp_db_execute()
 
 // --- Page Generation
 

@@ -9,35 +9,30 @@ ob_start();
  */
 function fpl_hackGuard(){
     fp_check_param($_POST,['pseudo','passe','btnConnexion']) or fp_session_exit('../index.php');
-
-    (strlen($_POST['pseudo']) == 0 || strlen($_POST['passe']) == 0) and fp_session_exit('../index.php');
 }
 
 /**
- * Check if the user made a mistake during connection 
- * @return mixed 0 if there are no error, else it returning an array with the errors
+ * Check if the pass is empty, and if the pattern of pseudo is correct (so if not, we can avoid a database connection)
+ * @return boolean True if there are no error, else false
  */
 function fpl_check_inputs(){
     $_POST = array_map('trim',$_POST);
-    $errors = array();
+    
 
-    if(strlen($_POST['pseudo']) == 0){
-       $errors[] = 'Veuillez renseigner un pseudo non vide';
+    if(!preg_match("/^[0-9a-z]{4,20}$/",$_POST['pseudo'])){
+       return false;
     }
 
     if(strlen($_POST['passe']) == 0){
-        $errors[] = 'Veuillez renseigner un mot de passe non vide';
+        return false;
     }
 
-    if(count($errors) != 0){
-        return $errors;
-    }
-    return 0;
+    return true;
 }
 
 /**
  * Check if the pseudo and the password match
- * @return mixed exit if the connection is a success, else it returning an array with the errors
+ * @return mixed if the pseudo and pass match,it returning the user data in an array, else false
  */
 function fpl_check_user_data(){
     $db = fp_db_connecter();
@@ -46,41 +41,52 @@ function fpl_check_user_data(){
                 FROM utilisateur
                 WHERE utPseudo = "'.fp_db_protect_inputs($db,$_POST['pseudo']).'"';
 
-    $pass = fp_db_execute($db,$query,false);
+    $pass = fp_db_execute($db,$query,false)[0];
+
+    mysqli_close($db);
 
     if($pass == null){
-        return 1;
+        return false;
     }
    
-    if(password_verify($_POST['passe'],$pass)){
-        return 1;
+    if(!password_verify($_POST['passe'],$pass['utPasse'])){
+        return false;
     }
 
-    $_SESSION['pseudo'] = $_POST['pseudo'];
-    $_SESSION['statut'] = $pass[0]['utStatut'];
+    return [$_POST['pseudo'],$pass['utStatut']];
 
-    header('Location: ../index.php');
+}
+
+/**
+ * Connect the user and redirects to the origin page
+ * @param $statut The user statut
+ */
+function fpl_connection($userData){
+    $page = $GLOBALS['origin_page'];
+    unset($GLOBALS['origin_page']);
+
+    $_SESSION['pseudo'] = $userData[0];
+    $_SESSION['statut'] = $userData[1];
+
+    header('Location: '.$page);
     exit(0);
-
-    
-
 }
 
 /**
  * Print the connection page
  * @param $errors The potential errors
  */
-function fpl_print_log_form($errors = false){
+function fpl_print_connection_form($errors = false){
     fp_print_beginPage('connexion','Connexion',1,-1);
-
+    $required = false;
     echo '<section>',
             '<h2>Formuaire de connexion</h2>',
             '<p>Pour vous identifier, remplissez le formulaire ci-dessous :</p>',
             ($errors) ? '<p class="error">Echec d\'authentification. Utilisateur inconnu ou mot de passe incorrect.</p>':'',
             '<form method="POST" action="connexion.php">',
                 '<table class="form">',
-                    fp_print_inputLine('Pseudo :','text','pseudo',20),
-                    fp_print_inputLine('Mot de passe :','password','passe',255),
+                    fp_print_inputLine('Pseudo :','text','pseudo',20,$required),
+                    fp_print_inputLine('Mot de passe :','password','passe',255,$required),
                     '<tr>',
                         '<td><input type="submit" value="Se connecter" name="btnConnexion"></td>',
                         '<td><input type="reset" value="Annuler"></td>',
@@ -95,16 +101,21 @@ function fpl_print_log_form($errors = false){
 
 /**
  * Execute the logging process
- * @return mixed exit if success, else 1
+ * @return mixed exit if success, else -1
  */
 function fpl_logging_process(){
     fpl_hackGuard();
-    
-    $res = fpl_check_user_data();
 
-    if($res != 0){
-        return 1;
+    if(!fpl_check_inputs()){
+        return -1;
     }
+
+    $statut = fpl_check_user_data();
+    if($statut == false){
+        return -1;
+    }
+
+    fpl_connection($statut);
 
 }
 
@@ -119,11 +130,13 @@ if(fp_is_logged()){
 }
 
 if(isset($_POST['btnConnexion'])){
-    $res = fpl_logging_process();
+    $res = fpl_logging_process(); // no return if success
     
-    if($res != 0){
-        fpl_print_log_form(true);
-    }
+    fpl_print_connection_form(true);
+    
 }else{
-    fpl_print_log_form();
+    if(!isset($GLOBALS['origin_page'])){
+        $GLOBALS['origin_page'] = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '../index.php' ;
+    }
+    fpl_print_connection_form();
 }

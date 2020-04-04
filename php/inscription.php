@@ -26,30 +26,21 @@ function fpl_intIsBetween($number,$min,$max){
  */
 function fpl_hackGuard(){
     /*
-        Only the 'spam check box' key may be missing, 
-        indeed all others are required for registration and the "required" attribute is set.
-        So, if they are missing, -> hacking.
+        Only checkbox and radio buttons can be missing
+        So, if other keys are missing -> hacking.
     */
-    $mandatoryKeys = ['pseudo','nom','prenom','naissance_j','naissance_m', 'naissance_a','email','passe1','passe2', 'cbCGU','btnInscription','radSexe'];
-    $optionalKeys = ['cbSpam'];
-
+    $mandatoryKeys = ['pseudo','nom','prenom','naissance_j','naissance_m', 'naissance_a','email','passe1','passe2','btnInscription'];
+    $optionalKeys = ['cbSpam','cbCGU','radSexe'];
+    
     fp_check_param($_POST,$mandatoryKeys,$optionalKeys) or fp_session_exit('../index.php');
-
-    // If one of the text fields is empty (before trim) although the "required" attribute is positioned there -> hacking.
-    ( strlen($_POST['pseudo']) == 0 || 
-        strlen($_POST['nom']) == 0 || 
-        strlen($_POST['prenom']) == 0 || 
-        strlen($_POST['email']) == 0 || 
-        strlen($_POST['passe1']) == 0 || 
-        strlen($_POST['passe2']) == 0 ) and fp_session_exit('../index.php');
 
     // If the date fields are not integers or are invalid -> hacking
     (fpl_intIsBetween($_POST['naissance_j'],1,31) && 
         fpl_intIsBetween($_POST['naissance_m'],1,12) && 
         fpl_intIsBetween($_POST['naissance_a'],1900,2020)) or fp_session_exit('../index.php');
     
-    // If the value of civility is different from 'h' and 'f' -> hacking
-    preg_match('/^[hf]$/',$_POST['radSexe']) or fp_session_exit('../index.php');
+    // If the value of civility is different from 'h' and 'f' (if it was entered) -> hacking
+    isset($_POST['radSexe']) and (preg_match('/^[hf]$/',$_POST['radSexe']) or fp_session_exit('../index.php'));
 
     
 }
@@ -67,11 +58,8 @@ function fpl_checkInputsError(){
         $errors[] = 'Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscule';
     }
 
-    // Email
-    if(!preg_match("/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$/",$_POST['email'])){
-        $errors[] = 'L\'adresse email n\'est pas valide';
-    }else if(strlen($_POST['email']) > 255){
-        $errors[] = 'L\'adresse mail doit contenir moins de 256 caractères';
+    if(!isset($_POST['radSexe'])){
+        $errors[] = 'Vous devez choisir une civilité';
     }
 
     // Last/First name
@@ -92,6 +80,18 @@ function fpl_checkInputsError(){
         }
     }
 
+    if(date('Ymd') - ($_POST['naissance_a']*10000+$_POST['naissance_m']*100+$_POST['naissance_j']) < 180000){
+        $errors[] = 'Vous devez avoir plus de 18 ans pour vous inscrire';
+    }
+
+    // Email
+    if(!preg_match("/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$/",$_POST['email'])){
+        $errors[] = 'L\'adresse email n\'est pas valide';
+    }else if(strlen($_POST['email']) > 255){
+        $errors[] = 'L\'adresse mail doit contenir moins de 256 caractères';
+    }
+
+
     // Passe1 et Passe2
     if(strlen($_POST['passe1']) == 0 ){
         $errors[] = 'Le mot de passe ne doit pas être vide';
@@ -101,8 +101,11 @@ function fpl_checkInputsError(){
         $errors[] = 'Le mot de passe doit contenir moins de 256 caractères';
     }
 
-    if(date('Ymd') - ($_POST['naissance_a']*10000+$_POST['naissance_m']*100+$_POST['naissance_j']) < 180000){
-        $errors[] = 'Vous devez avoir plus de 18 ans pour vous inscrire';
+    
+
+    
+    if(!isset($_POST['cbCGU'])){
+        $errors[] = 'Vous devez accepter les conditions générales d\'utilisation';
     }
     
     if(count($errors) != 0){
@@ -232,7 +235,7 @@ function fpl_print_Errors($errors){
  * @param Array $errors The potential errors 
  */
 function fpl_print_register_forms($errors = []){
-    
+    $required = true;
     fp_print_beginPage('inscription','Inscription',1,-1);
     echo '<section>',
             '<h2>Formulaire d\'inscription</h2>',
@@ -240,17 +243,17 @@ function fpl_print_register_forms($errors = []){
             (count($errors)!=0) ? fpl_print_Errors($errors):'',
             '<form method="POST" action="inscription.php">',
                 '<table class="form">',
-                    fp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,true,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):false),
-                    fp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],true,($errors)?htmlentities($_POST['radSexe']):false),
-                    fp_print_inputLine('Votre nom :',"text",'nom',50,true,false,($errors)?htmlentities($_POST['nom']):false),
-                    fp_print_inputLine('Votre prénom :',"text",'prenom',60,true,false,($errors)?htmlentities($_POST['prenom']):false),
+                    fp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):false),
+                    fp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):false),
+                    fp_print_inputLine('Votre nom :',"text",'nom',50,$required,false,($errors)?htmlentities($_POST['nom']):false),
+                    fp_print_inputLine('Votre prénom :',"text",'prenom',60,$required,false,($errors)?htmlentities($_POST['prenom']):false),
                     fp_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1),
-                    fp_print_inputLine('Votre email :',"email",'email',255,true,false,($errors)?htmlentities($_POST['email']):false),
-                    fp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,true,false,($errors)?htmlentities($_POST['passe1']):false),
-                    fp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,true,false,($errors)?htmlentities($_POST['passe2']):false),
+                    fp_print_inputLine('Votre email :',"email",'email',255,$required,false,($errors)?htmlentities($_POST['email']):false),
+                    fp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,false,($errors)?htmlentities($_POST['passe1']):false),
+                    fp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,false,($errors)?htmlentities($_POST['passe2']):false),
                     '<tr>',
                         '<td colspan="2">',
-                            fp_print_inputCheckbox('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",true,isset($_POST['cbCGU'])),
+                            fp_print_inputCheckbox('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU'])),
                         '</td>',
                     '</tr>',
                     '<tr>',
