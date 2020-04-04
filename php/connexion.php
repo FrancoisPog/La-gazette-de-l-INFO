@@ -62,9 +62,10 @@ function fpl_check_user_data(){
  * @param $statut The user statut
  */
 function fpl_connection($userData){
-    $page = $GLOBALS['origin_page'];
-    unset($GLOBALS['origin_page']);
-
+    
+    $page = $_SESSION['origin_page'];
+    unset($_SESSION['origin_page']);
+   
     $_SESSION['pseudo'] = $userData[0];
     $_SESSION['statut'] = $userData[1];
 
@@ -121,22 +122,20 @@ function fpl_logging_process(){
 
 
 
-
-
 // if the user comes to this page while already logged in -> compte.php
 if(fp_is_logged()){
     header('Location: compte.php');
     exit(0);
 }
 
+
+
 if(isset($_POST['btnConnexion'])){
     $res = fpl_logging_process(); // no return if success
-    
     fpl_print_connection_form(true);
     
 }else{
-    if(!isset($GLOBALS['origin_page'])){
-        $GLOBALS['origin_page'] = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '../index.php' ;
-    }
+    // Keep the origin page 
+    $_SESSION['origin_page'] = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '../index.php' ;
     fpl_print_connection_form();
 }
