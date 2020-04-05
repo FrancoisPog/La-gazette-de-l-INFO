@@ -1,7 +1,8 @@
 <?php
-require_once("bibli_generale.php");
 session_start();
 ob_start();
+require_once("bibli_gazette.php");
+
 
 // --- Local functions
 

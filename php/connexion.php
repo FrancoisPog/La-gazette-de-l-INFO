@@ -1,5 +1,5 @@
 <?php
-require_once("bibli_generale.php");
+require_once("bibli_gazette.php");
 session_start();
 ob_start();
 

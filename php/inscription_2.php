@@ -1,5 +1,5 @@
 <?php
-require_once("bibli_generale.php");
+require_once("bibli_gazette.php");
 ob_start();
 
 // This script is a beta version, many functions will be improved in the final version of inscription.php
