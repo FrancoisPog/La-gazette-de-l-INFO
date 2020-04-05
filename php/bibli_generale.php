@@ -313,7 +313,7 @@ function fp_print_datesList($name,$minYear,$maxYear,$defaultDay = 0, $defaultMon
 }
 
 /**
- * Print an array form line for date choice
+ * Print a form array line for date choice
  * @param String $label        The line label 
  * @param String $name         The field's name
  * @param int $minYear         The minimum year (include)
@@ -322,20 +322,23 @@ function fp_print_datesList($name,$minYear,$maxYear,$defaultDay = 0, $defaultMon
  * @param String $defaultMonth The month selected by default, if 0, it's the current month
  * @param String $defaultYear  The year selected by default, if 0, it's the current year
  * @param int $yearsStep       The iteration step for years value
+ * @param String $tooltip      The (optional) information displayed in a tooltip
+ * @param bool $tooltipInForm  True if there is at least one tooltip in the form, else false
  */
-function fp_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0, $defaultMonth = 0,$defaultYear = 0,$yearsStep = 1){
+function fp_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0, $defaultMonth = 0,$defaultYear = 0,$yearsStep = 1,$tooltip = false,$tooltipInForm=false){
     echo '<tr>',
-            '<td><label>',$label,'</label></td>',
-            '<td>';
-                fp_print_datesList($name,$minYear,$maxYear,$defaultDay,$defaultMonth,$defaultYear,$yearsStep);
-    echo    '</td>',
+            '<td class="label"><label>',$label,'</label></td>',
+            '<td class="input" ',(!$tooltip && $tooltipInForm)?'colspan="2"':'','>',
+                fp_print_datesList($name,$minYear,$maxYear,$defaultDay,$defaultMonth,$defaultYear,$yearsStep),
+            '</td>',
+            ($tooltip)?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
         '</tr>';
 
 
 }
 
 /**
- * Print an array input line 
+ * Print a form array input line 
  * @param String $label         The line label 
  * @param String $type          The input type (must be 'text','password' or 'email')
  * @param String $name          The field's name
@@ -343,14 +346,17 @@ function fp_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0, $def
  * @param bool $required        True is the input field must be required, true by default
  * @param String $placeholder   The (optional) placeholder, false if not
  * @param String $value         The (optional) default value, false if not
+ * @param String $tooltip       The (optional) information displayed in a tooltip
+ * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
  */
-function fp_print_inputLine($label,$type,$name,$maxLength = false,$required =true,$placeholder = false,$value = false){
+function fp_print_inputLine($label,$type,$name,$maxLength = false,$required =true,$placeholder = false,$value = false,$tooltip=false,$tooltipInForm = false){
     if($type != 'text' && $type != 'password' && $type != 'email'){
         throw new Exception('[fp_print_inputLine] : The input type must be "text", "password" or "email".');
     }
     echo '<tr>',
-            '<td><label for="',$name,'">',$label,'</label></td>',
-            '<td><input id="',$name,'" type="',$type,'" name="',$name,'" ',($required)?'required':'',' ',($placeholder)?('placeholder="'.$placeholder.'"'):(''),' value="',($value)?$value:'','" ',($maxLength)?('maxlength="'.$maxLength.'"'):'','>',
+            '<td class="label"><label for="',$name,'">',$label,'</label></td>',
+            '<td class="input" ',(!$tooltip && $tooltipInForm)?'colspan="2"':'','><input id="',$name,'" type="',$type,'" name="',$name,'" ',($required)?'required':'',' ',($placeholder)?('placeholder="'.$placeholder.'"'):(''),' value="',($value)?$value:'','" ',($maxLength)?('maxlength="'.$maxLength.'"'):'','></td>',
+            ($tooltip)?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
         '</tr>';
 }
 
@@ -368,24 +374,27 @@ function fp_print_inputRadio($name,$values,$required = true,$default = false){
 }
 
 /**
- * Print an array radio buttons group line
+ * Print a form array radio buttons group line
  * @param String $label         The line label
  * @param String $name          The field's name
  * @param Array $values         The value list in the 'label'=>'value' format
  * @param bool $required        True is the radio field must be required, true by default
  * @param String $default       The (optional) default value selected, false if not 
+ * @param String $tooltip       The (optional) information displayed in a tooltip
+ * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
  */
-function fp_print_inputRadioLine($label,$name,$values,$required = true,$default = false){
+function fp_print_inputRadioLine($label,$name,$values,$required = true,$default = false,$tooltip = false,$tooltipInForm = false){
     echo    '<tr>',
-                '<td><label>',$label,'</label></td>',
-                '<td>';
-                    fp_print_inputRadio($name,$values,$required,$default);
-    echo        '</td>',
+                '<td class="label"><label>',$label,'</label></td>',
+                '<td class="input" ',(!$tooltip && $tooltipInForm)?'colspan="2"':'','>',
+                    fp_print_inputRadio($name,$values,$required,$default),
+                '</td>',
+                ($tooltip)?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
             '</tr>';
 }
 
 /**
- * Print an array line of checkbox input
+ * Print a checkbox input
  * @param String $name          The field's name
  * @param String $label         The checkbox label
  * @param bool $required        True is the radio field must be required, true by default
@@ -394,6 +403,42 @@ function fp_print_inputRadioLine($label,$name,$values,$required = true,$default 
 function fp_print_inputCheckbox($name,$label,$required = true,$checked = false){
     echo '<input type="checkbox" name="',$name,'" id="',$name,'" ',($required)?'required':'',' ',($checked)?'checked':'','>',
             '<label for="',$name,'">',$label,'</label>';
+}
+
+/**
+ * Print a form array line for a chackbox
+ * @param String $name          The field's name
+ * @param String $label         The checkbox label
+ * @param bool $required        True is the radio field must be required, true by default
+ * @param bool $checked         True if the box is checked, false by defauly
+ * @param String $tooltip       The (optional) information displayed in a tooltip
+ * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
+ */
+function fp_print_checkboxLine($name,$label,$required = true, $checked = false,$tooltip = false, $tooltipInForm = false){
+    echo '<tr>',
+            '<td class="checkbox" colspan="',(!$tooltip && $tooltipInForm)?'3':'2','">',
+                fp_print_inputCheckbox($name,$label,$required,$checked),
+            '</td>',
+            ($tooltip)?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
+        '</tr>';
+}
+
+/**
+ * Print a form array line with submit and (optional) reset buttons
+ * @param Array $submit         Value and name of submit button (0:value, 1:name)
+ * @param String $resetValue    Value of reset button
+ * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
+ */ 
+function fp_print_buttonsLine($submit,$resetValue = false,$tooltipInForm = false){
+    if(!is_array($submit)){
+        throw new Exception('[fp_print_buttonsLine] : $submit must be an array ');
+    }
+    echo '<tr>',
+            '<td class="buttons" colspan="',($tooltipInForm)?'3':'2','">',
+                '<input type="submit" value="',$submit[0],'" name="',$submit[1],'">',
+                ($resetValue)?'<input type="reset" value="'.$resetValue.'">':'',
+             '</td>',
+        '</tr>';
 }
 
 // STR

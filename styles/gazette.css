@@ -587,30 +587,39 @@ h3{
 
 /* --------------------- PAGE INSCRIPTION / CONNEXION ---------------------*/
 
-/* Suppression des bordures */
+
 table.form td,  table.form {
    border: 0px;
 }
 
-/* Alignement à droite de la colonne de gauche */
-table.form td:first-child{
+table.form td.label{
     text-align: right;
 }
 
-table.form td:last-child:not(:only-child){
+table.form td.input{
     display: flex;
     justify-content: space-around;
 }
 
-table.form td[colspan="2"]{
+table.form td.checkbox{
     text-align: left;
     font-size: 0.95em;
+}
+
+table.form td.buttons{
+    text-align: center;
+}
+
+table.form td.checkbox input[type="checkbox"]{
+    margin-left: 40px;
 }
 
 
 table.form input[type="text"],table.form input[type="password"], table.form input[type="email"]{
     width: 200px;
     padding: 3px;
+    border-radius: 7px;
+    border : 1px solid rgb(125, 119, 119);
 }
 
 table.form input[type="submit"], table.form input[type="reset"]{
@@ -618,13 +627,15 @@ table.form input[type="submit"], table.form input[type="reset"]{
     border-radius: 5px;
     padding: 4px;
     font-weight: bold;
-    margin: 0px 5px;
+    margin: 0px 15px;
     justify-content: center;
+    transition: all 0.25s;
 }
 
 table.form input[type="submit"]:hover, table.form input[type="reset"]:hover{
     background-color: red;
     color :white;
+    
 }
 
 table.form select{
@@ -633,12 +644,53 @@ table.form select{
     
 }
 
+table.form tr{
+    position: relative;
+    
+}
+
+/* tooltip */
+
+.info {
+    cursor: default;
+    color: darkblue;
+    font-weight: 600;
+}
+
+.info:hover .infobulle{
+    
+    opacity: 1;
+    visibility: visible;
+    transform:scale(1) rotate(0);
+}
+
+
+.infobulle{
+    opacity: 0;
+    position: absolute;
+    right: -210px;
+    width: 200px;
+    text-align: center;
+    color:darkblue;
+    font-weight: 500;
+    font-size: 0.8em;
+    
+    background-color:rgba(135, 131, 130, 0.2);
+    padding: 3px;
+    border-radius:3px;
+    box-shadow:0 0 2px rgba(0,0,0,0.5);
+    transition:all .25s;
+    transform:scale(0) rotate(12deg);
+} 
+
+
+
 /* --------------------- PAGE PROTEGEE ---------------------*/
+
+#protegee h3{
+    margin-top: 10px;
+}
 
 #protegee li:not(:last-child){
     margin-bottom: 10px;
-}
-
-#protegee h3{
-    margin-top : 10px;
 }

@@ -243,28 +243,27 @@ function fpl_print_register_forms($errors = []){
             (count($errors)!=0) ? fpl_print_Errors($errors):'',
             '<form method="POST" action="inscription.php">',
                 '<table class="form">',
-                    fp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):false),
-                    fp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):false),
-                    fp_print_inputLine('Votre nom :',"text",'nom',50,$required,false,($errors)?htmlentities($_POST['nom']):false),
-                    fp_print_inputLine('Votre prénom :',"text",'prenom',60,$required,false,($errors)?htmlentities($_POST['prenom']):false),
-                    fp_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1),
-                    fp_print_inputLine('Votre email :',"email",'email',255,$required,false,($errors)?htmlentities($_POST['email']):false),
-                    fp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,false,($errors)?htmlentities($_POST['passe1']):false),
-                    fp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,false,($errors)?htmlentities($_POST['passe2']):false),
-                    '<tr>',
-                        '<td colspan="2">',
-                            fp_print_inputCheckbox('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU'])),
-                        '</td>',
-                    '</tr>',
-                    '<tr>',
-                        '<td colspan="2">',
-                            fp_print_inputCheckbox('cbSpam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['cbSpam'])),
-                    '</td>',
-                    '</tr>',
-                    '<tr>',
-                        '<td><input type="submit" value="S\'inscrire" name="btnInscription"></td>',
-                        '<td><input type="reset" value="Réinitialiser"></td>',
-                    '</tr>',
+                    fp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):false,"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
+                    
+                    fp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):false,false,true),
+                    
+                    fp_print_inputLine('Votre nom :',"text",'nom',50,$required,false,($errors)?htmlentities($_POST['nom']):false,false,true),
+                    
+                    fp_print_inputLine('Votre prénom :',"text",'prenom',60,$required,false,($errors)?htmlentities($_POST['prenom']):false,false,true),
+                    
+                    fp_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
+                    
+                    fp_print_inputLine('Votre email :',"email",'email',255,$required,false,($errors)?htmlentities($_POST['email']):false,false,true),
+                    
+                    fp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,false,($errors)?htmlentities($_POST['passe1']):false,false,true),
+                    
+                    fp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,false,($errors)?htmlentities($_POST['passe2']):false,false,true),
+                    
+                    fp_print_checkboxLine('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU']),'Vous les trouverez <a href="#">ici</a>.',true),
+                    
+                    fp_print_checkboxLine('cbSpam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['cbSpam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.',true),
+                    
+                    fp_print_buttonsLine(['S\'inscrire','btnInscription'],'Réinitialiser',true),
                 '</table>',
             '</form>',
         '</section>';

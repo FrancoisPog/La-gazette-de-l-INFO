@@ -88,10 +88,7 @@ function fpl_print_connection_form($errors = false){
                 '<table class="form">',
                     fp_print_inputLine('Pseudo :','text','pseudo',20,$required),
                     fp_print_inputLine('Mot de passe :','password','passe',255,$required),
-                    '<tr>',
-                        '<td><input type="submit" value="Se connecter" name="btnConnexion"></td>',
-                        '<td><input type="reset" value="Annuler"></td>',
-                    '</tr>',
+                    fp_print_buttonsLine(['Se connecter','btnConnexion'],'Annuler'),
                 '</table>',
             '</form>',
             '<p>Pas encore inscrit ? N\'attendez pas, <a href="inscription.php">inscrivez-vous</a> !</p> ',
@@ -127,7 +124,6 @@ if(fp_is_logged()){
     header('Location: compte.php');
     exit(0);
 }
-
 
 
 if(isset($_POST['btnConnexion'])){
