@@ -35,12 +35,12 @@ function fpl_hackGuard(){
     
     fp_check_param($_POST,$mandatoryKeys,$optionalKeys) or fp_session_exit('../index.php');
 
-    // If the date fields are not integers or are invalid -> hacking
+    // If the date fields values are not integers or are invalid -> hacking
     (fpl_intIsBetween($_POST['naissance_j'],1,31) && 
         fpl_intIsBetween($_POST['naissance_m'],1,12) && 
         fpl_intIsBetween($_POST['naissance_a'],1900,2020)) or fp_session_exit('../index.php');
     
-    // If the value of civility is different from 'h' and 'f' (if it was entered) -> hacking
+    // If the value of civility is different of 'h' and 'f' (if it was entered) -> hacking
     isset($_POST['radSexe']) and (preg_match('/^[hf]$/',$_POST['radSexe']) or fp_session_exit('../index.php'));
 
     

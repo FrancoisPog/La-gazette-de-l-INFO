@@ -6,3 +6,6 @@
 *.jpeg
 *.jpg
 *.gif
+
+#test
+test.php

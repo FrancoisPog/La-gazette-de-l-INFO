@@ -170,3 +170,56 @@ function fp_is_logged($page_to_go_if_not = false){
     fp_session_exit($page_to_go_if_not);
 
 }
+
+// URL
+
+/**
+ * Crypt and sign url.
+ * @param Array $data       All data to crypt in an array
+ * @return String|false     The encrypted and signed url is success, false if failure
+ */
+function fp_encrypt_url($data){
+    if(!defined('ENCRYPTION_KEY')){
+        throw new Exception('[fp_encrypt_url] : The constant \'ENCRYPTION_KEY\' must be defined');
+    }
+    $data = implode('§',$data);
+
+    $method = 'aes-128-gcm';
+    $initVectorLen = openssl_cipher_iv_length($method);
+    $initVector = openssl_random_pseudo_bytes($initVectorLen);
+    $data = openssl_encrypt($data,$method,base64_decode(ENCRYPTION_KEY),OPENSSL_RAW_DATA,$initVector,$tag);
+    if($data == false){
+        return false;
+    }
+    $url = $initVector.$tag.$data;
+    $url = base64_encode($url);
+    return urlencode($url);
+
+}
+
+/**
+ * Decrypts and authenticates the url. 
+ * @param String $url   The url to decrypt
+ * @param int $field    The number of field expected
+ * @return Array|false  Decrypted and authenticated data if success, false if failure
+ */
+function fp_decrypt_url($url,$field){
+    if(!defined('ENCRYPTION_KEY')){
+        throw new Exception('[fp_decrypt_url] : The constant \'ENCRYPTION_KEY\' must be defined');
+    }
+    $method = 'aes-128-gcm';
+    $url = base64_decode($url);
+    $initVectorLen = openssl_cipher_iv_length($method);
+    $initVector = substr($url,0,$initVectorLen);
+    $tagLen = 16;
+    $tag = substr($url,$initVectorLen,$tagLen);
+    $data = substr($url,$tagLen+$initVectorLen);
+
+    $data = openssl_decrypt($data,$method,base64_decode(ENCRYPTION_KEY),OPENSSL_RAW_DATA,$initVector,$tag);
+    if(!$data){
+        return false;
+    }
+    $data = explode('§',$data);
+    return (count($data) == $field)?$data:false ;
+
+}
