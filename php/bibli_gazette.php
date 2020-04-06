@@ -2,7 +2,7 @@
 
 /*################################################################
  *
- *              Gazette function librarie          
+ *              Gazette functions librarie          
  * 
  *      > My libraries functions are prefixed by fp_
  *      > My local functions are prefixed by fpl_

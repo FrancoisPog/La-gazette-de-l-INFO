@@ -49,12 +49,14 @@ function fpl_print_article($data){
     $status = $data[0]['utStatut'];
     $link = ($status == 3 || $status == 1) ? 'redaction.php#'.$data[0]['utPseudo']:false;
 
+    $pictureExist = (file_exists('../upload/'.$data[0]['arID'].'.jpg'));
 
-    echo    '<article>',
+
+    echo    '<article ',($pictureExist)?'class="with-picture"':'',' >',
                 '<h3>',$titre,'</h3>';
 
-                    if(file_exists('../upload/'.$data[0]['arID'].'.jpg')){
-                        echo '<img src="../upload/',$data[0]['arID'],'.jpg" alt="',$titre,'" >';
+                    if($pictureExist){
+                        echo '<img src="../upload/',$data[0]['arID'],'.jpg" width="250" height="187" alt="',$titre,'" >';
                     }
         
                 echo fp_html_parseBbCode(str_replace("\r\n"," ",$texte)),
@@ -75,6 +77,7 @@ function fpl_print_article($data){
     echo            '</p>',
                 '</footer>',
             '</article>',
+
             '<section>',
                 '<h2>Réactions</h2>',
                 fpl_print_comments($data),

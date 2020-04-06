@@ -392,6 +392,11 @@ nav ul>li>ul>li{
     border-radius: 10px 0px;
     padding-bottom: 5px;
 }
+
+#article article.with-picture{
+    min-height: 250px;
+}
+
 /* Image */
 #article article img{
     float: right;
@@ -650,7 +655,7 @@ table.form tr{
 .info {
     cursor: default;
     color: darkblue;
-    font-weight: 600;
+    font-weight: bold;
 }
 
 .info:hover .infobulle{

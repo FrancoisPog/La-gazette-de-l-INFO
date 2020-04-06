@@ -12,7 +12,7 @@ require_once("php/bibli_gazette.php");
 function fpl_print_articleLink($articleData){
     $titre = $articleData['arTitre'];
 
-    if(file_exists('upload/'.$articleData['arID']).'.jpg'){
+    if(file_exists('upload/'.$articleData['arID'].'.jpg')){
         $picture = 'upload/'.$articleData['arID'].'.jpg';
     }else{
         $picture = 'images/none.jpg';
