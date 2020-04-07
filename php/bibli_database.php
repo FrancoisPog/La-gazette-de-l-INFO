@@ -115,7 +115,7 @@ function fp_db_execute($db,$query,$protect_outputs = true,$insert = false){
 
     $array = null;
     while($data = mysqli_fetch_assoc($query)){
-        $array[] = ($protect_outputs) ? fp_db_protect_outputs($data):$data;
+        $array[] = ($protect_outputs) ? fp_db_protect_outputs($data) : $data;
     }
 
     mysqli_free_result($query);

@@ -16,6 +16,9 @@ $query = 'SELECT * FROM utilisateur WHERE utPseudo = "'.mysqli_real_escape_strin
 $userData = fp_db_execute($db,$query)[0];
 // N.B. $userData is protected in fp_db_execute()
 
+mysqli_close($db);
+
+
 // --- Page Generation
 
 fp_print_beginPage('protegee','Page accessible uniquement aux utilisateurs authentifiés',1,$userData['utStatut'],$userData['utPseudo']);
@@ -30,6 +33,5 @@ echo '<section>',
         }
 echo    '</ul>', 
     '</section>';
-
 
 fp_print_endPage();

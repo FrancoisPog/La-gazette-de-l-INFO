@@ -5,7 +5,7 @@ ob_start();
 
 /**
  * Check if it's a hacking case
- * Exit the script if it's a hacking case
+ * @return void|exit Exit the script if it's a hacking case
  */
 function fpl_hackGuard(){
     fp_check_param($_POST,['pseudo','passe','btnConnexion']) or fp_session_exit('../index.php');

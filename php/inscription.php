@@ -23,7 +23,7 @@ function fpl_intIsBetween($number,$min,$max){
 
 /**
  * Check if it's a hacking case
- * Exit the script if it's a hacking case
+ * @return void|exit Exit the script if it's a hacking case
  */
 function fpl_hackGuard(){
     /*
@@ -183,7 +183,7 @@ function fpl_registerUser($db,$userData){
 
 /**
  * Execute the registerion 
- * @return Boolean 0 if there are no error, else it returning an array with the errors
+ * @return int|Array 0 if there are no error, else it returning an array with the errors
  */
 function fpl_registeringProcess(){
     

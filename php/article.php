@@ -98,7 +98,6 @@ if(!fp_check_param($_GET,['id'])){
 }
 
 $codeErr = 0;
-
 $id = $_GET['id'];
 
 if(!fp_str_isInt($id)){

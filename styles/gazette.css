@@ -604,7 +604,7 @@ table.form td.label{
 
 table.form td.input{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 table.form td.checkbox{
