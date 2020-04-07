@@ -21,6 +21,12 @@ define("BD_SERVER","localhost");
 define("BD_NAME","poguet_gazette");
 define("BD_USER","poguet_u");
 define("BD_PASS","poguet_p");
+
+// define("BD_SERVER","db38127-poguet-gazette.sql-pro.online.net");
+// define("BD_NAME","db38127_poguet_gazette");
+// define("BD_USER","db115427");
+// define("BD_PASS","Poguet_p");
+
 define("ENCODE","UTF-8");
 define("ENCRYPTION_KEY","lJ4sMUKYK2DvDXMFr5lyCw==");
 
@@ -28,12 +34,13 @@ require_once('bibli_generale.php');
 
 /**
  * Printing the beginning of page in the gazette website 
- * @param String $id    The page's id (for css)
- * @param String $title The page title
- * @param int $deepness The deepness between the page file and the website root
- * @param int $status   The user status (-1 if unlogged)
+ * @param String $id        The page's id (for css)
+ * @param String $title     The page title
+ * @param int $deepness     The deepness between the page file and the website root
+ * @param int $status       The user status (-1 if unlogged in)
+ * @param String $pseudo    The (optional) user pseudo (if logged in)
  */
-function fp_print_beginPage($id,$title,$deepness,$status,$pseudo = false){
+function fp_print_beginPage($id,$title,$deepness,$status = -1,$pseudo = false){
     $path="";
     for($i = 0 ; $i < $deepness ; $i++){
         $path.="../";
@@ -51,7 +58,7 @@ function fp_print_beginPage($id,$title,$deepness,$status,$pseudo = false){
                 '<html lang=\'fr\'>',
                     '<head>',
                         '<meta charset="utf-8">',
-                        '<title>',$title,'</title>',
+                        '<title>La Gazette de L-INFO | ',$title,'</title>',
                         '<link rel="stylesheet" href="',$path,'styles/gazette.css">',
                     '</head>',
                     '<body>',
@@ -65,7 +72,7 @@ function fp_print_beginPage($id,$title,$deepness,$status,$pseudo = false){
     if($status == -1){
         echo                    '<li><a href="',$path,'php/connexion.php">Se connecter</a></li>';
     }else{
-        echo                       '<li><a href="',$path,'php/compte.php">',($pseudo)?$pseudo:'Se connecter','</a>',
+        echo                       '<li><a>',($pseudo)?$pseudo:'Se conecter','</a>',
                                         '<ul class="'.$statusClass.'">',
                                             '<li><a href="',$path,'php/compte.php">Mon profil</a></li>',
             ($status > 0 && $status != 2) ? "<li><a href=\"$path"."php/nouveau.php\">Nouvel article</a></li>":'',

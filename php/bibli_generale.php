@@ -155,7 +155,7 @@ function fp_session_exit($page){
 /**
  * Check if the user is logged in.
  * @param mixed $page_to_go_if_not  If you want to redirect the user if he's not logged in, you must specify a page
- * @return boolean True if he's logged in, else false (only if he's not redirected)
+ * @return boolean                  True if he's logged in, else false (only if he's not redirected)
  */
 function fp_is_logged($page_to_go_if_not = false){
     $isLogged = (isset($_SESSION['pseudo']) && isset($_SESSION['statut']));

@@ -79,7 +79,7 @@ function fpl_connection($userData){
  */
 function fpl_print_connection_form($errors = false){
     fp_print_beginPage('connexion','Connexion',1,-1);
-    $required = false;
+    $required = true;
     echo '<section>',
             '<h2>Formuaire de connexion</h2>',
             '<p>Pour vous identifier, remplissez le formulaire ci-dessous :</p>',

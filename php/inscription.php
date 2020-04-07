@@ -221,14 +221,14 @@ function fpl_registeringProcess(){
  * @param Array $errors The errors to print
  */
 function fpl_print_Errors($errors){
-    echo '<aside class="error">',
+    echo '<div class="error">',
             '<p>Les erreurs suivantes ont été relevées lors de votre inscription :</p>',
             '<ul>';
                 foreach($errors as $error){
                     echo '<li>',$error,'</li>';
                 }
     echo    '</ul>',
-        '</aside>';
+        '</div>';
 }
 
 /**
@@ -244,21 +244,21 @@ function fpl_print_register_forms($errors = []){
             (count($errors)!=0) ? fpl_print_Errors($errors):'',
             '<form method="POST" action="inscription.php">',
                 '<table class="form">',
-                    fp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):false,"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
+                    fp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
                     
-                    fp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):false,false,true),
+                    fp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):'','',true),
                     
-                    fp_print_inputLine('Votre nom :',"text",'nom',50,$required,false,($errors)?htmlentities($_POST['nom']):false,false,true),
+                    fp_print_inputLine('Votre nom :',"text",'nom',50,$required,'',($errors)?htmlentities($_POST['nom']):'','',true),
                     
-                    fp_print_inputLine('Votre prénom :',"text",'prenom',60,$required,false,($errors)?htmlentities($_POST['prenom']):false,false,true),
+                    fp_print_inputLine('Votre prénom :',"text",'prenom',60,$required,'',($errors)?htmlentities($_POST['prenom']):'','',true),
                     
                     fp_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
                     
-                    fp_print_inputLine('Votre email :',"email",'email',255,$required,false,($errors)?htmlentities($_POST['email']):false,false,true),
+                    fp_print_inputLine('Votre email :',"email",'email',255,$required,'',($errors)?htmlentities($_POST['email']):'','',true),
                     
-                    fp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,false,($errors)?htmlentities($_POST['passe1']):false,false,true),
+                    fp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,'',($errors)?htmlentities($_POST['passe1']):'','',true),
                     
-                    fp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,false,($errors)?htmlentities($_POST['passe2']):false,false,true),
+                    fp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,'',($errors)?htmlentities($_POST['passe2']):'','',true),
                     
                     fp_print_checkboxLine('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU']),'Vous les trouverez <a href="#">ici</a>.',true),
                     
@@ -284,11 +284,9 @@ if(fp_is_logged()){
 }
 
 if(isset($_POST['btnInscription'])){
-    $res = fpl_registeringProcess();
+    $errors = fpl_registeringProcess(); // no return if success
+    fpl_print_register_forms($errors);
     
-    if($res != 0){
-        fpl_print_register_forms($res);
-    }
 }else{
     fpl_print_register_forms();
 }

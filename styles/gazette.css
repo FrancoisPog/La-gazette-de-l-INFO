@@ -123,6 +123,7 @@ em {
 a{
     color: #00D;
     text-decoration: none;
+    cursor: default;
 }
 a:hover{
     text-decoration: underline;
