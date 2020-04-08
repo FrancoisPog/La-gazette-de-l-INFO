@@ -1,0 +1,12 @@
+index.php		| Terminé ✔️	| 
+actus.php 		| Pas commencé	| Lucas
+recherche.php		| Pas commencé	|
+article.php		| Commencé	| Moi
+redaction.php		| Pas commencé	| François
+connexion.php		| Commencé	|
+deconnexion.php		| Terminé ✔️	|
+inscription.php		| Commencé	|
+compte.php		| Pas commencé	|
+nouveau.php		| Pas commencé	|
+edition.php		| Pas commencé	|
+administration.php	| Pas commencé	|

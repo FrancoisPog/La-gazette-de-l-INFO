@@ -557,6 +557,14 @@ h3{
 
 /* --------------------- PAGE ACTUS ---------------------*/
 
+#actus section:first-of-type{
+    border-radius : 7px;
+}
+
+#actus section > form > p{
+    display: inline;
+}
+
 #actus article{
     position: relative;
     background-color: #E5E5E5;
@@ -590,6 +598,33 @@ h3{
     margin-bottom: 15px;
 }
 
+#actus button {
+    display: inline;
+    font-weight: bold;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+#actus input {
+    display: inline;
+    font-weight: bold;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+#actus input:disabled {
+    background-color: red;
+    color :white;
+}
+
+#actus input:hover {
+    background-color: red;
+    color :white;
+}
 
 /* --------------------- PAGE INSCRIPTION / CONNEXION ---------------------*/
 
@@ -639,7 +674,6 @@ table.form input[type="submit"], table.form input[type="reset"]{
 table.form input[type="submit"]:hover, table.form input[type="reset"]:hover{
     background-color: red;
     color :white;
-    
 }
 
 table.form select{
