@@ -12,13 +12,13 @@
  *
  *  @return objet 	connecteur à la base de données
  */
-function fp_db_connecter() {
+function cp_db_connecter() {
     $conn = mysqli_connect(BD_SERVER, BD_USER, BD_PASS, BD_NAME);
     if ($conn !== FALSE) {
         //mysqli_set_charset() définit le jeu de caractères par défaut à utiliser lors de l'envoi
         //de données depuis et vers le serveur de base de données.
         mysqli_set_charset($conn, 'utf8') 
-        or fp_db_error_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
+        or cp_db_error_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
         return $conn;     // ===> Sortie connexion OK
     }
     // Erreur de connexion
@@ -33,7 +33,7 @@ function fp_db_connecter() {
             //appel de htmlentities() pour que les éventuels accents s'affiche correctement
             .'<br>'.htmlentities(mysqli_connect_error(), ENT_QUOTES, 'ISO-8859-1')  
             .'</div>';
-    fp_db_error_exit($msg);
+    cp_db_error_exit($msg);
 }
 
 /**
@@ -46,7 +46,7 @@ function fp_db_connecter() {
  *
  * @param string	$msg	Message d'erreur à afficher
  */
-function fp_db_error_exit($msg) {
+function cp_db_error_exit($msg) {
     ob_end_clean();	// Suppression de tout ce qui a pu être déja généré
 
     echo    '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">',
@@ -69,7 +69,7 @@ function fp_db_error_exit($msg) {
  * @param objet		$bd		Connecteur sur la bd ouverte
  * @param string	$sql	requête SQL provoquant l'erreur
  */
-function fp_db_error($bd, $sql) {
+function cp_db_error($bd, $sql) {
     $errNum = mysqli_errno($bd);
     $errTxt = mysqli_error($bd);
 
@@ -95,7 +95,7 @@ function fp_db_error($bd, $sql) {
 
     $msg .= '</table>';
 
-    fp_db_error_exit($msg);	// ==> ARRET DU SCRIPT
+    cp_db_error_exit($msg);	// ==> ARRET DU SCRIPT
 }
 
 /**
@@ -106,8 +106,8 @@ function fp_db_error($bd, $sql) {
  * @param bool $insert          If true, is an insertion query
  * @return Array                The result in an array
  */
-function fp_db_execute($db,$query,$protect_outputs = true,$insert = false){
-    $query = mysqli_query($db,$query) or fp_db_error($db,$query);
+function cp_db_execute($db,$query,$protect_outputs = true,$insert = false){
+    $query = mysqli_query($db,$query) or cp_db_error($db,$query);
     
     if($insert){
         return $query;
@@ -115,7 +115,7 @@ function fp_db_execute($db,$query,$protect_outputs = true,$insert = false){
 
     $array = null;
     while($data = mysqli_fetch_assoc($query)){
-        $array[] = ($protect_outputs) ? fp_db_protect_outputs($data) : $data;
+        $array[] = ($protect_outputs) ? cp_db_protect_outputs($data) : $data;
     }
 
     mysqli_free_result($query);
@@ -127,10 +127,10 @@ function fp_db_execute($db,$query,$protect_outputs = true,$insert = false){
  * @param mixed $content    The array or string to protect
  * @return mixed            The array or string protected
  */
-function fp_db_protect_outputs($content) {
+function cp_db_protect_outputs($content) {
     if (is_array($content)) {
         foreach ($content as &$value) { 
-            $value = fp_db_protect_outputs($value);   
+            $value = cp_db_protect_outputs($value);   
         }
         unset ($value);
         return $content;
@@ -148,10 +148,10 @@ function fp_db_protect_outputs($content) {
  * @param mixed $content    The array or string to protect
  * @return mixed            The array or string protected
  */
-function fp_db_protect_inputs($db,$content) {
+function cp_db_protect_inputs($db,$content) {
     if (is_array($content)) {
         foreach ($content as &$value) { 
-            $value = fp_db_protect_inputs($db,$value);   
+            $value = cp_db_protect_inputs($db,$value);   
         }
         unset ($value);
         return $content;

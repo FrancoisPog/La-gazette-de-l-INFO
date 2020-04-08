@@ -7,15 +7,15 @@ ob_start();
  * Check if it's a hacking case
  * @return void|exit Exit the script if it's a hacking case
  */
-function fpl_hackGuard(){
-    fp_check_param($_POST,['pseudo','passe','btnConnexion']) or fp_session_exit('../index.php');
+function cpl_hackGuard(){
+    cp_check_param($_POST,['pseudo','passe','btnConnexion']) or cp_session_exit('../index.php');
 }
 
 /**
  * Check if the pass is empty, and if the pattern of pseudo is correct (so if not, we can avoid a database connection)
  * @return boolean True if there are no error, else false
  */
-function fpl_check_inputs(){
+function cpl_check_inputs(){
     $_POST = array_map('trim',$_POST);
     
 
@@ -34,14 +34,14 @@ function fpl_check_inputs(){
  * Check if the pseudo and the password match
  * @return mixed if the pseudo and pass match,it returning the user data in an array, else false
  */
-function fpl_check_user_data(){
-    $db = fp_db_connecter();
+function cpl_check_user_data(){
+    $db = cp_db_connecter();
 
     $query = 'SELECT utPasse,utStatut
                 FROM utilisateur
-                WHERE utPseudo = "'.fp_db_protect_inputs($db,$_POST['pseudo']).'"';
+                WHERE utPseudo = "'.cp_db_protect_inputs($db,$_POST['pseudo']).'"';
 
-    $pass = fp_db_execute($db,$query,false)[0];
+    $pass = cp_db_execute($db,$query,false)[0];
 
     mysqli_close($db);
 
@@ -61,7 +61,7 @@ function fpl_check_user_data(){
  * Connect the user and redirects to the origin page
  * @param $statut The user statut
  */
-function fpl_connection($userData){
+function cpl_connection($userData){
     
     $page = $_SESSION['origin_page'];
     unset($_SESSION['origin_page']);
@@ -77,8 +77,8 @@ function fpl_connection($userData){
  * Print the connection page
  * @param $errors The potential errors
  */
-function fpl_print_connection_form($errors = false){
-    fp_print_beginPage('connexion','Connexion',1,-1);
+function cpl_print_connection_form($errors = false){
+    cp_print_beginPage('connexion','Connexion',1,-1);
     $required = true;
     echo '<section>',
             '<h2>Formuaire de connexion</h2>',
@@ -86,52 +86,52 @@ function fpl_print_connection_form($errors = false){
             ($errors) ? '<p class="error">Echec d\'authentification. Utilisateur inconnu ou mot de passe incorrect.</p>':'',
             '<form method="POST" action="connexion.php">',
                 '<table class="form">',
-                    fp_print_inputLine('Pseudo :','text','pseudo',20,$required),
-                    fp_print_inputLine('Mot de passe :','password','passe',255,$required),
-                    fp_print_buttonsLine(['Se connecter','btnConnexion'],'Annuler'),
+                    cp_print_inputLine('Pseudo :','text','pseudo',20,$required),
+                    cp_print_inputLine('Mot de passe :','password','passe',255,$required),
+                    cp_print_buttonsLine(['Se connecter','btnConnexion'],'Annuler'),
                 '</table>',
             '</form>',
             '<p>Pas encore inscrit ? N\'attendez pas, <a href="inscription.php">inscrivez-vous</a> !</p> ',
         '</section>';
 
-    fp_print_endPage();
+    cp_print_endPage();
 }
 
 /**
  * Execute the logging process
  * @return mixed exit if success, else -1
  */
-function fpl_logging_process(){
-    fpl_hackGuard();
+function cpl_logging_process(){
+    cpl_hackGuard();
 
-    if(!fpl_check_inputs()){
+    if(!cpl_check_inputs()){
         return -1;
     }
 
-    $statut = fpl_check_user_data();
+    $statut = cpl_check_user_data();
     if($statut == false){
         return -1;
     }
 
-    fpl_connection($statut);
+    cpl_connection($statut);
 
 }
 
 
 
 // if the user comes to this page while already logged in -> compte.php
-if(fp_is_logged()){
+if(cp_is_logged()){
     header('Location: compte.php');
     exit(0);
 }
 
 
 if(isset($_POST['btnConnexion'])){
-    $res = fpl_logging_process(); // no return if success
-    fpl_print_connection_form(true);
+    $res = cpl_logging_process(); // no return if success
+    cpl_print_connection_form(true);
     
 }else{
     // Keep the origin page 
     $_SESSION['origin_page'] = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '../index.php' ;
-    fpl_print_connection_form();
+    cpl_print_connection_form();
 }

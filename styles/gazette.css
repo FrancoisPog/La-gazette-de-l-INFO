@@ -456,7 +456,7 @@ article footer p{
 /* --------------------- PAGE REDACTION ---------------------*/
 
 /* Tout les articles qui ne sont pas seul dans leur section */
-#redaction article:not(:only-of-type) {
+#redaction article.haveFunction {
     position: relative;
     border-top : 2px solid black;
     padding: 20px 0px 20px 0px;

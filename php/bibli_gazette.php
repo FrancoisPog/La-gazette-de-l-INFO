@@ -4,8 +4,8 @@
  *
  *              Gazette functions librarie          
  * 
- *      > My libraries functions are prefixed by fp_
- *      > My local functions are prefixed by fpl_
+ *      > My libraries functions are prefixed by cp_
+ *      > My local functions are prefixed by cpl_
  * 
  *      > I organize my functions in several domains :
  *         _print_  -> functions that display html code
@@ -40,7 +40,7 @@ require_once('bibli_generale.php');
  * @param int $status       The user status (-1 if unlogged in)
  * @param String $pseudo    The (optional) user pseudo (if logged in)
  */
-function fp_print_beginPage($id,$title,$deepness,$status = -1,$pseudo = false){
+function cp_print_beginPage($id,$title,$deepness,$status = -1,$pseudo = false){
     $path="";
     for($i = 0 ; $i < $deepness ; $i++){
         $path.="../";
@@ -95,7 +95,7 @@ function fp_print_beginPage($id,$title,$deepness,$status = -1,$pseudo = false){
 /**
  * Printing the ending of page in the gazette website 
  */
-function fp_print_endPage(){
+function cp_print_endPage(){
     echo        '</main>',
                 '<footer>',
                     '<p> &copy; Licence Informatique - Janvier 2020 - Tous droits réservés</p>',
@@ -108,7 +108,7 @@ function fp_print_endPage(){
  * Printing an error section 
  * @param $msg The error message 
  */
-function fp_make_error($msg){  
+function cp_make_error($msg){  
     echo    '<section>',
                 '<h2>Oups, il y a une erreur...</h2>',
                 '<p>La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :</p>',
