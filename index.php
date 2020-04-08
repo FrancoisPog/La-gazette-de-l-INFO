@@ -9,7 +9,7 @@ require_once("php/bibli_gazette.php");
  * Printing an article link
  * @param Array $articleData The article data (already protected)
  */
-function fpl_print_articleLink($articleData){
+function cpl_print_articleLink($articleData){
     $titre = $articleData['arTitre'];
 
     if(file_exists('upload/'.$articleData['arID'].'.jpg')){
@@ -33,11 +33,11 @@ function fpl_print_articleLink($articleData){
  * @param Array $articles   The articles to print
  * @param String $title     The section title
  */
-function fpl_print_articleBlock($articles,$title){
+function cpl_print_articleBlock($articles,$title){
     echo '<section>',
             '<h2>',$title,'</h2>';
                 foreach($articles as $article){
-                    fpl_print_articleLink($article);
+                    cpl_print_articleLink($article);
                 }
     echo '</section>';
 }
@@ -45,7 +45,7 @@ function fpl_print_articleBlock($articles,$title){
 /**
  * Print the horoscope
  */
-function fpl_print_horoscope(){
+function cpl_print_horoscope(){
     echo    '<section id="horoscope">',
                 '<h2>L\'horoscope de la semaine</h2>',    
                 '<p>',
@@ -110,7 +110,7 @@ function fpl_print_horoscope(){
  * @param Array $articles The articles from database
  * @return Array Articles distributed in three array
  */
-function fpl_select_articles($articles) {
+function cpl_select_articles($articles) {
     $result = array([],[],[]);
     $idAlreadyUsed = array();
 
@@ -138,7 +138,7 @@ function fpl_select_articles($articles) {
 
 // --- Database interactions  --- 
 
-$db = fp_db_connecter();
+$db = cp_db_connecter();
 
 $query = '('.'SELECT arID, arTitre, 1 AS type
                 FROM article
@@ -157,22 +157,22 @@ $query = '('.'SELECT arID, arTitre, 1 AS type
                         ORDER BY rand()
                         LIMIT 0,9)';
 
-$res = fp_db_execute($db,$query);
+$res = cp_db_execute($db,$query);
 
 mysqli_close($db);
 
-$articles = fpl_select_articles($res);
+$articles = cpl_select_articles($res);
 
             
 // ---Page generation ---
 
-$isLogged = fp_is_logged();
+$isLogged = cp_is_logged();
 
-fp_print_beginPage('accueil',"Le site de désinformation n°1 des étudiants en Licence info",0,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
+cp_print_beginPage('accueil',"Le site de désinformation n°1 des étudiants en Licence info",0,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
     
-fpl_print_articleBlock($articles[0],"&Agrave; la une");
-fpl_print_articleBlock($articles[1],"L'info brûlante");
-fpl_print_articleBlock($articles[2],"Les incontournables");
-fpl_print_horoscope();
+cpl_print_articleBlock($articles[0],"&Agrave; la une");
+cpl_print_articleBlock($articles[1],"L'info brûlante");
+cpl_print_articleBlock($articles[2],"Les incontournables");
+cpl_print_horoscope();
 
-fp_print_endPage();
+cp_print_endPage();

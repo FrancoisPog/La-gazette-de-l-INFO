@@ -9,7 +9,7 @@ require_once("bibli_gazette.php");
  * Print article's comments
  * @param Array $articleData The article's data
  */
-function fpl_print_comments($articleData){
+function cpl_print_comments($articleData){
     if($articleData[0]['coID'] == null){
         echo '<p>Il n\'y a pas encore de commentaire pour cette article !</p>';
         return;
@@ -19,8 +19,8 @@ function fpl_print_comments($articleData){
 
     foreach($articleData as $comment){
         echo    '<li>',
-                    '<p>Commentaire de <strong>',$comment['coAuteur'],'</strong>, le ',fp_str_toDate($comment['coDate']),'</p>',
-                    '<blockquote>',fp_html_parseBbCode($comment['coTexte']),'</blockquote>',
+                    '<p>Commentaire de <strong>',$comment['coAuteur'],'</strong>, le ',cp_str_toDate($comment['coDate']),'</p>',
+                    '<blockquote>',cp_html_parseBbCode($comment['coTexte']),'</blockquote>',
                 '</li>';
     }
 
@@ -31,20 +31,20 @@ function fpl_print_comments($articleData){
  * Print an article
  * @param Array $data The article data (not yet protected)
  */
-function fpl_print_article($data){
+function cpl_print_article($data){
     // author name formatting
     $auteur =  mb_strtoupper(mb_substr($data[0]['utPrenom'],0,1,ENCODE),ENCODE).'.'.mb_convert_case($data[0]['utNom'],MB_CASE_TITLE,ENCODE);
 
     // data protection
-    $auteur = fp_db_protect_outputs($auteur);
-    $data = fp_db_protect_outputs($data);
+    $auteur = cp_db_protect_outputs($auteur);
+    $data = cp_db_protect_outputs($data);
 
     $titre = $data[0]['arTitre'];
     $texte = $data[0]['arTexte'];
     
-    $dateP = fp_str_toDate($data[0]['arDatePublication']);
+    $dateP = cp_str_toDate($data[0]['arDatePublication']);
     $dateM = $data[0]['arDateModification'];
-    $dateM = ($dateM == null)?false:fp_str_toDate($dateM);
+    $dateM = ($dateM == null)?false:cp_str_toDate($dateM);
     
     $status = $data[0]['utStatut'];
     $link = ($status == 3 || $status == 1) ? 'redaction.php#'.$data[0]['utPseudo']:false;
@@ -59,7 +59,7 @@ function fpl_print_article($data){
                         echo '<img src="../upload/',$data[0]['arID'],'.jpg" width="250" height="187" alt="',$titre,'" >';
                     }
         
-                echo fp_html_parseBbCode(str_replace("\r\n"," ",$texte)),
+                echo cp_html_parseBbCode(str_replace("\r\n"," ",$texte)),
 
                 '<footer>',
                     '<p>';
@@ -80,7 +80,7 @@ function fpl_print_article($data){
 
             '<section>',
                 '<h2>Réactions</h2>',
-                fpl_print_comments($data),
+                cpl_print_comments($data),
                 '<p><a href="connexion.php"> Connectez-vous</a> ou <a href="inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p>',
             '</section>';
                 
@@ -92,7 +92,7 @@ function fpl_print_article($data){
 // --- ID verification and database interactions ---
 
 // if invalid keys -> index
-if(!fp_check_param($_GET,['id'])){
+if(!cp_check_param($_GET,['id'])){
     header('Location: ../index.php');
     exit(); 
 }
@@ -100,17 +100,17 @@ if(!fp_check_param($_GET,['id'])){
 $codeErr = 0;
 $id = $_GET['id'];
 
-if(!fp_str_isInt($id)){
+if(!cp_str_isInt($id)){
     $codeErr = 1; // The id key isn't an integer
 }else{
     $id = (int)$id;
-    $db = fp_db_connecter();
+    $db = cp_db_connecter();
     $query = 'SELECT * 
             FROM article INNER JOIN utilisateur
             ON utPseudo = arAuteur LEFT JOIN commentaire ON coArticle = arID
             WHERE arID = '.mysqli_escape_string($db,$id).
             ' ORDER BY coDate DESC';
-    $data = fp_db_execute($db,$query,false);
+    $data = cp_db_execute($db,$query,false);
     if($data == null){
         $codeErr = 2; // No article for this id
     }
@@ -121,15 +121,15 @@ if(!fp_str_isInt($id)){
 
 // --- Page generation ---
 
-$isLogged = fp_is_logged();
+$isLogged = cp_is_logged();
 
-fp_print_beginPage('article','L\'actu',1,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
+cp_print_beginPage('article','L\'actu',1,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
 
     if($codeErr == 0){ // print article
-        fpl_print_article($data);
+        cpl_print_article($data);
     }else{ // print error page
         $errorMsg = ($codeErr == 1) ? "Identifiant d'article invalide"  :"Aucun n'article ne correspond à cet identifiant";
-        fp_make_error($errorMsg);
+        cp_make_error($errorMsg);
     }
 
-fp_print_endPage();
+cp_print_endPage();

@@ -4,8 +4,8 @@
  *
  *              Generic functions librarie          
  * 
- *      > My libraries functions are prefixed by fp_
- *      > My local functions are prefixed by fpl_
+ *      > My libraries functions are prefixed by cp_
+ *      > My local functions are prefixed by cpl_
  * 
  *      > I organize my functions in several domains :
  *         _print_  -> functions that display html code
@@ -26,7 +26,7 @@ require_once('bibli_database.php');
  * @param String $arg   The bbcode text to parse
  * @return String       The html text
  */
-function fp_html_parseBbCode($arg){
+function cp_html_parseBbCode($arg){
     $exp = array();
     $exp[] = '/\[(p|citation|gras|it|item|liste)\](.+?)\[\/\1\]/i';
     $exp[] = '/\[(br|youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+( [^\]]*)?)\]/i';
@@ -34,7 +34,7 @@ function fp_html_parseBbCode($arg){
     $exp[] = '/\[#x?[0-9a-fA-F]+\]/';
     
     if(is_string($arg)){
-        return preg_replace_callback($exp,'fp_html_parseBbCode',$arg);
+        return preg_replace_callback($exp,'cp_html_parseBbCode',$arg);
     }
     
     // youtube with legende
@@ -51,7 +51,7 @@ function fp_html_parseBbCode($arg){
 
     // Link
     if(preg_match('/^\[a:([^\]])*\][^\[]+\[\/a\]$/i',$arg[0])){
-        return preg_replace_callback($exp,'fp_html_parseBbCode',preg_replace('/\[a:([^\]]*)\]([^\[]+)\[\/a\]/i','<a href="\1">\2</a>',$arg[0]));
+        return preg_replace_callback($exp,'cp_html_parseBbCode',preg_replace('/\[a:([^\]]*)\]([^\[]+)\[\/a\]/i','<a href="\1">\2</a>',$arg[0]));
        
     }
 
@@ -66,17 +66,17 @@ function fp_html_parseBbCode($arg){
         case "br":
             return "<br>";
         case 'p' :
-            return preg_replace_callback($exp,'fp_html_parseBbCode','<p>'.$arg[2].'</p>');
+            return preg_replace_callback($exp,'cp_html_parseBbCode','<p>'.$arg[2].'</p>');
         case 'citation' : 
-            return preg_replace_callback($exp,'fp_html_parseBbCode','<blockquote>'.$arg[2].'</blockquote>');
+            return preg_replace_callback($exp,'cp_html_parseBbCode','<blockquote>'.$arg[2].'</blockquote>');
         case 'liste' : 
-            return preg_replace_callback($exp,'fp_html_parseBbCode','<ul>'.$arg[2].'</ul>');
+            return preg_replace_callback($exp,'cp_html_parseBbCode','<ul>'.$arg[2].'</ul>');
         case 'item' : 
-            return preg_replace_callback($exp,'fp_html_parseBbCode','<li>'.$arg[2].'</li>');
+            return preg_replace_callback($exp,'cp_html_parseBbCode','<li>'.$arg[2].'</li>');
         case 'it' : 
-            return preg_replace_callback($exp,'fp_html_parseBbCode','<em>'.$arg[2].'</em>');
+            return preg_replace_callback($exp,'cp_html_parseBbCode','<em>'.$arg[2].'</em>');
         case 'gras' : 
-            return preg_replace_callback($exp,'fp_html_parseBbCode','<strong>'.$arg[2].'</strong>');
+            return preg_replace_callback($exp,'cp_html_parseBbCode','<strong>'.$arg[2].'</strong>');
     }
 
     echo 'error';
@@ -90,7 +90,7 @@ function fp_html_parseBbCode($arg){
  * @param String $str The string to test
  * @return boolean    True if the string is an int, else false
  */
-function fp_str_isInt($str){
+function cp_str_isInt($str){
     return preg_match('/^[[:digit:]]+$/',$str);
 }
 
@@ -99,7 +99,7 @@ function fp_str_isInt($str){
  * @param int $date The date to parse
  * @return String   The date in correct format
  */
-function fp_str_toDate($date){
+function cp_str_toDate($date){
     setlocale(LC_TIME, "fr_FR");
     return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
 }
@@ -113,7 +113,7 @@ function fp_str_toDate($date){
  * @param Array $optional_keys      The array containing the optional keys
  * @return boolean                  True if the parameters are correct, else false
  */
-function fp_check_param($array, $mandatory_keys, $optional_keys = array()){
+function cp_check_param($array, $mandatory_keys, $optional_keys = array()){
     $array = array_keys($array);
     if (count(array_diff($mandatory_keys, $array)) > 0){
         return false;
@@ -131,7 +131,7 @@ function fp_check_param($array, $mandatory_keys, $optional_keys = array()){
  * Correctly end a session and redirect to the given page.
  * @param String $page  The page for the redirection
  */
-function fp_session_exit($page){
+function cp_session_exit($page){
     session_destroy();
     session_unset();
 
@@ -156,7 +156,7 @@ function fp_session_exit($page){
  * @param mixed $page_to_go_if_not  If you want to redirect the user if he's not logged in, you must specify a page
  * @return boolean                  True if he's logged in, else false (only if he's not redirected)
  */
-function fp_is_logged($page_to_go_if_not = false){
+function cp_is_logged($page_to_go_if_not = false){
     $isLogged = (isset($_SESSION['pseudo']) && isset($_SESSION['statut']));
     if($isLogged){
         return true;
@@ -166,7 +166,7 @@ function fp_is_logged($page_to_go_if_not = false){
         return false;
     }
     
-    fp_session_exit($page_to_go_if_not);
+    cp_session_exit($page_to_go_if_not);
 
 }
 
@@ -177,9 +177,9 @@ function fp_is_logged($page_to_go_if_not = false){
  * @param Array $data       All data to crypt in an array
  * @return String|false     The encrypted and signed url is success, false if failure
  */
-function fp_encrypt_url($data){
+function cp_encrypt_url($data){
     if(!defined('ENCRYPTION_KEY')){
-        throw new Exception('[fp_encrypt_url] : The constant \'ENCRYPTION_KEY\' must be defined');
+        throw new Exception('[cp_encrypt_url] : The constant \'ENCRYPTION_KEY\' must be defined');
     }
     $data = implode('§',$data);
 
@@ -202,9 +202,9 @@ function fp_encrypt_url($data){
  * @param int $field    The number of field expected
  * @return Array|false  Decrypted and authenticated data if success, false if failure
  */
-function fp_decrypt_url($url,$field){
+function cp_decrypt_url($url,$field){
     if(!defined('ENCRYPTION_KEY')){
-        throw new Exception('[fp_decrypt_url] : The constant \'ENCRYPTION_KEY\' must be defined');
+        throw new Exception('[cp_decrypt_url] : The constant \'ENCRYPTION_KEY\' must be defined');
     }
     $method = 'aes-128-gcm';
     $url = base64_decode($url);

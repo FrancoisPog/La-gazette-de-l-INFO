@@ -5,23 +5,23 @@ ob_start();
 require_once("bibli_gazette.php");
 
 // if the user came in this page without be logged -> go index.php
-fp_is_logged('../index.php');
+cp_is_logged('../index.php');
 
 $pseudo = $_SESSION['pseudo'];
 
-$db = fp_db_connecter();
+$db = cp_db_connecter();
 
 // fetching user data
 $query = 'SELECT * FROM utilisateur WHERE utPseudo = "'.mysqli_real_escape_string($db,$pseudo).'"';
-$userData = fp_db_execute($db,$query)[0];
-// N.B. $userData is protected in fp_db_execute()
+$userData = cp_db_execute($db,$query)[0];
+// N.B. $userData is protected in cp_db_execute()
 
 mysqli_close($db);
 
 
 // --- Page Generation
 
-fp_print_beginPage('protegee','Page accessible uniquement aux utilisateurs authentifiés',1,$userData['utStatut'],$userData['utPseudo']);
+cp_print_beginPage('protegee','Page accessible uniquement aux utilisateurs authentifiés',1,$userData['utStatut'],$userData['utPseudo']);
 
 echo '<section>',
         '<h2>Utilisateur : ',$userData['utPseudo'],'</h2>',
@@ -34,4 +34,4 @@ echo '<section>',
 echo    '</ul>', 
     '</section>';
 
-fp_print_endPage();
+cp_print_endPage();

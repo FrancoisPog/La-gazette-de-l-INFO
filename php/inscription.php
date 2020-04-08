@@ -12,8 +12,8 @@ require_once("bibli_gazette.php");
  * @param $min The min limit
  * @param $max The max limit
  */
-function fpl_intIsBetween($number,$min,$max){
-    if(!fp_str_isInt($number)){
+function cpl_intIsBetween($number,$min,$max){
+    if(!cp_str_isInt($number)){
         return false;
     }
 
@@ -25,7 +25,7 @@ function fpl_intIsBetween($number,$min,$max){
  * Check if it's a hacking case
  * @return void|exit Exit the script if it's a hacking case
  */
-function fpl_hackGuard(){
+function cpl_hackGuard(){
     /*
         Only checkbox and radio buttons can be missing
         So, if other keys are missing -> hacking.
@@ -33,15 +33,15 @@ function fpl_hackGuard(){
     $mandatoryKeys = ['pseudo','nom','prenom','naissance_j','naissance_m', 'naissance_a','email','passe1','passe2','btnInscription'];
     $optionalKeys = ['cbSpam','cbCGU','radSexe'];
     
-    fp_check_param($_POST,$mandatoryKeys,$optionalKeys) or fp_session_exit('../index.php');
+    cp_check_param($_POST,$mandatoryKeys,$optionalKeys) or cp_session_exit('../index.php');
 
     // If the date fields values are not integers or are invalid -> hacking
-    (fpl_intIsBetween($_POST['naissance_j'],1,31) && 
-        fpl_intIsBetween($_POST['naissance_m'],1,12) && 
-        fpl_intIsBetween($_POST['naissance_a'],1900,2020)) or fp_session_exit('../index.php');
+    (cpl_intIsBetween($_POST['naissance_j'],1,31) && 
+        cpl_intIsBetween($_POST['naissance_m'],1,12) && 
+        cpl_intIsBetween($_POST['naissance_a'],1900,2020)) or cp_session_exit('../index.php');
     
     // If the value of civility is different of 'h' and 'f' (if it was entered) -> hacking
-    isset($_POST['radSexe']) and (preg_match('/^[hf]$/',$_POST['radSexe']) or fp_session_exit('../index.php'));
+    isset($_POST['radSexe']) and (preg_match('/^[hf]$/',$_POST['radSexe']) or cp_session_exit('../index.php'));
 
     
 }
@@ -50,7 +50,7 @@ function fpl_hackGuard(){
  * Check if the user made a mistake during registration 
  * @return mixed 0 if there are no error, else it returning an array with the errors
  */
-function fpl_checkInputsError(){
+function cpl_checkInputsError(){
     $_POST = array_map('trim',$_POST);
     $errors = array();
 
@@ -123,7 +123,7 @@ function fpl_checkInputsError(){
  * @param String $email     The specified email
  * @return mixed            0 if there are no error, else it returning an array with the errors
  */
-function fpl_checkAlreadyUsed($db,$pseudo,$email){
+function cpl_checkAlreadyUsed($db,$pseudo,$email){
 
     $query = '('."SELECT utPseudo, 1 AS type
                     FROM utilisateur
@@ -133,7 +133,7 @@ function fpl_checkAlreadyUsed($db,$pseudo,$email){
                         FROM utilisateur
                         WHERE utEmail = '$email' )";
 
-    $res = fp_db_execute($db,$query);
+    $res = cp_db_execute($db,$query);
 
     // if the pseudo of email is already used
     if($res != null){
@@ -155,7 +155,7 @@ function fpl_checkAlreadyUsed($db,$pseudo,$email){
  * @param Array $userData   The user's data (must be protected before calling this function !)
  * @return Boolean          True is the registration is a success  
  */
-function fpl_registerUser($db,$userData){
+function cpl_registerUser($db,$userData){
     extract($userData);
     $dateNaissance = $naissance_a*10000+$naissance_m*100+$naissance_j;
     $spam = (isset($cbSpam)) ? 1:0;
@@ -173,7 +173,7 @@ function fpl_registerUser($db,$userData){
                 utStatut = '0', 
                 utMailsPourris = '$spam' ";
 
-    fp_db_execute($db,$query,false,true);
+    cp_db_execute($db,$query,false,true);
 
     $_SESSION['pseudo'] = $pseudo;
     $_SESSION['statut'] = 0;
@@ -185,30 +185,30 @@ function fpl_registerUser($db,$userData){
  * Execute the registerion 
  * @return int|Array 0 if there are no error, else it returning an array with the errors
  */
-function fpl_registeringProcess(){
+function cpl_registeringProcess(){
     
     // Avoid hacking case
-    fpl_hackGuard();
+    cpl_hackGuard();
 
     // Check input errors
-    if(($errors = fpl_checkInputsError()) != 0){
+    if(($errors = cpl_checkInputsError()) != 0){
         return $errors;
     }
 
 
     // Check if the pseudo and email are already used
 
-    $db = fp_db_connecter();
+    $db = cp_db_connecter();
 
-    $userData = fp_db_protect_inputs($db,$_POST);
+    $userData = cp_db_protect_inputs($db,$_POST);
 
-    if(($errors = fpl_checkAlreadyUsed($db,$userData['pseudo'],$userData['email'])) != 0){
+    if(($errors = cpl_checkAlreadyUsed($db,$userData['pseudo'],$userData['email'])) != 0){
         mysqli_close($db);
         return $errors;
     }
 
     // Registering of new user
-    fpl_registerUser($db,$userData);
+    cpl_registerUser($db,$userData);
 
     mysqli_close($db);
 
@@ -220,7 +220,7 @@ function fpl_registeringProcess(){
  * Print the errors of registration 
  * @param Array $errors The errors to print
  */
-function fpl_print_Errors($errors){
+function cpl_print_Errors($errors){
     echo '<div class="error">',
             '<p>Les erreurs suivantes ont été relevées lors de votre inscription :</p>',
             '<ul>';
@@ -235,40 +235,40 @@ function fpl_print_Errors($errors){
  * Print the registration forms in the page
  * @param Array $errors The potential errors 
  */
-function fpl_print_register_forms($errors = []){
+function cpl_print_register_forms($errors = []){
     $required = true;
-    fp_print_beginPage('inscription','Inscription',1,-1);
+    cp_print_beginPage('inscription','Inscription',1,-1);
     echo '<section>',
             '<h2>Formulaire d\'inscription</h2>',
             '<p>Pour vous inscrire, remplissez le formulaire ci-dessous.</p>',
-            (count($errors)!=0) ? fpl_print_Errors($errors):'',
+            (count($errors)!=0) ? cpl_print_Errors($errors):'',
             '<form method="POST" action="inscription.php">',
                 '<table class="form">',
-                    fp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
+                    cp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
                     
-                    fp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):'','',true),
+                    cp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):'','',true),
                     
-                    fp_print_inputLine('Votre nom :',"text",'nom',50,$required,'',($errors)?htmlentities($_POST['nom']):'','',true),
+                    cp_print_inputLine('Votre nom :',"text",'nom',50,$required,'',($errors)?htmlentities($_POST['nom']):'','',true),
                     
-                    fp_print_inputLine('Votre prénom :',"text",'prenom',60,$required,'',($errors)?htmlentities($_POST['prenom']):'','',true),
+                    cp_print_inputLine('Votre prénom :',"text",'prenom',60,$required,'',($errors)?htmlentities($_POST['prenom']):'','',true),
                     
-                    fp_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
+                    cp_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
                     
-                    fp_print_inputLine('Votre email :',"email",'email',255,$required,'',($errors)?htmlentities($_POST['email']):'','',true),
+                    cp_print_inputLine('Votre email :',"email",'email',255,$required,'',($errors)?htmlentities($_POST['email']):'','',true),
                     
-                    fp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,'',($errors)?htmlentities($_POST['passe1']):'','',true),
+                    cp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,'',($errors)?htmlentities($_POST['passe1']):'','',true),
                     
-                    fp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,'',($errors)?htmlentities($_POST['passe2']):'','',true),
+                    cp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,'',($errors)?htmlentities($_POST['passe2']):'','',true),
                     
-                    fp_print_checkboxLine('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU']),'Vous les trouverez <a href="#">ici</a>.',true),
+                    cp_print_checkboxLine('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU']),'Vous les trouverez <a href="#">ici</a>.',true),
                     
-                    fp_print_checkboxLine('cbSpam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['cbSpam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.',true),
+                    cp_print_checkboxLine('cbSpam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['cbSpam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.',true),
                     
-                    fp_print_buttonsLine(['S\'inscrire','btnInscription'],'Réinitialiser',true),
+                    cp_print_buttonsLine(['S\'inscrire','btnInscription'],'Réinitialiser',true),
                 '</table>',
             '</form>',
         '</section>';
-    fp_print_endPage();
+    cp_print_endPage();
 }
 
 
@@ -278,16 +278,16 @@ function fpl_print_register_forms($errors = []){
 // MAIN
 
 // if the user comes to this page while already logged in -> compte.php
-if(fp_is_logged()){
+if(cp_is_logged()){
     header('Location: compte.php');
     exit(0);
 }
 
 if(isset($_POST['btnInscription'])){
-    $errors = fpl_registeringProcess(); // no return if success
-    fpl_print_register_forms($errors);
+    $errors = cpl_registeringProcess(); // no return if success
+    cpl_print_register_forms($errors);
     
 }else{
-    fpl_print_register_forms();
+    cpl_print_register_forms();
 }
     
