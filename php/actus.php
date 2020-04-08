@@ -5,11 +5,11 @@
 
   // --- Database interactions  --- 
 
-  $db = fp_db_connecter();
+  $db = cp_db_connecter();
 
   $query = 'SELECT arID/*,arTitre,arResume*/ FROM article ORDER BY arDateModification DESC, arDatePublication DESC, rand()';
   
-  $res = fp_db_execute($db,$query);
+  $res = cp_db_execute($db,$query);
 
   mysqli_close($db);
   
@@ -17,9 +17,9 @@
 
   var_dump($_POST);
 
-  fp_print_beginPage('actus','L\'actu',1);
+  cp_print_beginPage('actus','L\'actu',1);
   cpl_print_button_pages($numberArticle);
-  fp_print_endPage();
+  cp_print_endPage();
 
   // #########################################################
 
