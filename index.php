@@ -11,6 +11,7 @@ require_once("php/bibli_gazette.php");
  */
 function cpl_print_articleLink($articleData){
     $titre = $articleData['arTitre'];
+    $resume = $articleData['arResume'];
 
     if(file_exists('upload/'.$articleData['arID'].'.jpg')){
         $picture = 'upload/'.$articleData['arID'].'.jpg';
@@ -19,6 +20,7 @@ function cpl_print_articleLink($articleData){
     }
 
     echo    '<a href="php/article.php?id=',urlencode($articleData['arID']),'">',
+                '<div><h4>',$titre,'</h4>','<p>',$resume,'</p></div>',
                 '<figure>',
                     '<img src="',$picture,'" alt="',$titre,'">',
                     '<figcaption>',$titre,'</figcaption>',
@@ -140,19 +142,19 @@ function cpl_select_articles($articles) {
 
 $db = cp_db_connecter();
 
-$query = '('.'SELECT arID, arTitre, 1 AS type
+$query = '('.'SELECT arID, arTitre, arResume, 1 AS type
                 FROM article
                 ORDER BY arDatePublication DESC
                 LIMIT 0, 3)
                 UNION
-                    (SELECT arID, arTitre, 2 AS type
+                    (SELECT arID, arTitre, arResume, 2 AS type
                     FROM article
                     LEFT OUTER JOIN commentaire ON coArticle = arID
                     GROUP BY arID
                     ORDER BY COUNT(coArticle) DESC, rand()
                     LIMIT 0, 3)
                     UNION
-                        (SELECT arID, arTitre, 3 AS type
+                        (SELECT arID, arTitre, arResume, 3 AS type
                         FROM article
                         ORDER BY rand()
                         LIMIT 0,9)';
