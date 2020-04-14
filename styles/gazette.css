@@ -526,6 +526,7 @@ h3{
 
 #accueil a{
     position: relative;
+    z-index: 2;
 }
 
 #horoscope table{
@@ -567,40 +568,41 @@ h3{
     justify-content: center;
     align-items: center;
     /* border : red 1px solid; */
-    border-radius: 5px;
-    position: fixed;
+    /* border-radius: 5px; */
+    position: absolute;
     opacity: 0;
-    z-index: 5;
-    background-color: rgba(144, 137, 133, 0.8);
-    left: 15px;
-    top: 250px;
+    z-index: 0;
+    background-color: rgba(169, 161, 156, 0.9);
+    left: 10px;
+    top: 1px;
     width : 250px;
     color : black;
-    transition: all 0s 0.3s;
-    padding : 15px;
-    /* overflow:auto; */
+    transition: all 0.3s 0.5s;
+    /* padding : 10px; */
+    overflow:hidden;
+  
     /* height: min-content; */
-    /* max-height: 80px; */
+    height: 0px;
     font-size: 0.9em;
 }
 
-#accueil a div h4{
-    display: flex;
-    text-align: center;
-    margin-bottom: 10px;
-    font-weight: bold;
-    border-bottom: 1px black solid;
-    padding-bottom: 10px;
-}
+
 
 #accueil a div p{
     font-size: 0.95em;
+    margin: 15px;
+    /* font-weight: bold; */
+    text-align: left;
 }
 
+/* #accueil section a div:hover{
+    opacity: 0;
+} */
 
 
 #accueil a:hover div{
-    
+    height: 187px;
+    z-index: 5;
     opacity: 1;
 }
 

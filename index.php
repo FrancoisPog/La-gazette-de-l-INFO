@@ -12,6 +12,10 @@ require_once("php/bibli_gazette.php");
 function cpl_print_articleLink($articleData){
     $titre = $articleData['arTitre'];
     $resume = $articleData['arResume'];
+    $resumeCut = mb_substr($resume,0,300,ENCODE);
+    if($resume != $resumeCut){
+        $resumeCut .= '...';
+    }
 
     if(file_exists('upload/'.$articleData['arID'].'.jpg')){
         $picture = 'upload/'.$articleData['arID'].'.jpg';
@@ -20,7 +24,7 @@ function cpl_print_articleLink($articleData){
     }
 
     echo    '<a href="php/article.php?id=',urlencode($articleData['arID']),'">',
-                '<div><h4>',$titre,'</h4>','<p>',$resume,'</p></div>',
+                '<div><p>',$resumeCut,'</p></div>',
                 '<figure>',
                     '<img src="',$picture,'" alt="',$titre,'">',
                     '<figcaption>',$titre,'</figcaption>',
