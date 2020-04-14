@@ -369,6 +369,7 @@ nav ul>li>ul {
     transition-property: height;
     transition-duration: 0.3s;
     transition-timing-function: ease;
+    border-radius: 0px 0px 10px 10px;
     
 }
 
@@ -560,10 +561,14 @@ h3{
     height: 187px;
 }
 
-#accueil a aside{
+#accueil a figure {
+    position: relative;
+}
+
+#accueil a figure aside{
     position: absolute;
-    left: 10px;
-    top: 1px;
+    /* left: 10px;
+    top: 1px; */
     width : 250px;
     height: 0px;
 
@@ -576,16 +581,17 @@ h3{
     align-items: center;
     
     
-    transition: all 0.3s 0.5s;
+    transition: all 0.3s 0.4s ease-in-out;
     overflow:hidden;
+    border-top: 1px solid black;
 }
 
-#accueil a:hover aside{
+#accueil a:hover figure aside{
     height: 187px;
     opacity: 1;
 }
 
-#accueil a aside p{
+#accueil a figure aside p{
     font-size: 0.95em;
     margin: 15px;
     text-align: justify;

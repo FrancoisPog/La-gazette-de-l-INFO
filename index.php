@@ -28,8 +28,9 @@ function cpl_print_articleLink($articleData){
     }
 
     echo    '<a href="php/article.php?id=',urlencode($articleData['arID']),'">',
-                '<aside><p>',$cutAbstarct,'</p></aside>',
+                
                 '<figure>',
+                '<aside><p>',$cutAbstarct,'</p></aside>',
                     '<img src="',$picture,'" alt="',$titre,'">',
                     '<figcaption>',$titre,'</figcaption>',
                 '</figure>',
