@@ -10,12 +10,16 @@ require_once("php/bibli_gazette.php");
  * @param Array $articleData The article data (already protected)
  */
 function cpl_print_articleLink($articleData){
-    $titre = $articleData['arTitre'];
-    $resume = $articleData['arResume'];
-    $resumeCut = mb_substr($resume,0,300,ENCODE);
-    if($resume != $resumeCut){
-        $resumeCut .= '...';
+    
+    $abstarct = $articleData['arResume'];
+    $cutAbstarct = mb_substr($abstarct,0,300,ENCODE);
+    if($abstarct != $cutAbstarct){
+        $cutAbstarct .= '...';
     }
+
+    $articleData = cp_db_protect_outputs($articleData);
+    $cutAbstarct = cp_db_protect_outputs($cutAbstarct);
+    $titre = $articleData['arTitre'];
 
     if(file_exists('upload/'.$articleData['arID'].'.jpg')){
         $picture = 'upload/'.$articleData['arID'].'.jpg';
@@ -24,7 +28,7 @@ function cpl_print_articleLink($articleData){
     }
 
     echo    '<a href="php/article.php?id=',urlencode($articleData['arID']),'">',
-                '<div><p>',$resumeCut,'</p></div>',
+                '<aside><p>',$cutAbstarct,'</p></aside>',
                 '<figure>',
                     '<img src="',$picture,'" alt="',$titre,'">',
                     '<figcaption>',$titre,'</figcaption>',
@@ -33,6 +37,8 @@ function cpl_print_articleLink($articleData){
 
  
 }
+
+
 
 /**
  * Printing an articles link block
@@ -163,7 +169,7 @@ $query = '('.'SELECT arID, arTitre, arResume, 1 AS type
                         ORDER BY rand()
                         LIMIT 0,9)';
 
-$res = cp_db_execute($db,$query);
+$res = cp_db_execute($db,$query,false);
 
 mysqli_close($db);
 

@@ -526,7 +526,6 @@ h3{
 
 #accueil a{
     position: relative;
-    z-index: 2;
 }
 
 #horoscope table{
@@ -561,49 +560,36 @@ h3{
     height: 187px;
 }
 
-#accueil a div{
-   
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* border : red 1px solid; */
-    /* border-radius: 5px; */
+#accueil a aside{
     position: absolute;
-    opacity: 0;
-    z-index: 0;
-    background-color: rgba(169, 161, 156, 0.9);
     left: 10px;
     top: 1px;
     width : 250px;
-    color : black;
-    transition: all 0.3s 0.5s;
-    /* padding : 10px; */
-    overflow:hidden;
-  
-    /* height: min-content; */
     height: 0px;
-    font-size: 0.9em;
+
+    opacity: 0;
+    background-color: rgba(169, 161, 156, 0.9);
+    color : black;
+    font-size: 0.8em;
+
+    display: flex;
+    align-items: center;
+    
+    
+    transition: all 0.3s 0.5s;
+    overflow:hidden;
 }
 
+#accueil a:hover aside{
+    height: 187px;
+    opacity: 1;
+}
 
-
-#accueil a div p{
+#accueil a aside p{
     font-size: 0.95em;
     margin: 15px;
-    /* font-weight: bold; */
-    text-align: left;
-}
-
-/* #accueil section a div:hover{
-    opacity: 0;
-} */
-
-
-#accueil a:hover div{
-    height: 187px;
-    z-index: 5;
-    opacity: 1;
+    text-align: justify;
+    overflow-wrap: anywhere;
 }
 
 /* --------------------- PAGE ACTUS ---------------------*/
