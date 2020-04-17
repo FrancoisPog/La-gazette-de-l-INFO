@@ -107,7 +107,11 @@ function cp_db_error($bd, $sql) {
  * @return Array                The result in an array
  */
 function cp_db_execute($db,$query,$protect_outputs = true,$insert = false){
-    $query = mysqli_query($db,$query) or cp_db_error($db,$query);
+    $query = mysqli_query($db,$query);
+
+    if(!$query){
+        cp_db_error($db,$query);
+    }
     
     if($insert){
         return $query;

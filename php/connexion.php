@@ -23,7 +23,7 @@ function cpl_check_inputs(){
        return false;
     }
 
-    if(!cp_isValid_passe($_POST['passe'])){
+    if(cp_isValid_passe($_POST['passe'])){
         return false;
     }
 
