@@ -6,19 +6,7 @@ require_once("bibli_gazette.php");
 
 // --- Local functions
 
-/**
- * Check is an integer is include between two others
- * @param $number The integer to test
- * @param $min The min limit
- * @param $max The max limit
- */
-function cpl_intIsBetween($number,$min,$max){
-    if(!cp_str_isInt($number)){
-        return false;
-    }
 
-    return $number >= $min && $number <= $max;
-}
 
 
 /**
@@ -35,13 +23,11 @@ function cpl_hackGuard(){
     
     cp_check_param($_POST,$mandatoryKeys,$optionalKeys) or cp_session_exit('../index.php');
 
-    // If the date fields values are not integers or are invalid -> hacking
-    (cpl_intIsBetween($_POST['naissance_j'],1,31) && 
-        cpl_intIsBetween($_POST['naissance_m'],1,12) && 
-        cpl_intIsBetween($_POST['naissance_a'],1900,2020)) or cp_session_exit('../index.php');
+    // If the date fields values are invalid -> hacking
+    cp_isValid_date($_POST['naissance_j'],$_POST['naissance_m'],$_POST['naissance_a']) or cp_session_exit('../index.php');
     
     // If the value of civility is different of 'h' and 'f' (if it was entered) -> hacking
-    isset($_POST['radSexe']) and (preg_match('/^[hf]$/',$_POST['radSexe']) or cp_session_exit('../index.php'));
+    isset($_POST['radSexe']) and (cp_isValid_civility($_POST['radSexe']) or cp_session_exit('../index.php'));
 
     
 }
@@ -55,7 +41,7 @@ function cpl_checkInputsError(){
     $errors = array();
 
     // Pseudo
-    if(!preg_match("/^[0-9a-z]{4,20}$/",$_POST['pseudo'])){
+    if(!cp_isValid_pseudo($_POST['pseudo'])){
         $errors[] = 'Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscule';
     }
 
@@ -64,41 +50,47 @@ function cpl_checkInputsError(){
     }
 
     // Last/First name
+
     foreach(['nom','prénom'] as $value){
         $tmp = $_POST[str_replace('é','e',$value)];
+
+        $maxLength = ($value == 'nom') ? 50 : 60;
+        $res = cp_isValid_name($tmp,$maxLength);
         
-        if(strlen($tmp)==0){
+        if($res == 1){
             $errors[] = "Le $value ne doit pas être vide";
             continue;
         }
-        if($tmp != strip_tags($tmp)){
+        if($res == 2){
             $errors[] = "Le $value ne doit pas contenir de tags HTML";
         }
         
-        $maxLength = ($value == 'nom') ? 50 : 60;
-        if(strlen($tmp) > $maxLength){
+        if($res == 3){
             $errors[] = "Le $value doit contenir moins de $maxLength caractères";
         }
     }
 
-    if(date('Ymd') - ($_POST['naissance_a']*10000+$_POST['naissance_m']*100+$_POST['naissance_j']) < 180000){
+    if(!cp_isValid_age($_POST['naissance_j'],$_POST['naissance_m'],$_POST['naissance_a'])){
         $errors[] = 'Vous devez avoir plus de 18 ans pour vous inscrire';
     }
 
     // Email
-    if(!preg_match("/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$/",$_POST['email'])){
+    $emailValid = cp_isValid_email($_POST['email']);
+    if($emailValid == 1){
         $errors[] = 'L\'adresse email n\'est pas valide';
-    }else if(strlen($_POST['email']) > 255){
+    }else if($emailValid == 2){
         $errors[] = 'L\'adresse mail doit contenir moins de 256 caractères';
     }
 
 
+
     // Passe1 et Passe2
-    if(strlen($_POST['passe1']) == 0 ){
+    $passesValid = cp_isValid_passe($_POST['passe1'],$_POST['passe2']);
+    if($passesValid == 1 ){
         $errors[] = 'Le mot de passe ne doit pas être vide';
-    }else if($_POST['passe1'] != $_POST['passe2'] ){
+    }else if($passesValid == 2 ){
         $errors[] = 'Les mots de passes doivent être identiques';
-    }else if(strlen($_POST['passe1']) > 255){
+    }else if($passesValid == 3){
         $errors[] = 'Le mot de passe doit contenir moins de 256 caractères';
     }
 
@@ -244,27 +236,27 @@ function cpl_print_register_forms($errors = []){
             (count($errors)!=0) ? cpl_print_Errors($errors):'',
             '<form method="POST" action="inscription.php">',
                 '<table class="form">',
-                    cp_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
+                    cp_form_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
                     
-                    cp_print_inputRadioLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):'','',true),
+                    cp_form_print_radiosLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):'','',true),
                     
-                    cp_print_inputLine('Votre nom :',"text",'nom',50,$required,'',($errors)?htmlentities($_POST['nom']):'','',true),
+                    cp_form_print_inputLine('Votre nom :',"text",'nom',50,$required,'',($errors)?htmlentities($_POST['nom']):'','',true),
                     
-                    cp_print_inputLine('Votre prénom :',"text",'prenom',60,$required,'',($errors)?htmlentities($_POST['prenom']):'','',true),
+                    cp_form_print_inputLine('Votre prénom :',"text",'prenom',60,$required,'',($errors)?htmlentities($_POST['prenom']):'','',true),
                     
-                    cp_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
+                    cp_form_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
                     
-                    cp_print_inputLine('Votre email :',"email",'email',255,$required,'',($errors)?htmlentities($_POST['email']):'','',true),
+                    cp_form_print_inputLine('Votre email :',"email",'email',255,$required,'',($errors)?htmlentities($_POST['email']):'','',true),
                     
-                    cp_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,'',($errors)?htmlentities($_POST['passe1']):'','',true),
+                    cp_form_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,'',($errors)?htmlentities($_POST['passe1']):'','',true),
                     
-                    cp_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,'',($errors)?htmlentities($_POST['passe2']):'','',true),
+                    cp_form_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,'',($errors)?htmlentities($_POST['passe2']):'','',true),
                     
-                    cp_print_checkboxLine('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU']),'Vous les trouverez <a href="#">ici</a>.',true),
+                    cp_form_print_checkboxLine('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU']),'Vous les trouverez <a href="#">ici</a>.',true),
                     
-                    cp_print_checkboxLine('cbSpam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['cbSpam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.',true),
+                    cp_form_print_checkboxLine('cbSpam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['cbSpam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.',true),
                     
-                    cp_print_buttonsLine(['S\'inscrire','btnInscription'],'Réinitialiser',true),
+                    cp_form_print_buttonsLine(['S\'inscrire','btnInscription'],'Réinitialiser',true),
                 '</table>',
             '</form>',
         '</section>';

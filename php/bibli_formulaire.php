@@ -14,12 +14,12 @@
  * @param int $step     The list iteration step
  * @param int $default  The value selected by defalult
  */
-function cp_print_numbersList($name,$min,$max,$step,$default){  
+function cp_form_print_numbersList($name,$min,$max,$step,$default){  
     if($min > $max ){
-        throw new Exception('[cp_print_numbersList] : The min value can\'t be greater than the max.');
+        throw new Exception('[cp_form_print_numbersList] : The min value can\'t be greater than the max.');
     }
     if($step == 0){
-        throw new Exception('[cp_print_numbersList] : The step value can\'t be 0.');
+        throw new Exception('[cp_form_print_numbersList] : The step value can\'t be 0.');
     }
     echo '<select name="',$name,'">';
 
@@ -38,7 +38,7 @@ function cp_print_numbersList($name,$min,$max,$step,$default){
  * @param Array $values     The value list in the 'label'=>'value' format
  * @param String $default   The value selected by defalult
  */
-function cp_print_list($name,$values,$default){
+function cp_form_print_list($name,$values,$default){
     echo '<select name="',$name,'">';
     foreach($values as $key => $value){
         echo '<option value="',$value,'" ',($default == $value)?'selected':'','>',$key,'</option>';
@@ -51,8 +51,8 @@ function cp_print_list($name,$values,$default){
  * @param String $name        The field's name
  * @param String $default     The month selected by defalult
  */
-function cp_print_monthsList($name,$default){
-    cp_print_list($name,['Janvier' => 1, 'Février' => 2,'Mars' => 3, 'Avril' => 4,'Mai' => 5, 'Juin' => 6,'Juillet' => 7, 'Août' => 8,'Septembre' => 9, 'Octobre' => 10,'Novembre' => 11, 'Décembre' => 12,],$default);
+function cp_form_print_monthsList($name,$default){
+    cp_form_print_list($name,['Janvier' => 1, 'Février' => 2,'Mars' => 3, 'Avril' => 4,'Mai' => 5, 'Juin' => 6,'Juillet' => 7, 'Août' => 8,'Septembre' => 9, 'Octobre' => 10,'Novembre' => 11, 'Décembre' => 12,],$default);
 }
 
 /**
@@ -65,12 +65,12 @@ function cp_print_monthsList($name,$default){
  * @param String $defaultYear  The year selected by default, if 0, it's the current year
  * @param int $yearsStep       The iteration step for years value
  */
-function cp_print_datesList($name,$minYear,$maxYear,$defaultDay = 0, $defaultMonth = 0,$defaultYear = 0,$yearsStep = 1){
+function cp_form_print_datesList($name,$minYear,$maxYear,$defaultDay = 0, $defaultMonth = 0,$defaultYear = 0,$yearsStep = 1){
     $today=  explode('-',date('d-m-Y'));
 
-    cp_print_numbersList($name.'_j',1,31,1,($defaultDay==0)?$today[0]:$defaultDay);
-    cp_print_monthsList($name.'_m',($defaultMonth==0)?$today[1]:$defaultMonth);
-    cp_print_numbersList($name.'_a',$minYear,($maxYear == 0)?$today[2]:$maxYear,$yearsStep,($defaultYear==0)?$today[2]:$defaultYear);
+    cp_form_print_numbersList($name.'_j',1,31,1,($defaultDay==0)?$today[0]:$defaultDay);
+    cp_form_print_monthsList($name.'_m',($defaultMonth==0)?$today[1]:$defaultMonth);
+    cp_form_print_numbersList($name.'_a',$minYear,($maxYear == 0)?$today[2]:$maxYear,$yearsStep,($defaultYear==0)?$today[2]:$defaultYear);
 }
 
 /**
@@ -86,11 +86,11 @@ function cp_print_datesList($name,$minYear,$maxYear,$defaultDay = 0, $defaultMon
  * @param String $tooltip      The (optional) information displayed in a tooltip
  * @param bool $tooltipInForm  True if there is at least one tooltip in the form, else false
  */
-function cp_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0, $defaultMonth = 0,$defaultYear = 0,$yearsStep = 1,$tooltip = '',$tooltipInForm=false){
+function cp_form_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0, $defaultMonth = 0,$defaultYear = 0,$yearsStep = 1,$tooltip = '',$tooltipInForm=false){
     echo '<tr>',
             '<td class="label"><label>',$label,'</label></td>',
             '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
-                cp_print_datesList($name,$minYear,$maxYear,$defaultDay,$defaultMonth,$defaultYear,$yearsStep),
+                cp_form_print_datesList($name,$minYear,$maxYear,$defaultDay,$defaultMonth,$defaultYear,$yearsStep),
             '</td>',
             ($tooltip != '')?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
         '</tr>';
@@ -110,9 +110,9 @@ function cp_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0, $def
  * @param String $tooltip       The (optional) information displayed in a tooltip
  * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
  */
-function cp_print_inputLine($label,$type,$name,$maxLength = '',$required =true,$placeholder = '',$value = '',$tooltip = '',$tooltipInForm = false){
+function cp_form_print_inputLine($label,$type,$name,$maxLength = '',$required =true,$placeholder = '',$value = '',$tooltip = '',$tooltipInForm = false){
     if($type != 'text' && $type != 'password' && $type != 'email'){
-        throw new Exception('[cp_print_inputLine] : The input type must be "text", "password" or "email".');
+        throw new Exception('[cp_form_print_inputLine] : The input type must be "text", "password" or "email".');
     }
     echo '<tr>',
             '<td class="label"><label for="',$name,'">',$label,'</label></td>',
@@ -128,7 +128,7 @@ function cp_print_inputLine($label,$type,$name,$maxLength = '',$required =true,$
  * @param bool $required        True is the radio field must be required, true by default
  * @param String $default       The (optional) default value selected
  */
-function cp_print_inputRadio($name,$values,$required = true,$default = ''){
+function cp_form_print_radios($name,$values,$required = true,$default = ''){
     foreach($values as $label => $value){
         echo    '<label for="',$value,'"><input type="radio" name="',$name,'" id="',$value,'" value="',$value,'" ',($required)?'required':'',' ',($value == $default)?'checked':'','>',$label,'</label>';        
     }
@@ -144,11 +144,11 @@ function cp_print_inputRadio($name,$values,$required = true,$default = ''){
  * @param String $tooltip       The (optional) information displayed in a tooltip
  * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
  */
-function cp_print_inputRadioLine($label,$name,$values,$required = true,$default = '',$tooltip = '',$tooltipInForm = false){
+function cp_form_print_radiosLine($label,$name,$values,$required = true,$default = '',$tooltip = '',$tooltipInForm = false){
     echo    '<tr>',
                 '<td class="label"><label>',$label,'</label></td>',
                 '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
-                    cp_print_inputRadio($name,$values,$required,$default),
+                    cp_form_print_radios($name,$values,$required,$default),
                 '</td>',
                 ($tooltip != '')?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
             '</tr>';
@@ -161,7 +161,7 @@ function cp_print_inputRadioLine($label,$name,$values,$required = true,$default 
  * @param bool $required        True is the radio field must be required, true by default
  * @param bool $checked         True if the box is checked, false by defauly
  */
-function cp_print_inputCheckbox($name,$label,$required = true,$checked = false){
+function cp_form_print_checkbox($name,$label,$required = true,$checked = false){
     echo '<input type="checkbox" name="',$name,'" id="',$name,'" ',($required)?'required':'',' ',($checked)?'checked':'','>',
             '<label for="',$name,'">',$label,'</label>';
 }
@@ -175,10 +175,10 @@ function cp_print_inputCheckbox($name,$label,$required = true,$checked = false){
  * @param String $tooltip       The (optional) information displayed in a tooltip
  * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
  */
-function cp_print_checkboxLine($name,$label,$required = true, $checked = false,$tooltip = '', $tooltipInForm = false){
+function cp_form_print_checkboxLine($name,$label,$required = true, $checked = false,$tooltip = '', $tooltipInForm = false){
     echo '<tr>',
             '<td class="checkbox" colspan="',($tooltip == '' && $tooltipInForm)?'3':'2','">',
-                cp_print_inputCheckbox($name,$label,$required,$checked),
+                cp_form_print_checkbox($name,$label,$required,$checked),
             '</td>',
             ($tooltip != '')?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
         '</tr>';
@@ -190,9 +190,9 @@ function cp_print_checkboxLine($name,$label,$required = true, $checked = false,$
  * @param String $resetValue    Value of reset button
  * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
  */ 
-function cp_print_buttonsLine($submit,$resetValue = '',$tooltipInForm = false){
+function cp_form_print_buttonsLine($submit,$resetValue = '',$tooltipInForm = false){
     if(!is_array($submit)){
-        throw new Exception('[cp_print_buttonsLine] : $submit must be an array ');
+        throw new Exception('[cp_form_print_buttonsLine] : $submit must be an array ');
     }
     echo '<tr>',
             '<td class="buttons" colspan="',($tooltipInForm)?'3':'2','">',

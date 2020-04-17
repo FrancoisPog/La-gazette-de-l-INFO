@@ -58,14 +58,21 @@ function cpl_print_category($categoryData){
             '<h2>',$catTitle,'</h2>';
             foreach($categoryData as $editor){
                 $fullName = mb_convert_case($editor['utPrenom'],MB_CASE_TITLE,ENCODE).' '.mb_convert_case($editor['utNom'],MB_CASE_TITLE,ENCODE);
+
                 $fullName = cp_db_protect_outputs($fullName);
                 $editor = cp_db_protect_outputs($editor);
 
                 $function = (isset($editor['reFonction']))?$editor['reFonction']:null;
                 $pseudo = $editor['utPseudo'];
 
+                if(file_exists('../upload/'.$pseudo.'.jpg')){
+                    $picture = '../upload/'.$pseudo.'.jpg';
+                }else{
+                    $picture = '../images/anonyme.jpg';
+                }
+
                 echo '<article id="',$pseudo,'" ',($function)?'class="haveFunction"':'',' >',
-                        '<img src="../upload/',$pseudo,'.jpg" alt="',$pseudo,'" title="',$fullName,'">',
+                        '<img src="',$picture,'" alt="',$pseudo,'" title="',$fullName,'">',
                         '<h3>',$fullName,'</h3>',
                         ($function)?('<h4>'.$function.'</h4>'):'',
                         cp_html_parseBbCode(str_replace("\r\n"," ",$editor['reBio'])),                     
@@ -115,11 +122,7 @@ function cpl_print_page_redac($isLogged){
 
 
 
-
-
+// main
 
 $isLogged = cp_is_logged();
-
-
-
 cpl_print_page_redac($isLogged);

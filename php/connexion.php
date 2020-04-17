@@ -19,11 +19,11 @@ function cpl_check_inputs(){
     $_POST = array_map('trim',$_POST);
     
 
-    if(!preg_match("/^[0-9a-z]{4,20}$/",$_POST['pseudo'])){
+    if(!cp_isValid_pseudo($_POST['pseudo'])){
        return false;
     }
 
-    if(strlen($_POST['passe']) == 0){
+    if(!cp_isValid_passe($_POST['passe'])){
         return false;
     }
 
@@ -86,9 +86,9 @@ function cpl_print_connection_form($errors = false){
             ($errors) ? '<p class="error">Echec d\'authentification. Utilisateur inconnu ou mot de passe incorrect.</p>':'',
             '<form method="POST" action="connexion.php">',
                 '<table class="form">',
-                    cp_print_inputLine('Pseudo :','text','pseudo',20,$required),
-                    cp_print_inputLine('Mot de passe :','password','passe',255,$required),
-                    cp_print_buttonsLine(['Se connecter','btnConnexion'],'Annuler'),
+                    cp_form_print_inputLine('Pseudo :','text','pseudo',20,$required),
+                    cp_form_print_inputLine('Mot de passe :','password','passe',255,$required),
+                    cp_form_print_buttonsLine(['Se connecter','btnConnexion'],'Annuler'),
                 '</table>',
             '</form>',
             '<p>Pas encore inscrit ? N\'attendez pas, <a href="inscription.php">inscrivez-vous</a> !</p> ',

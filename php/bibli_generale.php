@@ -222,3 +222,19 @@ function cp_decrypt_url($url,$field){
     return (count($data) == $field)?$data:false ;
 
 }
+
+
+// INT
+/**
+ * Check is an integer is include between two others
+ * @param $number The integer to test
+ * @param $min The min limit
+ * @param $max The max limit
+ */
+function cp_intIsBetween($number,$min,$max){
+    if(!cp_str_isInt($number)){
+        return false;
+    }
+
+    return $number >= $min && $number <= $max;
+}

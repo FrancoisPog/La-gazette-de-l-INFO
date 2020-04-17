@@ -117,3 +117,102 @@ function cp_make_error($msg){
                 '</blockquote>',
             '</section>';
 }
+
+
+
+// USERS DATA VALIDITY
+
+/**
+ * Test if a date is valid
+ * @param int $day      The date's day
+ * @param int $month    The date's month 
+ * @param int $year     The date's year
+ * @return boolean
+ */
+function cp_isValid_date($day,$month,$year){
+    return (cp_intIsBetween($day,1,31) && 
+            cp_intIsBetween($month,1,12) && 
+            cp_intIsBetween($year,1900,2020));
+}
+
+/**
+ * Test if a civility is valid
+ * @param char $civility    The civility
+ * @return boolean
+ */
+function cp_isValid_civility($civility){
+    return preg_match('/^[hf]$/',$civility);
+}
+
+/**
+ * Test if a pseudo is valid
+ * @param char $pseudo   The pseudo
+ * @return boolean
+ */
+function cp_isValid_pseudo($pseudo){
+    return preg_match("/^[0-9a-z]{4,20}$/",$pseudo);
+}
+
+/**
+ * Test if a name is valid
+ * @param char $name        The name
+ * @param int $maxlength    The name's max length     
+ * @return int 0:valid, 1:empty, 2:tags_html, 3:too_long
+ */
+function cp_isValid_name($name,$maxLength){
+    if(strlen($name)==0){
+        return 1;
+    }
+    if($name != strip_tags($name)){
+        return 2;
+    }
+
+    if(strlen($name) > $maxLength){
+        return 3;
+    }
+}
+
+/**
+ * Test if an age is valid
+ * @param int $birthday      The birth day
+ * @param int $birthmonth    The birth month
+ * @param int $birthyear     The birth year
+ * @return boolean  
+ */
+function cp_isValid_age($birthDay,$birthMonth,$birthYear){
+    return date('Ymd') - ($birthYear*10000+$birthMonth*100+$birthDay) >= 180000;
+}
+
+
+/**
+ * Test if an email is valid
+ * @param String $email The email
+ * @return int 0:valid, 1:invalid, 2:too_long
+ */
+function cp_isValid_email($email){
+    if(!preg_match("/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$/",$email)){
+        return 1;
+    }
+    if(strlen($email) > 255){
+        return 2;
+    }
+
+    return 0;
+}
+
+/**
+ * Test if the pass is valid
+ * @param String $passe1 The first pass
+ * @param String $passe2 The second pass
+ * @return int 0:valid, 1:empty, 2:different, 2:too_long
+ */
+function cp_isValid_passe($passe1, $passe2 = true){
+    if(strlen($passe1) == 0 ){
+        return 1;
+    }else if($passe1 != $passe2 ){
+        return 2;
+    }else if(strlen($passe1) > 255){
+        return 3;
+    }
+    return 0;
+}
