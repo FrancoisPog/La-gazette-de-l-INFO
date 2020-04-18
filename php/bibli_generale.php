@@ -157,7 +157,7 @@ function cp_session_exit($page){
  * @return boolean                  True if he's logged in, else false (only if he's not redirected)
  */
 function cp_is_logged($page_to_go_if_not = false){
-    $isLogged = (isset($_SESSION['pseudo']) && isset($_SESSION['statut']));
+    $isLogged = (isset($_SESSION['pseudo']) && isset($_SESSION['status']));
     if($isLogged){
         return true;
     }

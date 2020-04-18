@@ -68,9 +68,9 @@ function cp_form_print_monthsList($name,$default){
 function cp_form_print_datesList($name,$minYear,$maxYear,$defaultDay = 0, $defaultMonth = 0,$defaultYear = 0,$yearsStep = 1){
     $today=  explode('-',date('d-m-Y'));
 
-    cp_form_print_numbersList($name.'_j',1,31,1,($defaultDay==0)?$today[0]:$defaultDay);
+    cp_form_print_numbersList($name.'_d',1,31,1,($defaultDay==0)?$today[0]:$defaultDay);
     cp_form_print_monthsList($name.'_m',($defaultMonth==0)?$today[1]:$defaultMonth);
-    cp_form_print_numbersList($name.'_a',$minYear,($maxYear == 0)?$today[2]:$maxYear,$yearsStep,($defaultYear==0)?$today[2]:$defaultYear);
+    cp_form_print_numbersList($name.'_y',$minYear,($maxYear == 0)?$today[2]:$maxYear,$yearsStep,($defaultYear==0)?$today[2]:$defaultYear);
 }
 
 /**

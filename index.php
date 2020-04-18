@@ -181,7 +181,7 @@ $articles = cpl_select_articles($res);
 
 $isLogged = cp_is_logged();
 
-cp_print_beginPage('accueil',"Le site de désinformation n°1 des étudiants en Licence info",0,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
+cp_print_beginPage('accueil',"Le site de désinformation n°1 des étudiants en Licence info",0,($isLogged)?$_SESSION['status']:-1,($isLogged)?$_SESSION['pseudo']:false);
     
 cpl_print_articleBlock($articles[0],"&Agrave; la une");
 cpl_print_articleBlock($articles[1],"L'info brûlante");

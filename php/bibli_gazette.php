@@ -206,7 +206,7 @@ function cp_isValid_email($email){
  * @param String $passe2 The second pass
  * @return int 0:valid, 1:empty, 2:different, 2:too_long
  */
-function cp_isValid_passe($passe1, $passe2 = true){
+function cp_isValid_pass($passe1, $passe2 = true){
     if(strlen($passe1) == 0 ){
         return 1;
     }else if($passe1 != $passe2 ){

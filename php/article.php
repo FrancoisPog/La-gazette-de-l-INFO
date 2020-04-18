@@ -123,7 +123,7 @@ if(!cp_str_isInt($id)){
 
 $isLogged = cp_is_logged();
 
-cp_print_beginPage('article','L\'actu',1,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
+cp_print_beginPage('article','L\'actu',1,($isLogged)?$_SESSION['status']:-1,($isLogged)?$_SESSION['pseudo']:false);
 
     if($codeErr == 0){ // print article
         cpl_print_article($data);

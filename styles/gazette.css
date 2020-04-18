@@ -220,6 +220,16 @@ tbody{
     width: 70%;
 }
 
+.success{
+    color : green;
+    border :2px green solid;
+    padding: 7px;
+    text-align: center;
+    width: 70%;
+    font-weight: 600;
+    align-self: center;
+}
+
 /* --- Section --- */
 section {
     position: relative;

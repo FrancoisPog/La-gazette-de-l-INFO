@@ -3,6 +3,8 @@ ob_start();
 session_start();
 require_once('bibli_gazette.php');
 
+// --- local functions ---
+
 /**
  * Fetch the connected user data in database
  * @return Array $userData
@@ -28,22 +30,26 @@ function cpl_fetch_userData(){
 
 }
 
+
+// EDIT DATA
+
+
 /**
  * Check if it's a hacking case
  * @return void|exit Exit the script if it's a hacking case
  */
-function cpl_hackGuard(){
+function cpl_hackGuardEditData(){
      /*
         Only the spam checkbox can be missing
         So, if other keys are missing -> hacking.
     */
-    $mandatoryKeys = ['btnEditData','civility','last_name','first_name','birthday_a','birthday_m','birthday_j','email'];
+    $mandatoryKeys = ['btnEditData','civility','last_name','first_name','birthday_y','birthday_m','birthday_d','email'];
     $optionalKeys = ['spam'];
 
     cp_check_param($_POST,$mandatoryKeys,$optionalKeys) or cp_session_exit('../index.php');
 
     // If the date fields values are invalid -> hacking
-    cp_isValid_date($_POST['birthday_j'],$_POST['birthday_m'],$_POST['birthday_a']) or cp_session_exit('../index.php');
+    cp_isValid_date($_POST['birthday_d'],$_POST['birthday_m'],$_POST['birthday_y']) or cp_session_exit('../index.php');
 
      // If the value of civility is different of 'h' and 'f' -> hacking
     cp_isValid_civility($_POST['civility']) or cp_session_exit('../index.php');
@@ -81,7 +87,7 @@ function cpl_checkEditingMistakes(){
     }
 
     // Age
-    if(!cp_isValid_age($_POST['birthday_j'],$_POST['birthday_m'],$_POST['birthday_a'])){
+    if(!cp_isValid_age($_POST['birthday_d'],$_POST['birthday_m'],$_POST['birthday_y'])){
         $errors[] = 'Vous devez avoir plus de 18 ans pour vous inscrire';
     }
 
@@ -114,7 +120,7 @@ function cpl_updateData(){
 
     $_POST = cp_db_protect_inputs($db,$_POST);
     extract($_POST);
-    $birthDate = $birthday_a*10000+$birthday_m*100+$birthday_j;
+    $birthDate = $birthday_y*10000+$birthday_m*100+$birthday_d;
     $spam = (isset($spam)) ? 1:0;
 
     $query = "UPDATE utilisateur
@@ -131,9 +137,13 @@ function cpl_updateData(){
     mysqli_close($db);
 }
 
+/**
+ * Edit the user's data 
+ * @return Array|0 The array of errors, 0 if there are no errors
+ */
 function cpl_editDataProcess(){
     // Avoid hacking case
-    cpl_hackGuard();
+    cpl_hackGuardEditData();
 
     // check user mistakes
     if(($errors = cpl_checkEditingMistakes()) != 0){
@@ -146,6 +156,60 @@ function cpl_editDataProcess(){
     
 }
 
+
+// EDIT PASS
+
+
+/**
+ * Update the user's pass on database
+ */
+function cpl_updatePass(){
+    $db = cp_db_connecter();
+    $pass = $_POST['pass1'];
+    $pass =  password_hash($pass,PASSWORD_DEFAULT);
+
+    $query = "UPDATE utilisateur
+                SET utPasse = '$pass'
+                WHERE  utPseudo = '". cp_db_protect_inputs($db,$_SESSION['pseudo'])."'";
+
+    cp_db_execute($db,$query,false,true);
+
+    mysqli_close($db);
+
+}
+
+/**
+ * Edit the user's password
+ * @return Array|0 The array of errors, 0 if there are no errors
+ */
+function cpl_editPassProcess(){
+    $mandatoryKeys = ['pass2','pass1','btnEditPass'];
+    cp_check_param($_POST,$mandatoryKeys) or cp_session_exit('../index.php');
+
+    $errors = array();
+    $_POST = array_map('trim',$_POST);
+
+    // Passe1 et Passe2
+    $passValid = cp_isValid_pass($_POST['pass1'],$_POST['pass2']);
+    if($passValid == 1 ){
+        $errors[] = 'Le mot de passe ne doit pas être vide';
+    }else if($passValid == 2 ){
+        $errors[] = 'Les mots de passes doivent être identiques';
+    }else if($passValid == 3){
+        $errors[] = 'Le mot de passe doit contenir moins de 256 caractères';
+    }
+
+    if($errors){
+        return $errors;
+    }
+    
+    cpl_updatePass();
+
+    return 0;
+
+}
+
+// PRINT
 
 /**
  * Print the errors of registration 
@@ -170,35 +234,32 @@ function cpl_print_Errors($errors){
 function cpl_print_page_compte($userData = [], $errors = []){
     $required = true;
 
-    //  var_dump($errors);
-    //  var_dump($userData);
 
-    if(count($userData) == 0){
+    if(isset($_POST['btnEditData'])){
         $_POST = cp_db_protect_outputs($_POST);
-        // var_dump($_POST);
         extract($_POST);
         $spam = isset($spam);
     }else{
         extract($userData);
-        $birthday_j = substr($birthday,-2,2);
+        $birthday_d = substr($birthday,-2,2);
         $birthday_m = substr($birthday,-4,2);
-        $birthday_a = substr($birthday,0,4);
+        $birthday_y = substr($birthday,0,4);
     }
     
 
-    cp_print_beginPage('compte',"Mon compte",1,$_SESSION['statut'],$_SESSION['pseudo']);
+    cp_print_beginPage('compte',"Mon compte",1,$_SESSION['status'],$_SESSION['pseudo']);
 
     echo '<section>',
             '<h2>Informations personnelles</h2>',
             '<p>Vous pouvez modifier les informations suivantes.</p>',
-            (count($errors) != 0) ? cpl_print_Errors($errors) : '',
-            (count($errors) == 0 && count($userData) == 0) ? '<p class="success">Vos informations ont été mise à jour avec succés.</p>':'',
+            (count($errors) != 0 && isset($_POST['btnEditData'])) ? cpl_print_Errors($errors) : '',
+            (count($errors) == 0 && isset($_POST['btnEditData'])) ? '<p class="success">Vos informations ont été mise à jour avec succès.</p>':'',
             '<form method="POST" action="compte.php">',
                 '<table class="form">',
                     cp_form_print_radiosLine('Votre civilité :','civility',['Monsieur' => 'h','Madame'=> 'f'],$required,$civility,'',true),
                     cp_form_print_inputLine('Votre nom :','text','last_name','50',$required,'',$last_name,'',true),
                     cp_form_print_inputLine('Votre prénom :','text','first_name','60',$required,'',$first_name,'',true),
-                    cp_form_print_DatesLine('Votre date de naissance','birthday',1920,0,$birthday_j,$birthday_m,$birthday_a,1,'Vous devez avoir 18 ans pour être inscrire',true),
+                    cp_form_print_DatesLine('Votre date de naissance :','birthday',1920,0,$birthday_d,$birthday_m,$birthday_y,1,'Vous devez avoir 18 ans pour être inscrire',true),
                     cp_form_print_inputLine('Votre email :','email','email',255,$required,'',$email,'',true),
                     cp_form_print_checkboxLine('spam','J\'accepte de recevoir des tonnes de mails pourris',false,$spam,'Vos données personnelles seront bien évidemment utilisées à des fins commerciales',true),
                     cp_form_print_buttonsLine(['Enregistrer','btnEditData'],'Réinitialiser',true),
@@ -208,6 +269,8 @@ function cpl_print_page_compte($userData = [], $errors = []){
             '<section>',
                 '<h2>Authentification</h2>',
                 '<p>Vous pouvez modifier votre mot de passe ci-dessous</p>',
+                (count($errors) != 0 && isset($_POST['btnEditPass'])) ? cpl_print_Errors($errors) : '',
+                (count($errors) == 0 && isset($_POST['btnEditPass'])) ? '<p class="success">Votre mot de passe à été mis à jour avec succès.</p>':'',
                 '<form method="POST" action="compte.php">',
                     '<table class="form">',
                         cp_form_print_inputLine('Choisissez un mot de passe :','password','pass1',255,$required),
@@ -222,18 +285,25 @@ function cpl_print_page_compte($userData = [], $errors = []){
 }
 
 
+
+
+
+
+// --- Page generation
+
+
 cp_is_logged('../index.php');
 
-if(isset($_POST['btnEditData'])){
-    
+if(isset($_POST['btnEditData'])){  
     $errors = cpl_editDataProcess();
     cpl_print_page_compte([],($errors == 0)?[]:$errors);  
 
 }else if(isset($_POST['btnEditPass'])){
-    echo 'edit pass';
+    $errors = cpl_editPassProcess();
+    $userData = cpl_fetch_userData();
+    cpl_print_page_compte($userData,($errors == 0)?[]:$errors);
 
 }else{
-
     $userData = cpl_fetch_userData();
     cpl_print_page_compte($userData);   
 }

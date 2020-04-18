@@ -8,11 +8,11 @@ ob_start();
  * @return void|exit Exit the script if it's a hacking case
  */
 function cpl_hackGuard(){
-    cp_check_param($_POST,['pseudo','passe','btnConnexion']) or cp_session_exit('../index.php');
+    cp_check_param($_POST,['pseudo','pass','connectBtn']) or cp_session_exit('../index.php');
 }
 
 /**
- * Check if the pass is empty, and if the pattern of pseudo is correct (so if not, we can avoid a database connection)
+ * Check if the userData is empty, and if the pattern of pseudo is correct (so if not, we can avoid a database connection)
  * @return boolean True if there are no error, else false
  */
 function cpl_check_inputs(){
@@ -23,7 +23,7 @@ function cpl_check_inputs(){
        return false;
     }
 
-    if(cp_isValid_passe($_POST['passe'])){
+    if(cp_isValid_pass($_POST['pass'])){
         return false;
     }
 
@@ -32,28 +32,28 @@ function cpl_check_inputs(){
 
 /**
  * Check if the pseudo and the password match
- * @return mixed if the pseudo and pass match,it returning the user data in an array, else false
+ * @return mixed if the pseudo and userData match,it returning the user data in an array, else false
  */
 function cpl_check_user_data(){
     $db = cp_db_connecter();
 
-    $query = 'SELECT utPasse,utStatut
+    $query = 'SELECT utPasse AS pass,utStatut AS status
                 FROM utilisateur
                 WHERE utPseudo = "'.cp_db_protect_inputs($db,$_POST['pseudo']).'"';
 
-    $pass = cp_db_execute($db,$query,false)[0];
+    $userData = cp_db_execute($db,$query,false)[0];
 
     mysqli_close($db);
 
-    if($pass == null){
+    if($userData == null){
         return false;
     }
    
-    if(!password_verify($_POST['passe'],$pass['utPasse'])){
+    if(!password_verify($_POST['pass'],$userData['pass'])){
         return false;
     }
 
-    return [$_POST['pseudo'],$pass['utStatut']];
+    return [$_POST['pseudo'],$userData['status']];
 
 }
 
@@ -67,7 +67,7 @@ function cpl_connection($userData){
     unset($_SESSION['origin_page']);
    
     $_SESSION['pseudo'] = $userData[0];
-    $_SESSION['statut'] = $userData[1];
+    $_SESSION['status'] = $userData[1];
 
     header('Location: '.$page);
     exit(0);
@@ -87,8 +87,8 @@ function cpl_print_connection_form($errors = false){
             '<form method="POST" action="connexion.php">',
                 '<table class="form">',
                     cp_form_print_inputLine('Pseudo :','text','pseudo',20,$required),
-                    cp_form_print_inputLine('Mot de passe :','password','passe',255,$required),
-                    cp_form_print_buttonsLine(['Se connecter','btnConnexion'],'Annuler'),
+                    cp_form_print_inputLine('Mot de passe :','password','pass',255,$required),
+                    cp_form_print_buttonsLine(['Se connecter','connectBtn'],'Annuler'),
                 '</table>',
             '</form>',
             '<p>Pas encore inscrit ? N\'attendez pas, <a href="inscription.php">inscrivez-vous</a> !</p> ',
@@ -126,7 +126,7 @@ if(cp_is_logged()){
 }
 
 
-if(isset($_POST['btnConnexion'])){
+if(isset($_POST['connectBtn'])){
     $res = cpl_logging_process(); // no return if success
     cpl_print_connection_form(true);
     

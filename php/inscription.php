@@ -18,13 +18,13 @@ function cpl_hackGuard(){
         Only checkbox and radio buttons can be missing
         So, if other keys are missing -> hacking.
     */
-    $mandatoryKeys = ['pseudo','nom','prenom','naissance_j','naissance_m', 'naissance_a','email','passe1','passe2','btnInscription'];
-    $optionalKeys = ['cbSpam','cbCGU','radSexe'];
+    $mandatoryKeys = ['pseudo','last_name','first_name','birthday_d','birthday_m', 'birthday_y','email','pass1','pass2','inscriptionBtn'];
+    $optionalKeys = ['spam','GCU','civility'];
     
     cp_check_param($_POST,$mandatoryKeys,$optionalKeys) or cp_session_exit('../index.php');
 
     // If the date fields values are invalid -> hacking
-    cp_isValid_date($_POST['naissance_j'],$_POST['naissance_m'],$_POST['naissance_a']) or cp_session_exit('../index.php');
+    cp_isValid_date($_POST['birthday_d'],$_POST['birthday_m'],$_POST['birthday_y']) or cp_session_exit('../index.php');
     
     // If the value of civility is different of 'h' and 'f' (if it was entered) -> hacking
     isset($_POST['radSexe']) and (cp_isValid_civility($_POST['radSexe']) or cp_session_exit('../index.php'));
@@ -45,32 +45,35 @@ function cpl_checkInputsError(){
         $errors[] = 'Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscule';
     }
 
-    if(!isset($_POST['radSexe'])){
+    if(!isset($_POST['civility'])){
         $errors[] = 'Vous devez choisir une civilité';
     }
 
     // Last/First name
 
-    foreach(['nom','prénom'] as $value){
-        $tmp = $_POST[str_replace('é','e',$value)];
+    // Last/First name
+    foreach(['last_name','first_name'] as $value){
+        $french = ($value == 'last_name') ? 'nom' : 'prénom';
 
-        $maxLength = ($value == 'nom') ? 50 : 60;
-        $res = cp_isValid_name($tmp,$maxLength);
+        $maxLength = ($value == 'last_name') ? 50 : 60;
+        $res = cp_isValid_name($_POST[$value],$maxLength);
         
         if($res == 1){
-            $errors[] = "Le $value ne doit pas être vide";
+            $errors[] = "Le $french ne doit pas être vide";
             continue;
         }
         if($res == 2){
-            $errors[] = "Le $value ne doit pas contenir de tags HTML";
+            $errors[] = "Le $french ne doit pas contenir de tags HTML";
+            continue;
         }
         
         if($res == 3){
-            $errors[] = "Le $value doit contenir moins de $maxLength caractères";
+            $errors[] = "Le $french doit contenir moins de $maxLength caractères";
+            continue;
         }
     }
 
-    if(!cp_isValid_age($_POST['naissance_j'],$_POST['naissance_m'],$_POST['naissance_a'])){
+    if(!cp_isValid_age($_POST['birthday_d'],$_POST['birthday_m'],$_POST['birthday_y'])){
         $errors[] = 'Vous devez avoir plus de 18 ans pour vous inscrire';
     }
 
@@ -84,8 +87,8 @@ function cpl_checkInputsError(){
 
 
 
-    // Passe1 et Passe2
-    $passesValid = cp_isValid_passe($_POST['passe1'],$_POST['passe2']);
+    // Pass1 et Pass2
+    $passesValid = cp_isValid_pass($_POST['pass1'],$_POST['pass2']);
     if($passesValid == 1 ){
         $errors[] = 'Le mot de passe ne doit pas être vide';
     }else if($passesValid == 2 ){
@@ -97,7 +100,7 @@ function cpl_checkInputsError(){
     
 
     
-    if(!isset($_POST['cbCGU'])){
+    if(!isset($_POST['GCU'])){
         $errors[] = 'Vous devez accepter les conditions générales d\'utilisation';
     }
     
@@ -149,26 +152,26 @@ function cpl_checkAlreadyUsed($db,$pseudo,$email){
  */
 function cpl_registerUser($db,$userData){
     extract($userData);
-    $dateNaissance = $naissance_a*10000+$naissance_m*100+$naissance_j;
-    $spam = (isset($cbSpam)) ? 1:0;
-    $passe = password_hash($passe1,PASSWORD_DEFAULT);
+    $birthDate = $birthday_y*10000+$birthday_m*100+$birthday_d;
+    $spam = (isset($spam)) ? 1:0;
+    $pass = password_hash($pass1,PASSWORD_DEFAULT);
 
 
     $query = "INSERT INTO utilisateur SET 
                 utPseudo = '$pseudo', 
-                utNom = '$nom', 
-                utPrenom = '$prenom', 
+                utNom = '$last_name', 
+                utPrenom = '$first_name', 
                 utEmail = '$email', 
-                utPasse = '$passe', 
-                utDateNaissance = '$dateNaissance', 
-                utCivilite = '$radSexe',
+                utPasse = '$pass', 
+                utDateNaissance = '$birthDate', 
+                utCivilite = '$civility',
                 utStatut = '0', 
                 utMailsPourris = '$spam' ";
 
     cp_db_execute($db,$query,false,true);
 
     $_SESSION['pseudo'] = $pseudo;
-    $_SESSION['statut'] = 0;
+    $_SESSION['status'] = 0;
 
 }
 
@@ -238,25 +241,25 @@ function cpl_print_register_forms($errors = []){
                 '<table class="form">',
                     cp_form_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
                     
-                    cp_form_print_radiosLine('Votre civilité :','radSexe',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['radSexe']))?htmlentities($_POST['radSexe']):'','',true),
+                    cp_form_print_radiosLine('Votre civilité :','civility',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['civility']))?htmlentities($_POST['civility']):'','',true),
                     
-                    cp_form_print_inputLine('Votre nom :',"text",'nom',50,$required,'',($errors)?htmlentities($_POST['nom']):'','',true),
+                    cp_form_print_inputLine('Votre nom :',"text",'last_name',50,$required,'',($errors)?htmlentities($_POST['last_name']):'','',true),
                     
-                    cp_form_print_inputLine('Votre prénom :',"text",'prenom',60,$required,'',($errors)?htmlentities($_POST['prenom']):'','',true),
+                    cp_form_print_inputLine('Votre prénom :',"text",'first_name',60,$required,'',($errors)?htmlentities($_POST['first_name']):'','',true),
                     
-                    cp_form_print_DatesLine('Votre date de naissance :','naissance',1920,0,($errors)?htmlentities($_POST['naissance_j']):0,($errors)?htmlentities($_POST['naissance_m']):0,($errors)?htmlentities($_POST['naissance_a']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
+                    cp_form_print_DatesLine('Votre date de naissance :','birthday',1920,0,($errors)?htmlentities($_POST['birthday_d']):0,($errors)?htmlentities($_POST['birthday_m']):0,($errors)?htmlentities($_POST['birthday_y']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
                     
                     cp_form_print_inputLine('Votre email :',"email",'email',255,$required,'',($errors)?htmlentities($_POST['email']):'','',true),
                     
-                    cp_form_print_inputLine('Choisissez un mot de passe :',"password",'passe1',255,$required,'',($errors)?htmlentities($_POST['passe1']):'','',true),
+                    cp_form_print_inputLine('Choisissez un mot de passe :',"password",'pass1',255,$required,'',($errors)?htmlentities($_POST['pass1']):'','',true),
                     
-                    cp_form_print_inputLine('Répétez le mot de passe :',"password",'passe2',255,$required,'',($errors)?htmlentities($_POST['passe2']):'','',true),
+                    cp_form_print_inputLine('Répétez le mot de passe :',"password",'pass2',255,$required,'',($errors)?htmlentities($_POST['pass2']):'','',true),
                     
-                    cp_form_print_checkboxLine('cbCGU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['cbCGU']),'Vous les trouverez <a href="#">ici</a>.',true),
+                    cp_form_print_checkboxLine('GCU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['GCU']),'Vous les trouverez <a href="#">ici</a>.',true),
                     
-                    cp_form_print_checkboxLine('cbSpam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['cbSpam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.',true),
+                    cp_form_print_checkboxLine('spam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['spam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.',true),
                     
-                    cp_form_print_buttonsLine(['S\'inscrire','btnInscription'],'Réinitialiser',true),
+                    cp_form_print_buttonsLine(['S\'inscrire','inscriptionBtn'],'Réinitialiser',true),
                 '</table>',
             '</form>',
         '</section>';
@@ -275,7 +278,7 @@ if(cp_is_logged()){
     exit(0);
 }
 
-if(isset($_POST['btnInscription'])){
+if(isset($_POST['inscriptionBtn'])){
     $errors = cpl_registeringProcess(); // no return if success
     cpl_print_register_forms($errors);
     

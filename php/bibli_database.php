@@ -107,22 +107,22 @@ function cp_db_error($bd, $sql) {
  * @return Array                The result in an array
  */
 function cp_db_execute($db,$query,$protect_outputs = true,$insert = false){
-    $query = mysqli_query($db,$query);
+    $res = mysqli_query($db,$query);
 
-    if(!$query){
+    if(!$res){
         cp_db_error($db,$query);
     }
     
     if($insert){
-        return $query;
+        return $res;
     }
 
     $array = null;
-    while($data = mysqli_fetch_assoc($query)){
+    while($data = mysqli_fetch_assoc($res)){
         $array[] = ($protect_outputs) ? cp_db_protect_outputs($data) : $data;
     }
 
-    mysqli_free_result($query);
+    mysqli_free_result($res);
     return $array;
 }
 

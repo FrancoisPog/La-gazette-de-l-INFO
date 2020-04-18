@@ -87,7 +87,7 @@ function cpl_print_category($categoryData){
  */
 function cpl_print_page_redac($isLogged){
 
-    cp_print_beginPage('redaction','La rédac',1,($isLogged)?$_SESSION['statut']:-1,($isLogged)?$_SESSION['pseudo']:false);
+    cp_print_beginPage('redaction','La rédac',1,($isLogged)?$_SESSION['status']:-1,($isLogged)?$_SESSION['pseudo']:false);
 
     echo '<section>',
             '<h2>Le mot de la rédaction</h2>',
