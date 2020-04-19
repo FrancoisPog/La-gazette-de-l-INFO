@@ -466,16 +466,18 @@ article footer p{
 
 /* --------------------- PAGE REDACTION ---------------------*/
 
-/* Tout les articles qui ne sont pas seul dans leur section */
-#redaction article.haveFunction {
-    position: relative;
-    border-top : 2px solid black;
-    padding: 20px 0px 20px 0px;
-}
+
 
 /* Les derniers articles d'une sections (s'il y en a d'autres) */
 #redaction article:not(:only-of-type):last-child{
     padding-bottom: 0px;
+}
+
+/* Bordure noir si on a une fonction, ou que ce n'est pas le seul article */
+#redaction article:not(:only-of-type), #redaction article.haveFunction{
+    border-top : 2px solid black;
+    padding: 20px 0px 20px 0px;
+    position: relative;
 }
 
 /* Titres */
@@ -503,7 +505,7 @@ h3{
 }
 
 /* Empecher que le texte entoure les images */
-#redaction article:not(:only-of-type) p {
+#redaction article p {
     padding-left: 170px;
 }
 

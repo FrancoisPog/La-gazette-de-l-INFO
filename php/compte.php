@@ -251,7 +251,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
 
     echo '<section>',
             '<h2>Informations personnelles</h2>',
-            '<p>Vous pouvez modifier les informations suivantes.</p>',
+            '<p>Vous pouvez modifier les informations suivantes :</p>',
             (count($errors) != 0 && isset($_POST['btnEditData'])) ? cpl_print_Errors($errors) : '',
             (count($errors) == 0 && isset($_POST['btnEditData'])) ? '<p class="success">Vos informations ont été mise à jour avec succès.</p>':'',
             '<form method="POST" action="compte.php">',
@@ -268,7 +268,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
             '</section>',
             '<section>',
                 '<h2>Authentification</h2>',
-                '<p>Vous pouvez modifier votre mot de passe ci-dessous</p>',
+                '<p>Vous pouvez modifier votre mot de passe ci-dessous :</p>',
                 (count($errors) != 0 && isset($_POST['btnEditPass'])) ? cpl_print_Errors($errors) : '',
                 (count($errors) == 0 && isset($_POST['btnEditPass'])) ? '<p class="success">Votre mot de passe à été mis à jour avec succès.</p>':'',
                 '<form method="POST" action="compte.php">',
