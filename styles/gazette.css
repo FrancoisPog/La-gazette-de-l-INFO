@@ -502,6 +502,7 @@ h3{
     margin: 0px 20px 0px 0px;
     width: 150px;
     height: 200px;
+    border : 1px solid black;
 }
 
 /* Empecher que le texte entoure les images */
@@ -695,6 +696,11 @@ table.form td.input{
     justify-content: space-between;
 }
 
+table.form td.input select:only-child{
+    width: 207px;
+    /* padding: 3px; */
+}
+
 table.form td.checkbox{
     text-align: left;
     font-size: 0.95em;
@@ -782,4 +788,14 @@ table.form tr{
 
 #protegee li:not(:last-child){
     margin-bottom: 10px;
+}
+
+
+/* --------------------- PAGE COMPTE---------------------*/
+
+#compte section img{
+    width: 150px;
+    height: 200px;
+    align-self: center;
+    border : 1px solid black;
 }

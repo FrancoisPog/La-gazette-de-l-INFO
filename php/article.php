@@ -59,7 +59,7 @@ function cpl_print_article($data){
                         echo '<img src="../upload/',$data[0]['arID'],'.jpg" width="250" height="187" alt="',$titre,'" >';
                     }
         
-                echo cp_html_parseBbCode(str_replace("\r\n"," ",$texte)),
+                echo cp_html_parseBbCode($texte),
 
                 '<footer>',
                     '<p>';

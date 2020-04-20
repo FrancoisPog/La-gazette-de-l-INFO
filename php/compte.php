@@ -13,14 +13,15 @@ function cpl_fetch_userData(){
 
     $db = cp_db_connecter();
 
-    $query = '('.'SELECT utPseudo AS pseudo, utNom AS last_name, utPrenom AS first_name, utEmail AS email, utDateNaissance AS birthday, utCivilite AS civility, utMailsPourris AS spam, 1 AS type 
-                FROM utilisateur
-                WHERE utPseudo="'. cp_db_protect_inputs($db,$_SESSION['pseudo']).'" ) UNION (SELECT 0,0,0, utEmail,0,0,0, 2 AS type FROM utilisateur WHERE utPseudo <> "'. cp_db_protect_inputs($db,$_SESSION['pseudo']).'" )';
+    $query = '('.'SELECT utPseudo AS pseudo, utNom AS last_name, utPrenom AS first_name, utEmail AS email, utDateNaissance AS birthday, utCivilite AS civility, utMailsPourris AS spam, reBio AS bio, reCategorie AS category, reFonction AS function, 1 AS type 
+                FROM utilisateur, redacteur
+                WHERE utPseudo = rePseudo
+                AND utPseudo="'. cp_db_protect_inputs($db,$_SESSION['pseudo']).'" ) UNION (SELECT 0,0,0, utEmail,0,0,0,0,0,0, 2 AS type FROM utilisateur WHERE utPseudo <> "'. cp_db_protect_inputs($db,$_SESSION['pseudo']).'" )';
 
     $userData = cp_db_execute($db,$query);
 
     // We keep all others user's email for check later if the user want to change
-    $_SESSION['emails'] = array_slice($userData,1);
+    $GLOBALS['emails'] = array_slice($userData,1);
 
     $userData = $userData[0];
 
@@ -101,7 +102,7 @@ function cpl_checkEditingMistakes(){
 
     // var_dump($_SESSION['emails']);
 
-    foreach($_SESSION['emails'] as $email){
+    foreach($GLOBALS['emails'] as $email){
         if($email['email'] == $_POST['email'] ){
             $errors[] = 'L\'adresse mail est déjà utilisée';
             break;
@@ -234,17 +235,16 @@ function cpl_print_Errors($errors){
 function cpl_print_page_compte($userData = [], $errors = []){
     $required = true;
 
+    extract($userData);
+    $birthday_d = substr($birthday,-2,2);
+    $birthday_m = substr($birthday,-4,2);
+    $birthday_y = substr($birthday,0,4);
 
-    if(isset($_POST['btnEditData'])){
+    // if(isset($_POST['btnEditData'])){
         $_POST = cp_db_protect_outputs($_POST);
-        extract($_POST);
+        extract($_POST,EXTR_OVERWRITE);
         $spam = isset($spam);
-    }else{
-        extract($userData);
-        $birthday_d = substr($birthday,-2,2);
-        $birthday_m = substr($birthday,-4,2);
-        $birthday_y = substr($birthday,0,4);
-    }
+    // }
     
 
     cp_print_beginPage('compte',"Mon compte",1,$_SESSION['status'],$_SESSION['pseudo']);
@@ -278,10 +278,42 @@ function cpl_print_page_compte($userData = [], $errors = []){
                         cp_form_print_buttonsLine(['Enregistrer','btnEditPass']),
                     '</table>',
                 '</form>',
-            '</section>',
+            '</section>';
+
+    if($_SESSION['status'] == 0 || $_SESSION['status'] == 2){
+        cp_print_endPage();
+        return ;
+    }
+
+    echo '<section>',
+            '<h2>Information rédacteur</h2>',
+            '<p>Vous pouvez modifier les informations suivantes :</p>',
+            '<form method="POST" action="compte.php">',
+                '<table class="form" >',
+                    cp_form_print_inputLine('Votre fonction :','text','function',100,true,'',$function),
+                    cp_form_print_listLine('Votre catégorie :','category',['Rédacteur en chef' => '1','Premier violon' => '2',  'Sous-fifre' => '3'],$category),
+                    cp_form_print_textAreaLine('Votre biographie :','bio',str_replace(array("\n","\r"),'',$bio),60,4),
+                    cp_form_print_buttonsLine(['Enregistrer','editBioBtn'],'Réinitialiser'),
+                '</table>',
+            '</form>',
+
+        '</section>',
+        '<section>',
+            '<h2>Votre photo de rédacteur</h2>',
+            '<p>Vous pouvez modifier votre photo ci-dessous :</p>',
+            (file_exists('../upload/'.$_SESSION['pseudo'].'.jpg'))?'<img title="Votre photo de rédacteur actuelle" alt="Photo actuelle" width="150" height="200" src="../upload/'.$_SESSION['pseudo'].'.jpg" >':'',
+            '<form method="POST" action="compte.php">',
+                '<table class="form" >',
+                    cp_form_print_file('picture','',true,'Pour ne pas être déformée, la photo doit faire 150x200 pixels.',true),
+                    cp_form_print_buttonsLine(['Enregistrer','editPictureBtn'],'',true),
+                '</table>',
+            '</form>',
+
+        '</section>',
 
 
     cp_print_endPage();
+    
 }
 
 
@@ -294,13 +326,14 @@ function cpl_print_page_compte($userData = [], $errors = []){
 
 cp_is_logged('../index.php');
 
-if(isset($_POST['btnEditData'])){  
+if(isset($_POST['btnEditData'])){ 
+    $userData = cpl_fetch_userData(); 
     $errors = cpl_editDataProcess();
-    cpl_print_page_compte([],($errors == 0)?[]:$errors);  
+    cpl_print_page_compte($userData,($errors == 0)?[]:$errors);  
 
 }else if(isset($_POST['btnEditPass'])){
-    $errors = cpl_editPassProcess();
     $userData = cpl_fetch_userData();
+    $errors = cpl_editPassProcess();
     cpl_print_page_compte($userData,($errors == 0)?[]:$errors);
 
 }else{
@@ -310,6 +343,6 @@ if(isset($_POST['btnEditData'])){
 
 
 /** TODO
- * mettre en forme le message vert
+ * Faire la modification de bio,fonction, categorie et photo dans la base de données
  * optimiser : si pas de mofif, pas de co à la db
  */

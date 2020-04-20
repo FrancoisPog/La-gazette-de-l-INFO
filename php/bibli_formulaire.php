@@ -47,6 +47,23 @@ function cp_form_print_list($name,$values,$default){
 }
 
 /**
+ * Print a form array line for a list 
+ * @param String $label     The line label
+ * @param String name       The field's name
+ * @param Array $values     The value list in the 'label'=>'value' format
+ * @param String $default   The value selected by defalult
+ */
+function cp_form_print_listLine($label,$name,$value,$default,$tooltip = '', $tooltipInForm = false){
+    echo '<tr>',
+            '<td class="label"><label>',$label,'</label></td>',
+            '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
+                cp_form_print_list($name,$value,$default),
+            '</td>',
+            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+        '</tr>';
+}
+
+/**
  * Print a month list in select form field
  * @param String $name        The field's name
  * @param String $default     The month selected by defalult
@@ -92,7 +109,7 @@ function cp_form_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0,
             '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
                 cp_form_print_datesList($name,$minYear,$maxYear,$defaultDay,$defaultMonth,$defaultYear,$yearsStep),
             '</td>',
-            ($tooltip != '')?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
+            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
         '</tr>';
 
 
@@ -111,13 +128,13 @@ function cp_form_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0,
  * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
  */
 function cp_form_print_inputLine($label,$type,$name,$maxLength = '',$required =true,$placeholder = '',$value = '',$tooltip = '',$tooltipInForm = false){
-    if($type != 'text' && $type != 'password' && $type != 'email'){
+    if($type != 'text' && $type != 'password' && $type != 'email' && $type != 'file'){
         throw new Exception('[cp_form_print_inputLine] : The input type must be "text", "password" or "email".');
     }
     echo '<tr>',
             '<td class="label"><label for="',$name,'">',$label,'</label></td>',
             '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','><input id="',$name,'" type="',$type,'" name="',$name,'" ',($required)?'required ':'','placeholder="',$placeholder,'" value="',$value,'" ','maxlength="',$maxLength,'"></td>',
-            ($tooltip != '')?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
+            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
         '</tr>';
 }
 
@@ -150,7 +167,7 @@ function cp_form_print_radiosLine($label,$name,$values,$required = true,$default
                 '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
                     cp_form_print_radios($name,$values,$required,$default),
                 '</td>',
-                ($tooltip != '')?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
+                ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
             '</tr>';
 }
 
@@ -158,7 +175,7 @@ function cp_form_print_radiosLine($label,$name,$values,$required = true,$default
  * Print a checkbox input
  * @param String $name          The field's name
  * @param String $label         The checkbox label
- * @param bool $required        True is the radio field must be required, true by default
+ * @param bool $required        True is thecheckbox must be required, true by default
  * @param bool $checked         True if the box is checked, false by defauly
  */
 function cp_form_print_checkbox($name,$label,$required = true,$checked = false){
@@ -170,7 +187,7 @@ function cp_form_print_checkbox($name,$label,$required = true,$checked = false){
  * Print a form array line for a chackbox
  * @param String $name          The field's name
  * @param String $label         The checkbox label
- * @param bool $required        True is the radio field must be required, true by default
+ * @param bool $required        True is the checkbox must be required, true by default
  * @param bool $checked         True if the box is checked, false by defauly
  * @param String $tooltip       The (optional) information displayed in a tooltip
  * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
@@ -180,7 +197,7 @@ function cp_form_print_checkboxLine($name,$label,$required = true, $checked = fa
             '<td class="checkbox" colspan="',($tooltip == '' && $tooltipInForm)?'3':'2','">',
                 cp_form_print_checkbox($name,$label,$required,$checked),
             '</td>',
-            ($tooltip != '')?'<td><span class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></span></td>':'',
+            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
         '</tr>';
 }
 
@@ -200,4 +217,47 @@ function cp_form_print_buttonsLine($submit,$resetValue = '',$tooltipInForm = fal
                 ($resetValue != '')?'<input type="reset" value="'.$resetValue.'">':'',
              '</td>',
         '</tr>';
+}
+
+
+
+
+/**
+ * Print a form array line for a text area
+ * @param String $label         The text area label
+ * @param String $name          The field's name
+ * @param String $value         The (optional) default value
+ * @param bool $required        True is the field must be required, true by default
+ * @param int $cols             The number of columns
+ * @param int $rows             The number of rows
+ * @param String $tooltip       The (optional) information displayed in a tooltip
+ * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
+ */
+function cp_form_print_textAreaLine($label,$name,$value,$cols,$rows,$required = true,$tooltip = '',$tooltipInForm = false){
+    echo '<tr>',
+            '<td class="label"><label for="',$name,'">',$label,'</label></td>',
+            '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
+                '<textarea name="',$name,'" id="',$name,'" cols="',$cols,'" rows="',$rows,'" ',($required)?'required':'',' >',$value,'</textarea>',
+            '</td>',
+            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+        '</tr>';
+}
+
+
+/**
+ * Print a form array line for a file input
+ * @param String $label         The file label
+ * @param String $name          The field's name
+ * @param bool $required        True is the file must be required, true by default
+ * @param String $tooltip       The (optional) information displayed in a tooltip
+ * @param bool $tooltipInForm   True if there is at least one tooltip in the form, else false
+ */
+function cp_form_print_file($name,$label,$required = true,$tooltip = '', $tooltipInForm = true){
+    echo '<tr>',
+            '<td class="label"><label for="',$name,'">',$label,'</label></td>',
+            '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','><input id="',$name,'" type="file" name="',$name,'" ',($required)?'required ':'','></td>',
+            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+        '</tr>';
+
+
 }
