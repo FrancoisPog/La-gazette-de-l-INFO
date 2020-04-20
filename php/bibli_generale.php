@@ -34,7 +34,7 @@ function cp_html_parseBbCode($arg){
     $exp[] = '/\[#x?[0-9a-fA-F]+\]/';
     
     if(is_string($arg)){
-        return preg_replace_callback($exp,'cp_html_parseBbCode',$arg);
+        return preg_replace_callback($exp,'cp_html_parseBbCode',str_replace(array("\r","\n"),'',$arg));
     }
     
     // youtube with legende
