@@ -217,7 +217,7 @@ tbody{
     flex-direction: column;
     justify-content: center;
     align-self: center;
-    width: 70%;
+    width: 80%;
 }
 
 .success{
@@ -506,7 +506,7 @@ h3{
 }
 
 /* Empecher que le texte entoure les images */
-#redaction article p {
+#redaction article div.biography {
     padding-left: 170px;
 }
 
@@ -798,4 +798,5 @@ table.form tr{
     height: 200px;
     align-self: center;
     border : 1px solid black;
+    margin: 10px;
 }

@@ -81,6 +81,13 @@ function cpl_hackGuard($processType){
             cp_intIsBetween($_POST['category'],1,3) or cp_session_exit('../index.php');
             return ;
         }
+        case EDIT_PICTURE : {
+            $mandatoryKeys = ['btnEditPicture'];
+            cp_check_param($_POST,$mandatoryKeys) or cp_session_exit('../index.php');
+            $mandatoryKeys = ['picture'];
+            cp_check_param($_FILES,$mandatoryKeys) or cp_session_exit('../index.php');
+            return;
+        }
     }
 }
 
@@ -165,11 +172,35 @@ function cpl_checkMistakes($processType){
                 $errors[] = 'La biographie ne peut pas être vide';
             }
         
-            if($_POST['bio'] != strip_tags($_POST['bio'])){
+            if($_POST['bio'] != str_replace(['<','>'],'',$_POST['bio'])){
                 $errors[] = 'La biographie ne doit pas contenir de tags HTML';
             }
         break;
         }
+        case EDIT_PICTURE : {
+            
+            switch($_FILES['picture']['error']){
+                case 1 : 
+                case 2 :
+                    $errors[] = 'Le fichier est trop volumineux';
+                break 2;
+                case 3 : 
+                    $errors[] = 'Erreur de transfert';
+                break 2;
+                case 4 : 
+                    $errors[] = 'Fichier introuvable';
+                break 2;
+            }
+
+            if($_FILES['picture']['type'] != 'image/jpeg'){
+                $errors[] = 'Le format de la photo doit être "jpeg"';
+            }
+            if(!is_uploaded_file($_FILES['picture']['tmp_name'])){
+                $errors[] = 'Erreur interne';
+            }
+        break;
+        }
+        
     }
     return (count($errors) == 0)?0:$errors;
 
@@ -247,8 +278,13 @@ function cpl_editDataProcess($processType){
         return $errors;
     }
 
-    // Update data on database
-    cpl_updateDatabase($processType);
+    if($processType < EDIT_PICTURE){
+        // Update data on database
+        cpl_updateDatabase($processType);
+    }else{
+        $pseudo = $_SESSION['pseudo'];
+        move_uploaded_file($_FILES['picture']['tmp_name'],realpath('..')."/upload/$pseudo.jpg");
+    }
 
     return 0;
 }
@@ -261,9 +297,9 @@ function cpl_editDataProcess($processType){
  * Print the errors of registration 
  * @param Array $errors The errors to print
  */
-function cpl_print_Errors($errors){
+function cpl_print_Errors($errors,$label){
     echo '<div class="error">',
-            '<p>Les erreurs suivantes ont été relevées lors de votre inscription :</p>',
+            "<p>$label</p>",
             '<ul>';
                 foreach($errors as $error){
                     echo '<li>',$error,'</li>';
@@ -295,11 +331,11 @@ function cpl_print_page_compte($userData = [], $errors = []){
     
 
     cp_print_beginPage('compte',"Mon compte",1,$_SESSION['status'],$_SESSION['pseudo']);
-
-    echo '<section>',
+    
+    echo '<section id="personal_data">',
             '<h2>Informations personnelles</h2>',
             '<p>Vous pouvez modifier les informations suivantes :</p>',
-            ($errors && isset($_POST['btnEditData'])) ? cpl_print_Errors($errors) : '',
+            ($errors && isset($_POST['btnEditData'])) ? cpl_print_Errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de vos données :') : '',
             (!$errors && isset($_POST['btnEditData'])) ? '<p class="success">Vos informations ont été mise à jour avec succès.</p>':'',
             '<form method="POST" action="compte.php">',
                 '<table class="form">',
@@ -313,10 +349,10 @@ function cpl_print_page_compte($userData = [], $errors = []){
                 '</table>',
             '</form>',
             '</section>',
-            '<section>',
+            '<section id="pass">',
                 '<h2>Authentification</h2>',
                 '<p>Vous pouvez modifier votre mot de passe ci-dessous :</p>',
-                ($errors && isset($_POST['btnEditPass'])) ? cpl_print_Errors($errors) : '',
+                ($errors && isset($_POST['btnEditPass'])) ? cpl_print_Errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de votre mot de passe :') : '',
                 (!$errors && isset($_POST['btnEditPass'])) ? '<p class="success">Votre mot de passe à été mis à jour avec succès.</p>':'',
                 '<form method="POST" action="compte.php">',
                     '<table class="form">',
@@ -327,38 +363,51 @@ function cpl_print_page_compte($userData = [], $errors = []){
                 '</form>',
             '</section>';
 
+    if(isset($_POST['btnEditPass'])){
+        echo '<script>window.location.replace("#pass"); </script>';
+    }
+
     if($_SESSION['status'] == 0 || $_SESSION['status'] == 2){
         cp_print_endPage();
         return ;
     }
 
-    echo '<section>',
+    echo '<section id="editor_data">',
             '<h2>Information rédacteur</h2>',
             '<p>Vous pouvez modifier les informations suivantes :</p>',
-            ($errors && isset($_POST['btnEditBio'])) ? cpl_print_Errors($errors) : '',
+            ($errors && isset($_POST['btnEditBio'])) ? cpl_print_Errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de vos données :') : '',
             (!$errors && isset($_POST['btnEditBio'])) ? '<p class="success">Vos informations de rédacteur ont été mis à jour avec succès.</p>':'',
             '<form method="POST" action="compte.php">',
                 '<table class="form" >',
                     cp_form_print_inputLine('Votre fonction :','text','function',100,false,'',$function),
                     cp_form_print_listLine('Votre catégorie :','category',['Rédacteur en chef' => '1','Premier violon' => '2',  'Sous-fifre' => '3'],$category),
-                    cp_form_print_textAreaLine('Votre biographie :','bio',str_replace(array("\n","\r"),'',$bio),60,4),
+                    cp_form_print_textAreaLine('Votre biographie :','bio',str_replace(array("\n","\r"),'',$bio),60,6),
                     cp_form_print_buttonsLine(['Enregistrer','btnEditBio'],'Réinitialiser'),
                 '</table>',
             '</form>',
 
         '</section>',
-        '<section>',
+        '<section id="picture">',
             '<h2>Votre photo de rédacteur</h2>',
             '<p>Vous pouvez modifier votre photo ci-dessous :</p>',
             (file_exists('../upload/'.$_SESSION['pseudo'].'.jpg'))?'<img title="Votre photo de rédacteur actuelle" alt="Photo actuelle" width="150" height="200" src="../upload/'.$_SESSION['pseudo'].'.jpg" >':'',
-            '<form method="POST" action="compte.php">',
+            ($errors && isset($_POST['btnEditPicture'])) ? cpl_print_Errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de votre photo :') : '',
+            (!$errors && isset($_POST['btnEditPicture'])) ? '<p class="success">Votre photo de rédacteur a été mis à jour avec succès.</p>':'',
+            
+            '<form method="POST" action="compte.php" enctype="multipart/form-data">',
                 '<table class="form" >',
                     cp_form_print_file('picture','',true,'Pour ne pas être déformée, la photo doit faire 150x200 pixels.',true),
                     cp_form_print_buttonsLine(['Enregistrer','btnEditPicture'],'',true),
                 '</table>',
             '</form>',
 
-        '</section>',
+        '</section>';
+
+        if(isset($_POST['btnEditBio'])){
+            echo '<script>window.location.replace("#pass"); </script>';
+        }else if(isset($_POST['btnEditPicture'])){
+            echo '<script>window.location.replace("#picture"); </script>';
+        }
 
 
     cp_print_endPage();
@@ -384,10 +433,9 @@ if(isset($_POST['btnEditData'])){
 }else if(isset($_POST['btnEditBio'])){
     $errors = cpl_editDataProcess(EDIT_EDITOR_DATA);
     cpl_print_page_compte($userData,($errors)?$errors:[]);
-
 }else if(isset($_POST['btnEditPicture'])){
-    
-
+    $errors = cpl_editDataProcess(EDIT_PICTURE);
+    cpl_print_page_compte($userData,$errors);
 }else{
     cpl_print_page_compte($userData);   
 }

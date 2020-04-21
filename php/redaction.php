@@ -75,7 +75,7 @@ function cpl_print_category($categoryData){
                         '<img src="',$picture,'" alt="',$pseudo,'" title="',$fullName,'">',
                         '<h3>',$fullName,'</h3>',
                         ($function)?('<h4>'.$function.'</h4>'):'',
-                        cp_html_parseBbCode(str_replace("\r\n"," ",$editor['reBio'])),                     
+                        '<div class="biography">',cp_html_parseBbCode(str_replace("\r\n"," ",$editor['reBio'])),'</div>',                     
                     '</article>';
             }
     echo '</section>';
