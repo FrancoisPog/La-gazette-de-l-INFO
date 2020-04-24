@@ -698,7 +698,7 @@ table.form td.input{
 
 table.form td.input select:only-child{
     width: 207px;
-    /* padding: 3px; */
+    padding: 3px;
 }
 
 table.form td.checkbox{
@@ -714,6 +714,10 @@ table.form td.checkbox input[type="checkbox"]{
     margin-left: 40px;
 }
 
+/* For linux */
+table.form select {
+    border : 1px grey solid;
+}
 
 table.form input[type="text"],table.form input[type="password"], table.form input[type="email"]{
     width: 200px;

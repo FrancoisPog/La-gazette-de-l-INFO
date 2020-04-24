@@ -33,6 +33,10 @@ function cpl_fetch_userData(){
     }
 
     $userData = $userData[0];
+    $userData['bio'] = str_replace(["\r","\n"],"",$userData['bio']);
+    $userData['birthday_d'] = substr($userData['birthday'],-2,2);
+    $userData['birthday_m'] = substr($userData['birthday'],-4,2);
+    $userData['birthday_y'] = substr($userData['birthday'],0,4);
 
     mysqli_close($db);
 
@@ -264,18 +268,49 @@ function cpl_updateDatabase($processType){
 }
 
 
+function cpl_nothingChange($processType, $userData){
+
+    
+
+    switch($processType){
+        case EDIT_PERSONAL_DATA : {
+            $keys = ['civility','last_name','first_name','email','birthday_m','birthday_y','birthday_d'];
+            if($userData['spam'] != isset($_POST['spam'])){
+                return false;
+            }
+        break;
+        }
+        case EDIT_EDITOR_DATA : {
+            $keys = ['function','bio','category'];
+        break;
+        }
+        default : {
+            return false;
+        }
+    }
+
+    return cpl_arrayIsSame($_POST,$userData,$keys);
+
+}
+
+
 /**
  * Edit the user's data 
  * @param int $processType  The type of process
  * @return Array|0 The array of errors, 0 if there are no errors
  */
-function cpl_editDataProcess($processType){
+function cpl_editDataProcess($processType,$userData){
     // Avoid hacking case
     cpl_hackGuard($processType);
 
     // check user mistakes
     if(($errors = cpl_checkMistakes($processType))){
         return $errors;
+    }
+
+    // if nothing change, no database connection
+    if(cpl_nothingChange($processType,$userData)){
+        return 0;
     }
 
     if($processType < EDIT_PICTURE){
@@ -287,6 +322,19 @@ function cpl_editDataProcess($processType){
     }
 
     return 0;
+}
+
+
+
+function cpl_arrayIsSame($array1, $array2,$keys){
+
+    foreach($keys as $key){
+        if($array1[$key] != $array2[$key]){
+            return false;
+        }
+    }
+
+    return true;
 }
 
 
@@ -318,9 +366,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
     $required = true;
 
     extract($userData);
-    $birthday_d = substr($birthday,-2,2);
-    $birthday_m = substr($birthday,-4,2);
-    $birthday_y = substr($birthday,0,4);
+    
 
     
     $_POST = cp_db_protect_outputs($_POST); // *1
@@ -381,13 +427,13 @@ function cpl_print_page_compte($userData = [], $errors = []){
                 '<table class="form" >',
                     cp_form_print_inputLine('Votre fonction :','text','function',100,false,'',$function),
                     cp_form_print_listLine('Votre catégorie :','category',['Rédacteur en chef' => '1','Premier violon' => '2',  'Sous-fifre' => '3'],$category),
-                    cp_form_print_textAreaLine('Votre biographie :','bio',str_replace(array("\n","\r"),'',$bio),60,6),
+                    cp_form_print_textAreaLine('Votre biographie :','bio',$bio,60,6),
                     cp_form_print_buttonsLine(['Enregistrer','btnEditBio'],'Réinitialiser'),
                 '</table>',
             '</form>',
 
         '</section>',
-        '<section id="picture">',
+        '<section id="profil_picture">',
             '<h2>Votre photo de rédacteur</h2>',
             '<p>Vous pouvez modifier votre photo ci-dessous :</p>',
             (file_exists('../upload/'.$_SESSION['pseudo'].'.jpg'))?'<img title="Votre photo de rédacteur actuelle" alt="Photo actuelle" width="150" height="200" src="../upload/'.$_SESSION['pseudo'].'.jpg" >':'',
@@ -406,7 +452,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
         if(isset($_POST['btnEditBio'])){
             echo '<script>window.location.replace("#pass"); </script>';
         }else if(isset($_POST['btnEditPicture'])){
-            echo '<script>window.location.replace("#picture"); </script>';
+            echo '<script>window.location.replace("#profil_picture"); </script>';
         }
 
 
@@ -423,25 +469,20 @@ cp_is_logged('../index.php');
 $userData = cpl_fetch_userData();
 
 if(isset($_POST['btnEditData'])){ 
-    $errors = cpl_editDataProcess(EDIT_PERSONAL_DATA);
+    $errors = cpl_editDataProcess(EDIT_PERSONAL_DATA,$userData);
     cpl_print_page_compte($userData,($errors)?$errors:[]);  
 
 }else if(isset($_POST['btnEditPass'])){
-    $errors = cpl_editDataProcess(EDIT_PASS);
+    $errors = cpl_editDataProcess(EDIT_PASS,$userData);
     cpl_print_page_compte($userData,($errors)?$errors:[]);
 
 }else if(isset($_POST['btnEditBio'])){
-    $errors = cpl_editDataProcess(EDIT_EDITOR_DATA);
+    $errors = cpl_editDataProcess(EDIT_EDITOR_DATA,$userData);
     cpl_print_page_compte($userData,($errors)?$errors:[]);
 }else if(isset($_POST['btnEditPicture'])){
-    $errors = cpl_editDataProcess(EDIT_PICTURE);
+    $errors = cpl_editDataProcess(EDIT_PICTURE,$userData);
     cpl_print_page_compte($userData,$errors);
 }else{
     cpl_print_page_compte($userData);   
 }
 
-
-/** TODO
- * Faire la modification de et photo dans la base de données
- * optimiser : si pas de mofif, pas de co à la db
- */
