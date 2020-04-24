@@ -6,6 +6,12 @@
  *
  ###############################################################*/
 
+
+
+require_once('bibli_generale.php');
+
+
+
 /**
  * Print a number list in select form field
  * @param String $name  The field's name
@@ -59,7 +65,7 @@ function cp_form_print_listLine($label,$name,$value,$default,$tooltip = '', $too
             '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
                 cp_form_print_list($name,$value,$default),
             '</td>',
-            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+            ($tooltip != '')?'<td>'.cp_html_tooltip($tooltip).'</td>':'',
         '</tr>';
 }
 
@@ -109,7 +115,7 @@ function cp_form_print_DatesLine($label,$name,$minYear,$maxYear,$defaultDay = 0,
             '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
                 cp_form_print_datesList($name,$minYear,$maxYear,$defaultDay,$defaultMonth,$defaultYear,$yearsStep),
             '</td>',
-            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+            ($tooltip != '')?'<td>'.cp_html_tooltip($tooltip).'</td>':'',
         '</tr>';
 
 
@@ -134,7 +140,7 @@ function cp_form_print_inputLine($label,$type,$name,$maxLength = '',$required =t
     echo '<tr>',
             '<td class="label"><label for="',$name,'">',$label,'</label></td>',
             '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','><input id="',$name,'" type="',$type,'" name="',$name,'" ',($required)?'required ':'','placeholder="',$placeholder,'" value="',$value,'" ','maxlength="',$maxLength,'"></td>',
-            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+            ($tooltip != '')?'<td>'.cp_html_tooltip($tooltip).'</td>':'',
         '</tr>';
 }
 
@@ -167,7 +173,7 @@ function cp_form_print_radiosLine($label,$name,$values,$required = true,$default
                 '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
                     cp_form_print_radios($name,$values,$required,$default),
                 '</td>',
-                ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+                ($tooltip != '')?'<td>'.cp_html_tooltip($tooltip).'</td>':'',
             '</tr>';
 }
 
@@ -197,7 +203,7 @@ function cp_form_print_checkboxLine($name,$label,$required = true, $checked = fa
             '<td class="checkbox" colspan="',($tooltip == '' && $tooltipInForm)?'3':'2','">',
                 cp_form_print_checkbox($name,$label,$required,$checked),
             '</td>',
-            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+            ($tooltip != '')?'<td>'.cp_html_tooltip($tooltip).'</td>':'',
         '</tr>';
 }
 
@@ -239,7 +245,7 @@ function cp_form_print_textAreaLine($label,$name,$value,$cols,$rows,$required = 
             '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','>',
                 '<textarea name="',$name,'" id="',$name,'" cols="',$cols,'" rows="',$rows,'" ',($required)?'required':'',' >',$value,'</textarea>',
             '</td>',
-            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+            ($tooltip != '')?'<td>'.cp_html_tooltip($tooltip).'</td>':'',
         '</tr>';
 }
 
@@ -256,7 +262,7 @@ function cp_form_print_file($name,$label,$required = true,$tooltip = '', $toolti
     echo '<tr>',
             '<td class="label"><label for="',$name,'">',$label,'</label></td>',
             '<td class="input" ',($tooltip == '' && $tooltipInForm)?'colspan="2"':'','><input id="',$name,'" type="file" name="',$name,'" ',($required)?'required ':'','></td>',
-            ($tooltip != '')?'<td><aside class="info">&#9432;<span class="infobulle">'.$tooltip.'</span></aside></td>':'',
+            ($tooltip != '')?'<td>'.cp_html_tooltip($tooltip).'</td>':'',
         '</tr>';
 
 

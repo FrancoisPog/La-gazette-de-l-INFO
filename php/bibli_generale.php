@@ -83,6 +83,16 @@ function cp_html_parseBbCode($arg){
     
 }
 
+/**
+ * Return the html code of a tooltip
+ * @param String $label    The tooltip message
+ * @return String          The html tooltip 
+ */
+function cp_html_tooltip($label){
+    return '<aside class="info">&#9432;<span class="infobulle">'.$label.'</span></aside>';
+}
+
+
 // STR
 
 /**
