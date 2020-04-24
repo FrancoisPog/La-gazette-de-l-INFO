@@ -2,11 +2,11 @@ index.php		| Terminé ✔️    |
 actus.php 		| Pas commencé  | Lucas
 recherche.php	| Pas commencé	|
 article.php		| Commencé	    | Moi
-redaction.php	| Terminé ✔️| François
+redaction.php	| Terminé ✔️| 
 connexion.php	| Commencé	|
 deconnexion.php	| Terminé ✔️|
 inscription.php	| Commencé	|
-compte.php		| Pas commencé	| François
-nouveau.php		| Pas commencé	|
-edition.php		| Pas commencé	|
+compte.php		| Terminé ✔️é	|
+nouveau.php		| Pas commencé	| François
+edition.php		| Pas commencé	| François 
 administration.php	| Pas commencé	|
