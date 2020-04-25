@@ -683,8 +683,11 @@ h3{
 /* --------------------- PAGE INSCRIPTION / CONNEXION ---------------------*/
 
 
+
+
 table.form td,  table.form {
    border: 0px;
+   position: relative;
 }
 
 table.form td.label{
@@ -714,6 +717,16 @@ table.form td.checkbox input[type="checkbox"]{
     margin-left: 40px;
 }
 
+
+
+table.form td.area label {
+    display: block;
+    text-align: center;
+    margin: 0px auto 5px auto;
+    position: relative;
+    width: max-content;
+}
+
 /* For linux */
 table.form select {
     border : 1px grey solid;
@@ -739,9 +752,7 @@ table.form input[type="submit"]:hover, table.form input[type="reset"]:hover{
     color :white;
 }
 
-/* table.form select{
-    border: 1px solid grey;
-} */
+
 
 table.form tr{
     position: relative;
@@ -754,6 +765,9 @@ table.form tr{
     cursor: default;
     color: darkblue;
     font-weight: bold;
+    position: absolute;
+    display: inline;
+    right: -20px;
 }
 
 .info:hover .infobulle{
@@ -767,17 +781,17 @@ table.form tr{
 .infobulle{
     opacity: 0;
     position: absolute;
-    right: -200px;
+    right: -204px;
     width: 190px;
     text-align: center;
     color:darkblue;
     font-weight: 500;
     font-size: 0.8em;
     
-    background-color:rgba(135, 131, 130, 0.2);
-    padding: 3px;
+    background-color:rgba(255, 255, 255, 0.971);
+    padding: 5px;
     border-radius:3px;
-    box-shadow:0 0 2px rgba(0,0,0,0.5);
+    box-shadow:0 0 5px rgba(9, 12, 167, 0.5);
     transition:all .25s;
     transform:scale(0) rotate(12deg);
 } 

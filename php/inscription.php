@@ -239,27 +239,27 @@ function cpl_print_register_forms($errors = []){
             (count($errors)!=0) ? cpl_print_Errors($errors):'',
             '<form method="POST" action="inscription.php">',
                 '<table class="form">',
-                    cp_form_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées.",true),
+                    cp_form_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées."),
                     
-                    cp_form_print_radiosLine('Votre civilité :','civility',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['civility']))?htmlentities($_POST['civility']):'','',true),
+                    cp_form_print_radiosLine('Votre civilité :','civility',['Monsieur'=>'h','Madame'=>'f'],$required,($errors && isset($_POST['civility']))?htmlentities($_POST['civility']):''),
                     
-                    cp_form_print_inputLine('Votre nom :',"text",'last_name',50,$required,'',($errors)?htmlentities($_POST['last_name']):'','',true),
+                    cp_form_print_inputLine('Votre nom :',"text",'last_name',50,$required,'',($errors)?htmlentities($_POST['last_name']):''),
                     
-                    cp_form_print_inputLine('Votre prénom :',"text",'first_name',60,$required,'',($errors)?htmlentities($_POST['first_name']):'','',true),
+                    cp_form_print_inputLine('Votre prénom :',"text",'first_name',60,$required,'',($errors)?htmlentities($_POST['first_name']):''),
                     
-                    cp_form_print_DatesLine('Votre date de naissance :','birthday',1920,0,($errors)?htmlentities($_POST['birthday_d']):0,($errors)?htmlentities($_POST['birthday_m']):0,($errors)?htmlentities($_POST['birthday_y']):0,-1,"Vous devez avoir 18 ans pour vous inscrire.",true),
+                    cp_form_print_DatesLine('Votre date de naissance :','birthday',1920,0,($errors)?htmlentities($_POST['birthday_d']):0,($errors)?htmlentities($_POST['birthday_m']):0,($errors)?htmlentities($_POST['birthday_y']):0,-1,"Vous devez avoir 18 ans pour vous inscrire."),
                     
-                    cp_form_print_inputLine('Votre email :',"email",'email',255,$required,'',($errors)?htmlentities($_POST['email']):'','',true),
+                    cp_form_print_inputLine('Votre email :',"email",'email',255,$required,'',($errors)?htmlentities($_POST['email']):''),
                     
-                    cp_form_print_inputLine('Choisissez un mot de passe :',"password",'pass1',255,$required,'',($errors)?htmlentities($_POST['pass1']):'','',true),
+                    cp_form_print_inputLine('Choisissez un mot de passe :',"password",'pass1',255,$required,'',($errors)?htmlentities($_POST['pass1']):''),
                     
-                    cp_form_print_inputLine('Répétez le mot de passe :',"password",'pass2',255,$required,'',($errors)?htmlentities($_POST['pass2']):'','',true),
+                    cp_form_print_inputLine('Répétez le mot de passe :',"password",'pass2',255,$required,'',($errors)?htmlentities($_POST['pass2']):''),
                     
-                    cp_form_print_checkboxLine('GCU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['GCU']),'Vous les trouverez <a href="#">ici</a>.',true),
+                    cp_form_print_checkboxLine('GCU',"J'ai lu et accepte les conditions générales d'utilisation",$required,isset($_POST['GCU']),'Vous les trouverez <a href="#">ici</a>.'),
                     
-                    cp_form_print_checkboxLine('spam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['spam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.',true),
+                    cp_form_print_checkboxLine('spam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['spam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.'),
                     
-                    cp_form_print_buttonsLine(['S\'inscrire','inscriptionBtn'],'Réinitialiser',true),
+                    cp_form_print_buttonsLine(['S\'inscrire','inscriptionBtn'],'Réinitialiser'),
                 '</table>',
             '</form>',
         '</section>';
