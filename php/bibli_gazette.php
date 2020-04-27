@@ -32,6 +32,9 @@ define("ENCRYPTION_KEY","lJ4sMUKYK2DvDXMFr5lyCw==");
 
 require_once('bibli_generale.php');
 
+
+// PRINT
+
 /**
  * Printing the beginning of page in the gazette website 
  * @param String $id        The page's id (for css)
@@ -40,12 +43,20 @@ require_once('bibli_generale.php');
  * @param int $status       The user status (-1 if unlogged in)
  * @param String $pseudo    The (optional) user pseudo (if logged in)
  */
-function cp_print_beginPage($id,$title,$deepness,$status = -1,$pseudo = false){
+function cp_print_beginPage($id,$title,$deepness,$isLogged = false){
     $path="";
     for($i = 0 ; $i < $deepness ; $i++){
         $path.="../";
     }
+
+    if($isLogged){
+        $pseudo = $_SESSION['pseudo'];
+        $status = $_SESSION['status'];
+    }else{
+        $status = -1;
+    }
     
+    // useful for transition
     if($status == 3){
         $statusClass = "all";
     }else if($status == 2 || $status == 1){
@@ -72,7 +83,7 @@ function cp_print_beginPage($id,$title,$deepness,$status = -1,$pseudo = false){
     if($status == -1){
         echo                    '<li><a href="',$path,'php/connexion.php">Se connecter</a></li>';
     }else{
-        echo                       '<li><a>',($pseudo)?$pseudo:'Se conecter','</a>',
+        echo                       '<li><a>',$pseudo,'</a>',
                                         '<ul class="'.$statusClass.'">',
                                             '<li><a href="',$path,'php/compte.php">Mon profil</a></li>',
             ($status > 0 && $status != 2) ? "<li><a href=\"$path"."php/nouveau.php\">Nouvel article</a></li>":'',
@@ -108,7 +119,7 @@ function cp_print_endPage(){
  * Printing an error section 
  * @param $msg The error message 
  */
-function cp_make_error($msg){  
+function cp_print_errorSection($msg){  
     echo    '<section>',
                 '<h2>Oups, il y a une erreur...</h2>',
                 '<p>La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :</p>',
@@ -118,9 +129,23 @@ function cp_make_error($msg){
             '</section>';
 }
 
+/**
+ * Print the errors of registration 
+ * @param Array $errors The errors to print
+ */
+function cp_print_errors($errors){
+    echo '<div class="error">',
+            '<p>Les erreurs suivantes ont été relevées lors de votre inscription :</p>',
+            '<ul>';
+                foreach($errors as $error){
+                    echo '<li>',$error,'</li>';
+                }
+    echo    '</ul>',
+        '</div>';
+}
 
 
-// USERS DATA VALIDITY
+// GAZETTE DATA VALIDITY
 
 /**
  * Test if a date is valid
@@ -218,3 +243,25 @@ function cp_isValid_pass($passe1, $passe2 = true){
 }
 
 
+function cp_isValid_articleElement($element){
+    if(strlen($element) == 0){
+        return 1;
+    }
+    if(strip_tags($element) != $element){
+        return 2;
+    }
+
+    return 0;
+}
+
+
+// STR
+/**
+ * Parsing date from database to string 
+ * @param int $date The date to parse
+ * @return String   The date in correct format
+ */
+function cp_str_toDate($date){
+    setlocale(LC_TIME, "fr_FR");
+    return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
+}

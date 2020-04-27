@@ -211,20 +211,7 @@ function cpl_registeringProcess(){
     exit(0);
 }
 
-/**
- * Print the errors of registration 
- * @param Array $errors The errors to print
- */
-function cpl_print_Errors($errors){
-    echo '<div class="error">',
-            '<p>Les erreurs suivantes ont été relevées lors de votre inscription :</p>',
-            '<ul>';
-                foreach($errors as $error){
-                    echo '<li>',$error,'</li>';
-                }
-    echo    '</ul>',
-        '</div>';
-}
+
 
 /**
  * Print the registration forms in the page
@@ -232,11 +219,11 @@ function cpl_print_Errors($errors){
  */
 function cpl_print_register_forms($errors = []){
     $required = true;
-    cp_print_beginPage('inscription','Inscription',1,-1);
+    cp_print_beginPage('inscription','Inscription',1,false);
     echo '<section>',
             '<h2>Formulaire d\'inscription</h2>',
             '<p>Pour vous inscrire, remplissez le formulaire ci-dessous.</p>',
-            (count($errors)!=0) ? cpl_print_Errors($errors):'',
+            (count($errors)!=0) ? cp_print_errors($errors):'',
             '<form method="POST" action="inscription.php">',
                 '<table class="form">',
                     cp_form_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées."),

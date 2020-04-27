@@ -214,16 +214,25 @@ function cp_form_print_checkboxLine($name,$label,$required = true, $checked = fa
  * @param Array $submit         Value and name of submit button (0:value, 1:name)
  * @param String $resetValue    Value of reset button
  */ 
-function cp_form_print_buttonsLine($submit,$resetValue = ''){
+function cp_form_print_buttonsLine($submit,$resetValue = '',$confirmSubmit = false, $confirmReset = false){
     if(!is_array($submit)){
         throw new Exception('[cp_form_print_buttonsLine] : $submit must be an array ');
     }
     echo '<tr>',
             '<td class="buttons" colspan="2">',
-                '<input type="submit" value="',$submit[0],'" name="',$submit[1],'">',
-                ($resetValue != '')?'<input type="reset" value="'.$resetValue.'">':'',
-             '</td>',
+                '<input type="submit" value="',$submit[0],'" name="',$submit[1],'">';
+                if($resetValue != ''){
+                    if(!$confirmReset){
+                        echo '<input type="reset" value="',$resetValue,'">';
+                    }else{
+                        echo    '<input type="button" value="Effacer">',
+
+                                '<div class="night"><div id="confirm" class="popup"><p>Vous êtes sur ?</p><input type="reset"></div><div> ';
+                    }
+                }
+        echo '</td>',
         '</tr>';
+   
 }
 
 
@@ -240,9 +249,9 @@ function cp_form_print_buttonsLine($submit,$resetValue = ''){
  * @param String $tooltip       The (optional) information displayed in a tooltip
  */
 function cp_form_print_textAreaLine($label,$name,$value,$cols,$rows,$required = true,$tooltip = ''){
-    echo '<tr>',
-            '<td class="area" colspan="2">',
-                '<label for="',$name,'">',$label,($tooltip != '')?'  '.cp_html_tooltip($tooltip):'','</label>',
+    echo '<tr class="textarea">',
+            '<td><label for="',$name,'">',$label,($tooltip != '')?'  '.cp_html_tooltip($tooltip):'','</label></td>',
+            '<td class="area">',
                 '<textarea name="',$name,'" id="',$name,'" cols="',$cols,'" rows="',$rows,'" ',($required)?'required':'',' >',$value,'</textarea>',
             '</td>',
         '</tr>';

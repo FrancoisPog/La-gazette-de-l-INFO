@@ -21,7 +21,7 @@ mysqli_close($db);
 
 // --- Page Generation
 
-cp_print_beginPage('protegee','Page accessible uniquement aux utilisateurs authentifiés',1,$userData['utStatut'],$userData['utPseudo']);
+cp_print_beginPage('protegee','Page accessible uniquement aux utilisateurs authentifiés',1,true);
 
 echo '<section>',
         '<h2>Utilisateur : ',$userData['utPseudo'],'</h2>',

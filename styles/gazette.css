@@ -81,27 +81,6 @@ body{
 }
 
 
-/* Theme alternatif */
-body[class='theme'] {
-    /* Dégradé du fond */
-    --backgroud-color1: rgba(238, 241, 248, 0.5);
-    --background-color2 : rgba(183, 197, 238,0.5);
-    /* Fond du titre des sections */
-    --colorSectionTitle : rgb(15, 31, 133);
-    /* Couleur du menu */
-    --navColorDflt : rgba(78, 116, 231, 0.8);
-    /* Couleur du menu au survol */
-    --navColorHvr : rgb(78, 116, 231);
-    /* Couleur du texte du menu */
-    --navLiColor : rgba(230, 230, 241, 1);
-    /* Couleur du texte du menu au survol */
-    --navLiColorHvr : white; 
-    /* Couleur du fond de l'item du menu au survol */
-    --navLiColorBckgrdHvr : rgb(17, 17, 105);
-    /* Couleur de l'ombre au survol des articles (index) */
-    --colorShdwFigHvr : rgb(148, 148, 238);
-}
-
 h3{
     font-weight: bold;
     text-decoration: underline;
@@ -193,6 +172,7 @@ table{
     margin:  10px auto;
 }
 
+
 th{
     font-weight: bold;
     padding: 7px;
@@ -217,7 +197,7 @@ tbody{
     flex-direction: column;
     justify-content: center;
     align-self: center;
-    width: 80%;
+    width: 70%;
 }
 
 .success{
@@ -567,6 +547,10 @@ h3{
     
 }
 
+#accueil figure:hover img{
+    box-shadow : 0px 0px 20px 5px grey;
+}
+
 #accueil img{
     width: 250px;
     height: 187px;
@@ -578,8 +562,6 @@ h3{
 
 #accueil a figure aside{
     position: absolute;
-    /* left: 10px;
-    top: 1px; */
     width : 250px;
     height: 0px;
 
@@ -682,12 +664,15 @@ h3{
 
 /* --------------------- PAGE INSCRIPTION / CONNEXION ---------------------*/
 
-
+table tr{
+    position: relative;
+}
 
 
 table.form td,  table.form {
    border: 0px;
    position: relative;
+   
 }
 
 table.form td.label{
@@ -717,14 +702,17 @@ table.form td.checkbox input[type="checkbox"]{
     margin-left: 40px;
 }
 
-
+table.form td.area textarea{
+    max-width: 800px;
+}
 
 table.form td.area label {
     display: block;
     text-align: center;
-    margin: 0px auto 5px auto;
+    margin: 5px auto;
     position: relative;
     width: max-content;
+    
 }
 
 /* For linux */
@@ -737,7 +725,7 @@ table.form input[type="text"],table.form input[type="password"], table.form inpu
     padding: 3px;
 }
 
-table.form input[type="submit"], table.form input[type="reset"]{
+table.form input[type="submit"], table.form input[type="reset"],table.form input[type='button']{
     border: 1px solid black;
     border-radius: 5px;
     padding: 4px;
@@ -747,7 +735,7 @@ table.form input[type="submit"], table.form input[type="reset"]{
     transition: all 0.25s;
 }
 
-table.form input[type="submit"]:hover, table.form input[type="reset"]:hover{
+table.form input[type="submit"]:hover, table.form input[type="reset"]:hover, table.form input[type='button']:hover{
     background-color: red;
     color :white;
 }
@@ -756,7 +744,51 @@ table.form input[type="submit"]:hover, table.form input[type="reset"]:hover{
 
 table.form tr{
     position: relative;
+}
+
+/* conf popup */
+
+table.form input[type='button']:focus + div.night{
+    z-index: 100;
+    background-color: rgba(0,0,0,0.4);
+}
+
+div.night {
+    transition: all 0.5s ;
+    top: 0px;
+    left: 0px;
+    width: 200%;
+    height: 100%;
+    background-color: rgba(0,0,0,0);
+    position: fixed;
+    z-index: -100;
+}
+
+table.form input[type='button']:focus + div.night #confirm {
+    opacity: 1;
+    top: 40%;
+    transition: all 0.4s 0.1s;
     
+}
+
+table.form input[type='button']:not(:focus) + div.night #confirm:hover{
+    transition: 0.4s 0.1s;
+    opacity: 0;
+    /* transform: translate(0,-20px); */
+    top: 45%;
+    
+}
+
+
+#confirm{
+    border : 1px red solid;
+    background-color: white;
+    padding : 15px;
+    top: 45%;
+    left: 45%;
+    position: fixed;
+    opacity: 0;
+    z-index: 5000;
 }
 
 /* tooltip */
@@ -787,7 +819,7 @@ table.form tr{
     color:darkblue;
     font-weight: 500;
     font-size: 0.8em;
-    
+    z-index: 3;
     background-color:rgba(255, 255, 255, 0.971);
     padding: 5px;
     border-radius:3px;
@@ -818,3 +850,25 @@ table.form tr{
     border : 1px solid black;
     margin: 10px;
 }
+
+
+
+/* --------------------- PAGE NOUVEAU---------------------*/
+
+
+#nouveau td.input input[type="text"] {
+    width: 400px;
+}
+
+.textarea, #nouveau tr{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ .textarea td, #nouveau td{
+    display: flex;
+    justify-content: center;
+    width: max-content;
+}
+

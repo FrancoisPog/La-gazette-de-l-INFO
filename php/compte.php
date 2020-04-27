@@ -269,9 +269,6 @@ function cpl_updateDatabase($processType){
 
 
 function cpl_nothingChange($processType, $userData){
-
-    
-
     switch($processType){
         case EDIT_PERSONAL_DATA : {
             $keys = ['civility','last_name','first_name','email','birthday_m','birthday_y','birthday_d'];
@@ -341,20 +338,7 @@ function cpl_arrayIsSame($array1, $array2,$keys){
 
 // PRINT
 
-/**
- * Print the errors of registration 
- * @param Array $errors The errors to print
- */
-function cpl_print_Errors($errors,$label){
-    echo '<div class="error">',
-            "<p>$label</p>",
-            '<ul>';
-                foreach($errors as $error){
-                    echo '<li>',$error,'</li>';
-                }
-    echo    '</ul>',
-        '</div>';
-}
+
 
 
 
@@ -376,12 +360,12 @@ function cpl_print_page_compte($userData = [], $errors = []){
     }
     
 
-    cp_print_beginPage('compte',"Mon compte",1,$_SESSION['status'],$_SESSION['pseudo']);
+    cp_print_beginPage('compte',"Mon compte",1,true);
     
     echo '<section id="personal_data">',
             '<h2>Informations personnelles</h2>',
             '<p>Vous pouvez modifier les informations suivantes :</p>',
-            ($errors && isset($_POST['btnEditData'])) ? cpl_print_Errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de vos données :') : '',
+            ($errors && isset($_POST['btnEditData'])) ? cp_print_errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de vos données :') : '',
             (!$errors && isset($_POST['btnEditData'])) ? '<p class="success">Vos informations ont été mise à jour avec succès.</p>':'',
             '<form method="POST" action="compte.php">',
                 '<table class="form">',
@@ -398,7 +382,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
             '<section id="pass">',
                 '<h2>Authentification</h2>',
                 '<p>Vous pouvez modifier votre mot de passe ci-dessous :</p>',
-                ($errors && isset($_POST['btnEditPass'])) ? cpl_print_Errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de votre mot de passe :') : '',
+                ($errors && isset($_POST['btnEditPass'])) ? cp_print_errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de votre mot de passe :') : '',
                 (!$errors && isset($_POST['btnEditPass'])) ? '<p class="success">Votre mot de passe à été mis à jour avec succès.</p>':'',
                 '<form method="POST" action="compte.php">',
                     '<table class="form">',
@@ -421,13 +405,15 @@ function cpl_print_page_compte($userData = [], $errors = []){
     echo '<section id="editor_data">',
             '<h2>Information rédacteur</h2>',
             '<p>Vous pouvez modifier les informations suivantes :</p>',
-            ($errors && isset($_POST['btnEditBio'])) ? cpl_print_Errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de vos données :') : '',
+            ($errors && isset($_POST['btnEditBio'])) ? cp_print_errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de vos données :') : '',
             (!$errors && isset($_POST['btnEditBio'])) ? '<p class="success">Vos informations de rédacteur ont été mis à jour avec succès.</p>':'',
             '<form method="POST" action="compte.php">',
                 '<table class="form" >',
                     cp_form_print_inputLine('Votre fonction :','text','function',100,false,'',$function),
                     cp_form_print_listLine('Votre catégorie :','category',['Rédacteur en chef' => '1','Premier violon' => '2',  'Sous-fifre' => '3'],$category),
-                    cp_form_print_textAreaLine('Votre biographie :','bio',$bio,60,6,true,'La page d\'accueil affiche les 300 premiers caractères du résumé'),
+                '</table>',
+                '<table class="form">',
+                    cp_form_print_textAreaLine('Votre biographie :','bio',$bio,60,6,true),
                     cp_form_print_buttonsLine(['Enregistrer','btnEditBio'],'Réinitialiser'),
                 '</table>',
             '</form>',
@@ -437,7 +423,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
             '<h2>Votre photo de rédacteur</h2>',
             '<p>Vous pouvez modifier votre photo ci-dessous :</p>',
             (file_exists('../upload/'.$_SESSION['pseudo'].'.jpg'))?'<img title="Votre photo de rédacteur actuelle" alt="Photo actuelle" width="150" height="200" src="../upload/'.$_SESSION['pseudo'].'.jpg" >':'',
-            ($errors && isset($_POST['btnEditPicture'])) ? cpl_print_Errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de votre photo :') : '',
+            ($errors && isset($_POST['btnEditPicture'])) ? cp_print_errors($errors,'Les erreurs suivantes ont été relevées lors de la mise à jours de votre photo :') : '',
             (!$errors && isset($_POST['btnEditPicture'])) ? '<p class="success">Votre photo de rédacteur a été mis à jour avec succès.</p>':'',
             
             '<form method="POST" action="compte.php" enctype="multipart/form-data">',

@@ -104,15 +104,7 @@ function cp_str_isInt($str){
     return preg_match('/^[[:digit:]]+$/',$str);
 }
 
-/**
- * Parsing date from database to string 
- * @param int $date The date to parse
- * @return String   The date in correct format
- */
-function cp_str_toDate($date){
-    setlocale(LC_TIME, "fr_FR");
-    return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
-}
+
 
 // PARAMETERS
 
