@@ -99,7 +99,6 @@
         $result[$date][] = $articles[$i];
       }
     }
-    var_dump($result);
     return $result;
   }
 
