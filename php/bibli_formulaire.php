@@ -214,20 +214,25 @@ function cp_form_print_checkboxLine($name,$label,$required = true, $checked = fa
  * @param Array $submit         Value and name of submit button (0:value, 1:name)
  * @param String $resetValue    Value of reset button
  */ 
-function cp_form_print_buttonsLine($submit,$resetValue = '',$confirmSubmit = false, $confirmReset = false){
+function cp_form_print_buttonsLine($submit,$resetValue = '',$confirmSubmit = false, $confirmReset = false, $confirmSubmitLabel = '', $confirmResetLabel =''){
     if(!is_array($submit)){
         throw new Exception('[cp_form_print_buttonsLine] : $submit must be an array ');
     }
     echo '<tr>',
-            '<td class="buttons" colspan="2">',
-                '<input type="submit" value="',$submit[0],'" name="',$submit[1],'">';
+            '<td class="buttons" colspan="2">';
+            
+                if(!$confirmSubmit){
+                    cp_print_button('submit',$submit[0],$submit[1]);
+                }else{
+                    cp_print_popUp($submit[0],'Vous êtes sûr ?',$confirmSubmitLabel,'submit','Oui je confirme','btnNewArticle');
+                }
+            
+                
                 if($resetValue != ''){
                     if(!$confirmReset){
-                        echo '<input type="reset" value="',$resetValue,'">';
+                        cp_print_button('reset',$resetValue,'reset');
                     }else{
-                        echo    '<input type="button" value="Effacer">',
-
-                                '<div class="night"><div id="confirm" class="popup"><p>Vous êtes sur ?</p><input type="reset"></div><div> ';
+                        cp_print_popUp($resetValue,'Vous êtes sûr ?',$confirmResetLabel,'reset','Oui je confirme','');
                     }
                 }
         echo '</td>',
