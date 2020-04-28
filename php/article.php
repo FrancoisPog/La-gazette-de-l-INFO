@@ -123,13 +123,13 @@ if(!cp_str_isInt($id)){
 
 $isLogged = cp_is_logged();
 
-cp_print_beginPage('article','L\'actu',1,($isLogged)?$_SESSION['status']:-1,($isLogged)?$_SESSION['pseudo']:false);
+cp_print_beginPage('article','L\'actu',1,$isLogged);
 
     if($codeErr == 0){ // print article
         cpl_print_article($data);
     }else{ // print error page
         $errorMsg = ($codeErr == 1) ? "Identifiant d'article invalide"  :"Aucun n'article ne correspond à cet identifiant";
-        cp_make_error($errorMsg);
+        cp_print_errorSection($errorMsg);
     }
 
 cp_print_endPage();

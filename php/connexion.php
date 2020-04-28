@@ -78,7 +78,7 @@ function cpl_connection($userData){
  * @param $errors The potential errors
  */
 function cpl_print_connection_form($errors = false){
-    cp_print_beginPage('connexion','Connexion',1,-1);
+    cp_print_beginPage('connexion','Connexion',1,false);
     $required = true;
     echo '<section>',
             '<h2>Formuaire de connexion</h2>',

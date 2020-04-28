@@ -104,15 +104,7 @@ function cp_str_isInt($str){
     return preg_match('/^[[:digit:]]+$/',$str);
 }
 
-/**
- * Parsing date from database to string 
- * @param int $date The date to parse
- * @return String   The date in correct format
- */
-function cp_str_toDate($date){
-    setlocale(LC_TIME, "fr_FR");
-    return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
-}
+
 
 // PARAMETERS
 
@@ -247,4 +239,28 @@ function cp_intIsBetween($number,$min,$max){
     }
 
     return $number >= $min && $number <= $max;
+}
+
+
+
+
+
+// PRINT
+
+function cp_print_button($type,$value,$name){
+    echo '<span class="btn-span"><input type="',$type,'" class="btn" value="',$value,'" name="',$name,'"></span>';
+}
+
+function cp_print_popUp($firstBtnValue,$title,$content,$btnType,$btnValue,$btnName){
+    echo    "<span class='btn-span'><button type='button' class='btn'><label for='popup-first-btn' class='popup-btn'>$firstBtnValue</label></button></span>",
+            '<input id="popup-first-btn" type="radio" name="popup-conf" class="popup-first-btn btn" value="none">',
+            '<div class="popup-night">',
+                '<div class="popup-box" >',
+                    "<h4>$title</h4>",
+                    "<p>$content</p>",
+                    '<input id="popup-exit" type="radio" name="popup-conf">',
+                    '<label for="popup-exit">&times;</label>',
+                    "<span class='btn-span'><input class='popup-final-btn btn' name='$btnName' value='$btnValue' type='$btnType'></span>",
+                '</div>',
+            '</div> ';
 }

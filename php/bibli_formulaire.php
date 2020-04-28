@@ -214,16 +214,30 @@ function cp_form_print_checkboxLine($name,$label,$required = true, $checked = fa
  * @param Array $submit         Value and name of submit button (0:value, 1:name)
  * @param String $resetValue    Value of reset button
  */ 
-function cp_form_print_buttonsLine($submit,$resetValue = ''){
+function cp_form_print_buttonsLine($submit,$resetValue = '',$confirmSubmit = false, $confirmReset = false, $confirmSubmitLabel = '', $confirmResetLabel =''){
     if(!is_array($submit)){
         throw new Exception('[cp_form_print_buttonsLine] : $submit must be an array ');
     }
     echo '<tr>',
-            '<td class="buttons" colspan="2">',
-                '<input type="submit" value="',$submit[0],'" name="',$submit[1],'">',
-                ($resetValue != '')?'<input type="reset" value="'.$resetValue.'">':'',
-             '</td>',
+            '<td class="buttons" colspan="2">';
+            
+                if(!$confirmSubmit){
+                    cp_print_button('submit',$submit[0],$submit[1]);
+                }else{
+                    cp_print_popUp($submit[0],'Vous êtes sûr ?',$confirmSubmitLabel,'submit','Oui je confirme','btnNewArticle');
+                }
+            
+                
+                if($resetValue != ''){
+                    if(!$confirmReset){
+                        cp_print_button('reset',$resetValue,'reset');
+                    }else{
+                        cp_print_popUp($resetValue,'Vous êtes sûr ?',$confirmResetLabel,'reset','Oui je confirme','');
+                    }
+                }
+        echo '</td>',
         '</tr>';
+   
 }
 
 
@@ -240,9 +254,9 @@ function cp_form_print_buttonsLine($submit,$resetValue = ''){
  * @param String $tooltip       The (optional) information displayed in a tooltip
  */
 function cp_form_print_textAreaLine($label,$name,$value,$cols,$rows,$required = true,$tooltip = ''){
-    echo '<tr>',
-            '<td class="area" colspan="2">',
-                '<label for="',$name,'">',$label,($tooltip != '')?'  '.cp_html_tooltip($tooltip):'','</label>',
+    echo '<tr class="textarea">',
+            '<td><label for="',$name,'">',$label,($tooltip != '')?'  '.cp_html_tooltip($tooltip):'','</label></td>',
+            '<td class="area">',
                 '<textarea name="',$name,'" id="',$name,'" cols="',$cols,'" rows="',$rows,'" ',($required)?'required':'',' >',$value,'</textarea>',
             '</td>',
         '</tr>';
