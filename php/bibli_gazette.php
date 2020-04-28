@@ -72,7 +72,7 @@ function cp_print_beginPage($id,$title,$deepness,$status = -1,$pseudo = false){
     if($status == -1){
         echo                    '<li><a href="',$path,'php/connexion.php">Se connecter</a></li>';
     }else{
-        echo                       '<li><a>',($pseudo)?$pseudo:'Se conecter','</a>',
+        echo                       '<li><a>',($pseudo)?$pseudo:'Se connecter','</a>',
                                         '<ul class="'.$statusClass.'">',
                                             '<li><a href="',$path,'php/compte.php">Mon profil</a></li>',
             ($status > 0 && $status != 2) ? "<li><a href=\"$path"."php/nouveau.php\">Nouvel article</a></li>":'',

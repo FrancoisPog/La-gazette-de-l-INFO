@@ -7,7 +7,7 @@
 
   $db = cp_db_connecter();
 
-  $query = 'SELECT arID,arTitre,arResume,arDatePublication,arDateModification FROM article ORDER BY arDateModification DESC, arDatePublication DESC, rand()';
+  $query = 'SELECT arID,arTitre,arResume,arDatePublication FROM article ORDER BY arDatePublication DESC, rand()';
   
   $res = cp_db_execute($db,$query);
 
@@ -21,7 +21,7 @@
   cpl_print_actus($res, $activeButton, $numberArticle);
   cp_print_endPage();
 
-  // #########################################################
+  // #####################################################################################################################
 
   /**
    * Printing page actus in the gazette website
@@ -92,12 +92,8 @@
   function cpl_group_article_by_date($articles, $button, $numberArticle) {
     $result = [];
     for ($i=4*($button-1); $i < 4*($button-1)+4 && $i < $numberArticle; $i++) {
-      if($date = cpl_get_year_and_month($articles[$i]['arDateModification'])) {
-        $result[$date][] = $articles[$i];
-      } else {
-        $date = cpl_get_year_and_month($articles[$i]['arDatePublication']);
-        $result[$date][] = $articles[$i];
-      }
+      $date = cpl_get_year_and_month($articles[$i]['arDatePublication']);
+      $result[$date][] = $articles[$i];
     }
     return $result;
   }
