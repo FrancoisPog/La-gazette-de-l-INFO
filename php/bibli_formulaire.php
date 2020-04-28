@@ -232,7 +232,7 @@ function cp_form_print_buttonsLine($submit,$resetValue = '',$confirmSubmit = fal
                     if(!$confirmReset){
                         cp_print_button('reset',$resetValue,'reset');
                     }else{
-                        cp_print_popUp($resetValue,'Vous êtes sûr ?',$confirmResetLabel,'reset','Oui je confirme','');
+                        cp_print_popUp($resetValue,'Vous êtes sûr ?',$confirmResetLabel,'reset','Oui je confirme','reset');
                     }
                 }
         echo '</td>',

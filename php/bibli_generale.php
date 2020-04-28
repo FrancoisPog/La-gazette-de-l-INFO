@@ -252,7 +252,7 @@ function cp_print_button($type,$value,$name){
 }
 
 function cp_print_popUp($firstBtnValue,$title,$content,$btnType,$btnValue,$btnName){
-    echo    "<span class='btn-span'><button type='button' class='btn'><label for='popup-first-btn' class='popup-btn'>$firstBtnValue</label></button></span>",
+    echo    "<span class='btn-span'><label for='popup-first-btn' class='popup-btn btn'>$firstBtnValue</label></span>",
             '<input id="popup-first-btn" type="radio" name="popup-conf" class="popup-first-btn btn" value="none">',
             '<div class="popup-night">',
                 '<div class="popup-box" >',
