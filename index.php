@@ -31,7 +31,7 @@ function cpl_print_articleLink($articleData){
                 
                 '<figure>',
                 '<aside><p>',$cutAbstarct,'</p></aside>',
-                    '<img src="',$picture,'" alt="',$titre,'">',
+                    '<img src="',$picture,'" alt="',$titre,'" width="250" height="187">',
                     '<figcaption>',$titre,'</figcaption>',
                 '</figure>',
             '</a>';
