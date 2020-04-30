@@ -89,7 +89,7 @@ function cp_html_parseBbCode($arg){
  * @return String          The html tooltip 
  */
 function cp_html_tooltip($label){
-    return '<span class="tooltip-icon">&#9432;<span class="tooltip-content">'.$label.'</span></span>';
+    return '<span class="tooltip-icon">&#128269;<span class="tooltip-content">'.$label.'</span></span>';
 }
 
 
