@@ -1,0 +1,86 @@
+/* --------------------- PAGE ACCUEIL ---------------------*/
+
+#accueil a {
+    
+    figure{
+        // position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 270px;
+        
+        aside{
+            position: absolute;
+            width : 250px;
+            height: 0px;
+            opacity: 0;
+            background-color: rgba(169, 161, 156, 0.9);
+            color : black;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s 0.4s ease-in-out;
+            overflow:hidden;
+            border-top: 1px solid black;
+            p{
+                font-size: 0.95em;
+                margin: 15px;
+                text-align: justify;
+                overflow-wrap: anywhere;
+            }
+        }
+    }
+
+    img{
+        border: black solid 1px;
+        width: 250px;
+        height: 187px;
+    }
+
+    
+    &:hover{
+        text-decoration: none;
+        figure img{
+            box-shadow : 0px 0px 20px 5px grey;
+        }
+        figure aside{
+            height: 187px;
+            opacity: 1;
+        }
+    }
+    
+}
+ 
+#accueil section:not(#horoscope){
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#horoscope{
+    table{
+        width: 700px;
+        font-size: 0.8em;
+        p{
+            font-size: 1em;
+        }
+    }
+
+    th{
+        &:nth-child(1){
+            width: 105px;
+        }
+        &:nth-child(2){
+            width: 110px;
+        }
+    }
+
+    td{
+        &:nth-child(2){
+            padding-right: 45px;
+        }
+        &:nth-child(3){
+            padding: 10px 10px;
+        }
+
+    }
+}

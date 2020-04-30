@@ -1,0 +1,38 @@
+/* --------------------- PAGE REDACTION ---------------------*/
+
+#redaction article{
+    img{
+        float: left;
+        margin: 0px 20px 0px 0px;
+        width: 150px;
+        height: 200px;
+        border : 1px solid black;
+    }
+
+    h4{
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        background-color: black;
+        padding: 5px 6px ;
+        color: white;
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+
+    div.biography{
+        padding-left: 170px;
+    }
+
+    &:not(:only-of-type){
+        @include bordet-top();
+        &:last-child{
+            padding-bottom: 0px;
+        }
+    }
+
+    &.haveFunction{
+        @include bordet-top();
+    }
+
+}

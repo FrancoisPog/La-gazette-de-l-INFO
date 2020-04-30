@@ -1,0 +1,60 @@
+/* --------------------- PAGE ARTICLE ---------------------*/
+
+#article article {
+    background-color: white;
+    box-shadow: 5px 5px  15px 4px black;
+    padding: 20px;
+    border-radius: 10px 0px;
+    padding-bottom: 5px;
+
+    &.with-picture{
+        min-height: 250px;
+    }
+
+    h3{
+        text-decoration: underline;
+    }
+
+    img{
+        float: right;
+        margin: 0px 0px 20px 20px ;
+        width: 250px;
+        height: 187px;
+        border: solid 1px black;
+    }
+
+    figure{
+        display: inline-block;
+        margin: 16px;  
+    }
+
+    footer{
+        border-top: #909090 solid 2px;
+        padding-top: 4px;
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        p{
+            margin: 0px;
+            font-size: 0.9em;
+        }
+    }
+}
+
+#article article ul{
+    list-style-type: none;
+    
+    li::before{
+        content: "\2611\0020";
+    }
+}
+
+#article section {
+    margin-top: 50px;
+    border-radius: 0px 10px 10px 10px;
+    li {
+        margin-left: 25px;
+    }
+}
+
+

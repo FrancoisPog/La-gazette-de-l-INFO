@@ -1,0 +1,131 @@
+/* --------------------- COMMON ---------------------*/
+
+html{
+    scroll-behavior: smooth;
+}
+
+h3{
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+p {
+    text-align: justify;
+    font-size: 16px;
+}
+
+p + p, ul + p {
+    margin-top : 10px;
+}
+em {
+    font-style: italic;
+}
+
+a{
+    color: #00D;
+    text-decoration: none;
+    cursor: default;
+    &:hover{
+        text-decoration: underline;
+    }
+    &[href^=http]:hover::after{
+        content: " ("attr(href)") " url(../images/lien_externe.gif);
+    }
+}
+
+strong{
+    font-weight: bold;
+}
+
+body{
+    font-family: Trebuchet, Arial, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.2;
+    background: linear-gradient(to bottom right, $color-bg-top-left,$color-bg-bottom-right) fixed;
+    min-height: max-content;
+
+    > header, > footer, main{
+        width: 900px;
+    }
+}
+
+blockquote {
+    margin: 20px 30px;
+    text-align: justify;
+    quotes: "« " " »" "‹" "›";
+    font-style: italic;
+    &:before{
+        content: open-quote;
+    }
+    &:after{
+        content: close-quote;
+    }
+}
+
+figcaption{
+    text-align: center;
+    margin-top: 7px;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+    max-width: 270px;
+    
+}
+
+ul{
+    list-style: circle;
+    li{
+        margin-left: 30px;
+    }
+
+    article & li{
+        margin-top: 5px;
+    }
+}
+
+
+table th, table td, table{
+    border: black 1px solid;
+    text-align: left;
+}
+
+table{
+    margin:  10px auto;
+    th{
+        font-weight: bold;
+        padding: 7px;
+    }
+    td{
+        padding: 5px ;
+        
+    }
+    tbody{
+        padding: 10px;
+    }
+}
+
+.error{
+    margin-top: 10px;
+    border: 2px red solid;
+    font-weight: 600;
+    color : red;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    width: 70%;
+}
+
+.success{
+    color : green;
+    border :2px green solid;
+    padding: 7px;
+    text-align: center;
+    width: 70%;
+    font-weight: 600;
+    align-self: center;
+}

@@ -1,0 +1,72 @@
+/* --- Forms ---  */
+table.form tr{
+    position: relative;
+}
+
+
+table.form td,  table.form {
+   border: 0px;
+   position: relative;
+}
+
+table.form td.label{
+    text-align: right;
+}
+
+table.form td.input{
+    display: flex;
+    justify-content: space-between;
+    vertical-align: middle;
+
+    select{
+        border : 1px grey solid;
+        &:only-child{
+            width: 207px;
+            padding: 3px;
+        }
+    }
+}
+
+table.form td.checkbox{
+    text-align: left;
+    font-size: 0.95em;
+
+    input[type="checkbox"]{
+        margin-left: 40px;
+    }
+}
+
+table.form td.buttons{
+    text-align: center;
+}
+
+table.form td.area{
+    textarea{
+        max-width: 800px;
+    }
+
+    label {
+        display: block;
+        text-align: center;
+        margin: 5px auto;
+        position: relative;
+        width: max-content;   
+    }
+}
+
+
+table.form input[type="text"],table.form input[type="password"], table.form input[type="email"]{
+    width: 200px;
+    padding: 3px;
+}
+
+table.form tr.textarea{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    td{
+        display: flex;
+        justify-content: center;
+        width: max-content;
+    }
+}

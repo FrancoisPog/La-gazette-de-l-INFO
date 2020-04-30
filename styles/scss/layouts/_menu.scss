@@ -1,0 +1,90 @@
+/* --- Menu --- */
+nav {
+    position: fixed;
+    top: 0px;
+    z-index: 5;
+    height: 40px;
+    width: 100%;
+    background-color: $color-nav;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+
+    &:hover{
+        background-color:$color-nav-hover;
+    }
+
+    a{
+        text-decoration: none;
+        font-weight: bold;
+        color: $color-nav-li;
+        width: 100%;
+        padding: 10px 30px;
+    }
+}
+
+nav li{
+    height: 40px;
+    display: flex;
+    transition-duration: 0.3s;
+    margin-left: 0px;
+
+    &:hover{
+        background-color: $color-nav-li-bg-hover;
+
+        >a{
+            text-decoration: none;
+            color: $color-nav-li-hover;
+        }
+    }
+}
+
+nav > ul {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    >li:first-child{
+        position: absolute;
+        left: 0px;
+    }
+
+    >li:last-child{
+        position: relative;
+        min-width: 200px;
+        >a{
+            padding-left: 40px;
+            padding-right: 70px;
+            &::before{
+                content: "\2630\0020";
+            }
+        }
+
+        &:hover{
+            @include list-size();
+        }
+    }
+}
+
+
+/* Sous liste */
+nav ul>li>ul {
+    display: flex;
+    height: 0px;
+    overflow: hidden;
+    flex-direction: column;
+    position: absolute;
+    top :40px;
+    left: 0px;
+    width: 100%;
+    transition-property: height;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    border-radius: 0px 0px 10px 10px;
+
+    > li{
+        background-color: $color-nav-hover;
+        width: 100%;
+    }
+    
+}
