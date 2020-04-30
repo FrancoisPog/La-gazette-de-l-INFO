@@ -17,15 +17,15 @@
 
 /* Constants and includes */
 
-// define("BD_SERVER","localhost");
-// define("BD_NAME","poguet_gazette");
-// define("BD_USER","poguet_u");
-// define("BD_PASS","poguet_p");
+define("BD_SERVER","localhost");
+define("BD_NAME","poguet_gazette");
+define("BD_USER","poguet_u");
+define("BD_PASS","poguet_p");
 
-define("BD_SERVER","db38127-poguet-gazette.sql-pro.online.net");
-define("BD_NAME","db38127_poguet_gazette");
-define("BD_USER","db115427");
-define("BD_PASS","Poguet_p");
+// define("BD_SERVER","db38127-poguet-gazette.sql-pro.online.net");
+// define("BD_NAME","db38127_poguet_gazette");
+// define("BD_USER","db115427");
+// define("BD_PASS","Poguet_p");
 
 define("ENCODE","UTF-8");
 define("ENCRYPTION_KEY","lJ4sMUKYK2DvDXMFr5lyCw==");
@@ -154,7 +154,7 @@ function cp_print_errors($errors){
  * @param int $year     The date's year
  * @return boolean
  */
-function cp_isValid_date($day,$month,$year){
+function cp_isValid_date($day,$month,$year) {
     return (cp_intIsBetween($day,1,31) && 
             cp_intIsBetween($month,1,12) && 
             cp_intIsBetween($year,1900,2020));

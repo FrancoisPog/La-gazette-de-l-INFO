@@ -3,6 +3,8 @@
   ob_start();
   require_once('../php/bibli_gazette.php');
 
+  $isLogged = cp_is_logged();
+
   // --- Database interactions  --- 
 
   $db = cp_db_connecter();
@@ -16,7 +18,7 @@
   $numberArticle = count($res);
   $activeButton = isset($_POST['buttonPage']) ? cp_str_isInt($_POST['buttonPage']) ? intval($_POST['buttonPage']) : 1 : 1;
 
-  cp_print_beginPage('actus','L\'actu',1);
+  cp_print_beginPage('actus','L\'actu',1,$isLogged);
   cpl_print_button_pages($numberArticle, $activeButton);
   cpl_print_actus($res, $activeButton, $numberArticle);
   cp_print_endPage();
