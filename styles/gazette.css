@@ -489,6 +489,10 @@ table.form tr.textarea td {
   width: max-content;
 }
 
+table.form input[type="radio"] {
+  margin-right: 7px;
+}
+
 /* Button */
 .btn {
   border: 0px;
@@ -496,8 +500,10 @@ table.form tr.textarea td {
   font-weight: bold;
   font-size: 15px;
   margin: 0px 14px;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
+  -webkit-transition: -webkit-transform 0.5s;
+  transition: -webkit-transform 0.5s;
+  transition: transform 0.5s;
+  transition: transform 0.5s, -webkit-transform 0.5s;
   color: white;
   display: inline-block;
   padding: 6px 4px;
@@ -517,8 +523,10 @@ span.btn-span {
   background-color: #af1f1f;
   border-radius: 5px;
   padding: 0px;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
+  -webkit-transition: -webkit-transform 0.5s;
+  transition: -webkit-transform 0.5s;
+  transition: transform 0.5s;
+  transition: transform 0.5s, -webkit-transform 0.5s;
   text-align: center;
 }
 
@@ -535,9 +543,11 @@ span.btn-span::after {
   top: 1px;
   position: absolute;
   content: "\00bb";
-  color: wheat;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
+  color: white;
+  -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+  transition: opacity 0.5s, -webkit-transform 0.5s;
+  transition: opacity 0.5s, transform 0.5s;
+  transition: opacity 0.5s, transform 0.5s, -webkit-transform 0.5s;
   font-size: 1.3em;
 }
 
@@ -552,8 +562,9 @@ span.btn-span::after {
 
 .popup-first-btn:checked + div.popup-night div.popup-box {
   opacity: 1;
-  -webkit-transform: scale(100%);
-          transform: scale(100%);
+  left: 35%;
+  -webkit-transform: scale(1);
+          transform: scale(1);
   z-index: 5000;
   display: block;
   width: 26%;
@@ -577,19 +588,19 @@ div.popup-night {
 }
 
 div.popup-night div.popup-box {
-  -webkit-transition: opacity 0.3s 0.2s, width 0s 1s, -webkit-transform 0.3s 0.2s;
-  transition: opacity 0.3s 0.2s, width 0s 1s, -webkit-transform 0.3s 0.2s;
-  transition: opacity 0.3s 0.2s, transform 0.3s 0.2s, width 0s 1s;
-  transition: opacity 0.3s 0.2s, transform 0.3s 0.2s, width 0s 1s, -webkit-transform 0.3s 0.2s;
+  -webkit-transition: opacity 0.3s 0.2s, width 0s 1s, left 0s 0.7s, -webkit-transform 0.3s 0.2s;
+  transition: opacity 0.3s 0.2s, width 0s 1s, left 0s 0.7s, -webkit-transform 0.3s 0.2s;
+  transition: opacity 0.3s 0.2s, transform 0.3s 0.2s, width 0s 1s, left 0s 0.7s;
+  transition: opacity 0.3s 0.2s, transform 0.3s 0.2s, width 0s 1s, left 0s 0.7s, -webkit-transform 0.3s 0.2s;
   background-color: white;
   padding: 25px;
   top: 40%;
-  left: 35%;
+  left: -35%;
   position: fixed;
   opacity: 0;
   z-index: 0;
-  -webkit-transform: scale(80%);
-          transform: scale(80%);
+  -webkit-transform: scale(0.8);
+          transform: scale(0.8);
   width: 0px;
   border-radius: 10px;
 }
@@ -599,8 +610,10 @@ div.popup-night div.popup-box label {
   position: absolute;
   top: 10px;
   right: 15px;
-  -webkit-transition: all 0.7s;
-  transition: all 0.7s;
+  -webkit-transition: -webkit-transform 0.7s;
+  transition: -webkit-transform 0.7s;
+  transition: transform 0.7s;
+  transition: transform 0.7s, -webkit-transform 0.7s;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -616,7 +629,7 @@ div.popup-night div.popup-box label {
 div.popup-night div.popup-box label:hover {
   -webkit-transform: rotate(360deg);
           transform: rotate(360deg);
-  color: red;
+  color: #af1f1f;
 }
 
 div.popup-night div.popup-box h4 {
@@ -637,7 +650,6 @@ div.popup-night div.popup-box p {
 /* tooltip */
 .tooltip-icon {
   cursor: default;
-  color: darkblue;
   font-weight: bold;
   position: absolute;
   display: inline;
@@ -646,17 +658,22 @@ div.popup-night div.popup-box p {
 }
 
 .tooltip-icon:hover .tooltip-content {
+  right: -190px;
   opacity: 1;
   visibility: visible;
   -webkit-transform: scale(1) rotate(0);
           transform: scale(1) rotate(0);
+  -webkit-transition: opacity .25s, right 0s, -webkit-transform .25s;
+  transition: opacity .25s, right 0s, -webkit-transform .25s;
+  transition: transform .25s, opacity .25s, right 0s;
+  transition: transform .25s, opacity .25s, right 0s, -webkit-transform .25s;
 }
 
 .tooltip-icon .tooltip-content {
   font-weight: bold;
   opacity: 0;
   position: absolute;
-  right: -190px;
+  right: -19000px;
   width: 180px;
   text-align: center;
   color: #5a5a5a;
@@ -667,8 +684,10 @@ div.popup-night div.popup-box p {
   border-radius: 5px;
   -webkit-box-shadow: 0px 0px 10px 1px lightgrey;
           box-shadow: 0px 0px 10px 1px lightgrey;
-  -webkit-transition: all .25s;
-  transition: all .25s;
+  -webkit-transition: opacity .25s, right 0s 1s, -webkit-transform .25s;
+  transition: opacity .25s, right 0s 1s, -webkit-transform .25s;
+  transition: transform .25s, opacity .25s, right 0s 1s;
+  transition: transform .25s, opacity .25s, right 0s 1s, -webkit-transform .25s;
   -webkit-transform: scale(0) rotate(12deg);
           transform: scale(0) rotate(12deg);
 }
@@ -810,7 +829,6 @@ div.popup-night div.popup-box p {
   -webkit-transition: all 0.3s 0.4s ease-in-out;
   transition: all 0.3s 0.4s ease-in-out;
   overflow: hidden;
-  border-top: 1px solid black;
 }
 
 #accueil a figure aside p {
@@ -821,7 +839,8 @@ div.popup-night div.popup-box p {
 }
 
 #accueil a img {
-  border: black solid 1px;
+  -webkit-box-shadow: 0 0 20px 10px lightgrey;
+          box-shadow: 0 0 20px 10px lightgrey;
   width: 250px;
   height: 187px;
 }

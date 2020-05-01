@@ -6,8 +6,8 @@
     font-weight: bold;
     font-size: 15px;
     margin: 0px 14px;
-    transition: all 0.5s;
-    color: white;
+    transition: transform 0.5s;
+    color: $color-text;
     display: inline-block;
     padding: 6px 4px;
     cursor: pointer;
@@ -23,10 +23,10 @@ span.btn-span{
     margin: 5px;
     position: relative;
     display: inline-block;
-    background-color: rgb(175, 31, 31);
+    background-color:$color-button;
     border-radius: 5px;
     padding: 0px;
-    transition: all 0.5s;
+    transition: transform 0.5s;
     text-align: center;
     
 }
@@ -43,8 +43,8 @@ span.btn-span::after{
     top: 1px;
     position: absolute;
     content: "\00bb";
-    color: wheat;
-    transition: all 0.5s;
+    color: $color-text;
+    transition: opacity 0.5s, transform 0.5s;
     font-size: 1.3em;
    
 }

@@ -21,7 +21,7 @@
             align-items: center;
             transition: all 0.3s 0.4s ease-in-out;
             overflow:hidden;
-            border-top: 1px solid black;
+            // border-top: 1px solid black;
             p{
                 font-size: 0.95em;
                 margin: 15px;
@@ -32,7 +32,8 @@
     }
 
     img{
-        border: black solid 1px;
+        // border: black solid 1px;
+        box-shadow: 0 0 20px 10px lightgrey;
         width: 250px;
         height: 187px;
     }
