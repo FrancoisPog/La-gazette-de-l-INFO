@@ -61,7 +61,9 @@ function cpl_editingProcess(){
 
 }
 
-
+function cpl_print_editArticlePage(){
+    
+}
 
 
 

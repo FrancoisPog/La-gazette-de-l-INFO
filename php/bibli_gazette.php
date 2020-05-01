@@ -17,15 +17,15 @@
 
 /* Constants and includes */
 
-define("BD_SERVER","localhost");
-define("BD_NAME","poguet_gazette");
-define("BD_USER","poguet_u");
-define("BD_PASS","poguet_p");
+// define("BD_SERVER","localhost");
+// define("BD_NAME","poguet_gazette");
+// define("BD_USER","poguet_u");
+// define("BD_PASS","poguet_p");
 
-// define("BD_SERVER","db38127-poguet-gazette.sql-pro.online.net");
-// define("BD_NAME","db38127_poguet_gazette");
-// define("BD_USER","db115427");
-// define("BD_PASS","Poguet_p");
+define("BD_SERVER","db38127-poguet-gazette.sql-pro.online.net");
+define("BD_NAME","db38127_poguet_gazette");
+define("BD_USER","db115427");
+define("BD_PASS","Poguet_p");
 
 define("ENCODE","UTF-8");
 define("ENCRYPTION_KEY","lJ4sMUKYK2DvDXMFr5lyCw==");
@@ -304,7 +304,7 @@ function cp_print_editArticleSection($page,$data,$errors = [],$onSuccess = ''){
                         cp_form_print_inputLine('Titre de l\'article : ','text','title',250,true,'',$title),
                         cp_form_print_textAreaLine('Résumé de l\'article : ','abstract',$abstract,80,7,true,'La page d\'accueil afffiche les 300 premiers caractéres du résumé'),
                         cp_form_print_textAreaLine('Contenu de l\'article :','content',$content,80,25,true),
-                        cp_form_print_buttonsLine(['Enregistrer','btnEditArticle'],'Réinitialiser',false,($page == 'nouveau'),'','Aucune sauvegarde n\'est encore effectuée, êtes-vous certain de vouloir réinitialiser l`\'article ?'),
+                        cp_form_print_buttonsLine(['Enregistrer','btnEditArticle'],'Réinitialiser',false,($page == 'nouveau.php'),'','Aucune sauvegarde n\'est encore effectuée, êtes-vous certain de vouloir réinitialiser l`\'article ?'),
                     '</table>',
                 '</form>',
 

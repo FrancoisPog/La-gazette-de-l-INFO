@@ -83,7 +83,7 @@
       echo '<section> <form method="POST" action="actus.php">',
       '<p>Pages : </p>';
       for ($i=0; $i < $numArticle/4; $i++) { 
-        echo '<input type="submit" value="',$i+1,'" name="buttonPage" ',$i==($buttonSelected-1) ? 'disabled' : '','></input>';
+        echo '<input type="submit" value="',$i+1,'" name="buttonPage" ',$i==($buttonSelected-1) ? 'disabled' : '','>';
       }
       echo '</form> </section>';
     } 

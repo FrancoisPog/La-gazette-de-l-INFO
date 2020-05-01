@@ -9,4 +9,4 @@ inscription.php	| Commencé	|
 compte.php		| Terminé ✔️é	|
 nouveau.php		| Pas commencé	| François
 edition.php		| Pas commencé	| François 
-administration.php	| Pas commencé	|
+administration.php	| Pas commencé	| Lucas
