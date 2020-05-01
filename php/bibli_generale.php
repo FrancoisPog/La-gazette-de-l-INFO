@@ -208,6 +208,9 @@ function cp_decrypt_url($url,$field){
     if(!defined('ENCRYPTION_KEY')){
         throw new Exception('[cp_decrypt_url] : The constant \'ENCRYPTION_KEY\' must be defined');
     }
+    if($url == ""){
+        return false;
+    }
     $method = 'aes-128-gcm';
     $url = base64_decode($url);
     $initVectorLen = openssl_cipher_iv_length($method);

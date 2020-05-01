@@ -1,8 +1,7 @@
 /* --------------------- PAGE ARTICLE ---------------------*/
 
 #article article {
-    background-color: white;
-    box-shadow: 5px 5px  15px 4px black;
+    @include block;
     padding: 20px;
     border-radius: 10px 0px;
     padding-bottom: 5px;
@@ -39,21 +38,29 @@
             font-size: 0.9em;
         }
     }
-}
-
-#article article ul{
-    list-style-type: none;
-    
-    li::before{
-        content: "\2611\0020";
+    ul{
+        list-style-type: none;
+        
+        li::before{
+            content: "\2611\0020";
+        }
     }
 }
 
-#article section {
-    margin-top: 50px;
-    border-radius: 0px 10px 10px 10px;
-    li {
-        margin-left: 25px;
+
+#article{
+    section {
+        margin-top: 50px;
+        border-radius: 0px 10px 10px 10px;
+        li {
+            margin-left: 25px;
+        }
+    }
+    aside{
+        @include block;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        padding : 4px 20px;
     }
 }
 

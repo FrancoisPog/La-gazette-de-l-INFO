@@ -31,7 +31,7 @@ function cpl_print_comments($articleData){
  * Print an article
  * @param Array $data The article data (not yet protected)
  */
-function cpl_print_article($data){
+function cpl_print_article($data,$isLogged){
     // author name formatting
     $auteur =  mb_strtoupper(mb_substr($data[0]['utPrenom'],0,1,ENCODE),ENCODE).'.'.mb_convert_case($data[0]['utNom'],MB_CASE_TITLE,ENCODE);
 
@@ -51,8 +51,11 @@ function cpl_print_article($data){
 
     $pictureExist = (file_exists('../upload/'.$data[0]['arID'].'.jpg'));
 
+    $urlID = cp_encrypt_url([$data[0]['arID']]);
+    
+    echo    ($isLogged && $_SESSION['pseudo'] == $data[0]['arAuteur'])?"<aside>Vous êtes l'auteur de cet article, <a href='edition.php?data=$urlID'>cliquer ici pour le modifier ou le supprimer</a></aside>":"",
 
-    echo    '<article ',($pictureExist)?'class="with-picture"':'',' >',
+            '<article ',($pictureExist)?'class="with-picture"':'',' >',
                 '<h3>',$titre,'</h3>';
 
                     if($pictureExist){
@@ -91,16 +94,20 @@ function cpl_print_article($data){
 
 // --- ID verification and database interactions ---
 
-// if invalid keys -> index
-if(!cp_check_param($_GET,['id'])){
-    header('Location: ../index.php');
-    exit(); 
+// Only data can be here
+cp_check_param($_GET,[],['data']) or cp_session_exit('../index.php');
+
+// If data is not set, -> actus.php
+if(!isset($_GET['data'])){
+    header('Location: actus.php');
+    exit(0);
 }
 
-$codeErr = 0;
-$id = $_GET['id'];
 
-if(!cp_str_isInt($id)){
+$codeErr = 0;
+$id = cp_decrypt_url($_GET['data'],1)[0];
+
+if(!$id){
     $codeErr = 1; // The id key isn't an integer
 }else{
     $id = (int)$id;
@@ -126,7 +133,7 @@ $isLogged = cp_is_logged();
 cp_print_beginPage('article','L\'actu',1,$isLogged);
 
     if($codeErr == 0){ // print article
-        cpl_print_article($data);
+        cpl_print_article($data,$isLogged);
     }else{ // print error page
         $errorMsg = ($codeErr == 1) ? "Identifiant d'article invalide"  :"Aucun n'article ne correspond à cet identifiant";
         cp_print_errorSection($errorMsg);

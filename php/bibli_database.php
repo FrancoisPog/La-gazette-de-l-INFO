@@ -140,7 +140,7 @@ function cp_db_protect_outputs($content) {
         return $content;
     }
     if (is_string($content)){
-        $protected_content = htmlentities($content);
+        $protected_content = htmlentities($content,ENT_QUOTES);
         return $protected_content;
     }
     return $content;

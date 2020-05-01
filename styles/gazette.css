@@ -226,10 +226,10 @@ section {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  background-color: white;
   border-radius: 0px 8px 8px 8px;
-  -webkit-box-shadow: 10px 10px 15px 4px black;
-          box-shadow: 10px 10px 15px 4px black;
+  -webkit-box-shadow: 10px 10px 30px 5px black;
+          box-shadow: 10px 10px 30px 5px black;
+  background-color: white;
   margin-top: 30px;
   padding: 20px;
 }
@@ -464,7 +464,7 @@ table.form input[type="text"], table.form input[type="password"], table.form inp
   padding: 3px;
 }
 
-table.form tr.textarea {
+table.form tr.textarea, table.form.row tr {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -477,7 +477,8 @@ table.form tr.textarea {
           align-items: center;
 }
 
-table.form tr.textarea td {
+table.form tr.textarea td, table.form.row tr td {
+  margin-top: 5px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -487,6 +488,14 @@ table.form tr.textarea td {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
+}
+
+table.form tr.textarea td:first-child, table.form.row tr td:first-child {
+  padding-bottom: 0;
+}
+
+table.form tr.textarea td.input input[type="text"], table.form.row tr td.input input[type="text"] {
+  width: 400px;
 }
 
 table.form input[type="radio"] {
@@ -649,7 +658,7 @@ div.popup-night div.popup-box p {
 
 /* tooltip */
 .tooltip-icon {
-  cursor: default;
+  cursor: help;
   font-weight: bold;
   position: absolute;
   display: inline;
@@ -694,9 +703,9 @@ div.popup-night div.popup-box p {
 
 /* --------------------- PAGE ARTICLE ---------------------*/
 #article article {
+  -webkit-box-shadow: 10px 10px 30px 5px black;
+          box-shadow: 10px 10px 30px 5px black;
   background-color: white;
-  -webkit-box-shadow: 5px 5px  15px 4px black;
-          box-shadow: 5px 5px  15px 4px black;
   padding: 20px;
   border-radius: 10px 0px;
   padding-bottom: 5px;
@@ -755,6 +764,15 @@ div.popup-night div.popup-box p {
 
 #article section li {
   margin-left: 25px;
+}
+
+#article aside {
+  -webkit-box-shadow: 10px 10px 30px 5px black;
+          box-shadow: 10px 10px 30px 5px black;
+  background-color: white;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  padding: 4px 20px;
 }
 
 /* --------------------- PAGE REDACTION ---------------------*/
@@ -962,35 +980,6 @@ div.popup-night div.popup-box p {
 }
 
 /* --------------------- PAGE NOUVEAU---------------------*/
-#nouveau tr {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-#nouveau tr td {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-#nouveau tr td.input input[type="text"] {
-  width: 400px;
-}
-
 /* --------------------- PAGE PROTEGEE ---------------------*/
 #protegee h3 {
   margin-top: 10px;

@@ -1,18 +1,1 @@
 /* --------------------- PAGE NOUVEAU---------------------*/
-
-#nouveau tr{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    td{
-        display: flex;
-        justify-content: center;
-        width: max-content;
-
-        &.input input[type="text"]{
-            width: 400px;
-        }
-    }
-}
-

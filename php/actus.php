@@ -58,12 +58,17 @@
    * @return void 
    */
   function cpl_print_article($id,$titre,$resume) {
+    if(file_exists("../upload/$id.jpg")){
+      $picture = "../upload/$id.jpg";
+    }else{
+      $picture = "../images/none.jpg";
+    }
     echo '<article>',
-    '<img src="../upload/',$id,'.jpg" alt="',$titre,'">',
-    "<h3>$titre</h3>",
-    "<p>$resume</p>",
-    '<a href="../php/article.php?id=',$id,'">Lire l\'article</a>',
-    '</article>';
+          '<img src="',$picture,'" alt="',$titre,'" title="',$titre,'">',
+          "<h3>$titre</h3>",
+          "<p>$resume</p>",
+          '<a href="../php/article.php?data=',cp_encrypt_url([$id]),'">Lire l\'article</a>',
+        '</article>';
   }
 
   /**
@@ -119,7 +124,7 @@
    * @return String   The date in correct format for section
    */
   function cpl_date_section($date) {
-    $moisTab = ['01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','06'=>'Mai','07'=>'Juin','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre'];
+    $moisTab = ['01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre'];
     $mois = substr($date,4);
     $annee = substr($date,0,4);
     return $moisTab[$mois] . ' ' . $annee; 

@@ -6,30 +6,9 @@ require_once('bibli_gazette.php');
 
 
 function cpl_hackGuard(){
-    
-    $mandatoryKeys = ['title','abstract','content','btnNewArticle'];
-    cp_check_param($_POST,$mandatoryKeys) or cp_session_exit('../index.php');
-    
-}
-
-function cpl_checkMistakes(){
-    $errors = array();
-    $_POST = array_map('trim',$_POST);
-    $translate = ['title'=>'titre','abstract'=>'résumé','content'=>'contenu'];
-
-    foreach(['title','abstract','content'] as $element){
-        $french = $translate[$element];
-        
-        if($err = cp_isValid_articleElement($_POST[$element])){
-            if($err == 1){
-                $errors[] = "Le $french ne doit pas être vide";
-            }else{
-                $errors[] = "Le $french ne doit pas contenir de tags html";
-            }
-        }
-    }
-
-    return ($errors)?$errors:0;
+    $mandatoryKeys = ['title','abstract','content','btnEditArticle'];
+    $optionalKeys = ['popup-conf'];
+    cp_check_param($_POST,$mandatoryKeys,$optionalKeys) or cp_session_exit('../index.php');
 }
 
 function cpl_insertInDatabase(){
@@ -55,7 +34,7 @@ function cpl_insertInDatabase(){
 
 function cpl_newArticleProcess(){
     cpl_hackGuard();
-    if($errors = cpl_checkMistakes()){
+    if($errors = cp_article_isValid($_POST)){
         return $errors;
     }
 
@@ -65,37 +44,29 @@ function cpl_newArticleProcess(){
 }
 
 
-function cpl_print_page($errors = []){
-
-    cp_print_beginPage('nouveau','Rédiger un nouvel article',1,true);
-
-    $_POST = cp_db_protect_outputs($_POST);
-    $title = (isset($_POST['title']))?$_POST['title']:'';
-    $abstract = (isset($_POST['abstract']))?$_POST['abstract']:'';
-    $content = (isset($_POST['content']))?$_POST['content']:'';
-
-    echo '<section>',
-            '<h2>Nouvel article</h2>',
-            '<p>Rédiger un nouvel article ci dessous : </p>',
-            ($errors)?cp_print_errors($errors):'',
-                '<form action="nouveau.php" method="POST">',
-                    '<table class="form">',
-                        cp_form_print_inputLine('Titre de l\'article : ','text','title',250,true,'',$title),
-                        cp_form_print_textAreaLine('Résumé de l\'article : ','abstract',$abstract,80,7,true,'La page d\'accueil afffiche les 300 premiers caractéres du résumé'),
-                        cp_form_print_textAreaLine('Contenu de l\'article :','content',$content,80,25,true),
-                        cp_form_print_buttonsLine(['Enregistrer','btnNewArticle'],'Réinitialiser',false,true,'','Aucune sauvegarde n\'est encore effectuée, êtes-vous certain de vouloir réinitialiser l`\'article ?'),
-                    '</table>',
-                '</form>',
 
 
-          '</section>',  
+function cpl_getNewArticleId(){
+    $db = cp_db_connecter();
 
-    cp_print_endPage();
+    $query = "SELECT MAX(arID) AS id FROM article";
 
+    $id = cp_db_execute($db,$query)[0]['id'];
+
+    mysqli_close($db);
+
+    return $id;
 }
 
 
-
+function cpl_print_newArticeSuccess($id){
+    echo '<section>',
+            '<h2>Nouvel article</h2>',
+            '<h3>Votre nouvel article vient d\'être publié !</h3>',
+            '<p>Vous pouvez le consulter <a href="article.php?data=',cp_encrypt_url([$id]),'">ici</a>.   </p>',
+            '<p>Vous pouvez le modifier <a href="edition.php?data=',cp_encrypt_url([$id]),'">ici</a>.  </p>',
+        '</section>';
+}
 
 
 
@@ -105,11 +76,21 @@ function cpl_print_page($errors = []){
 cp_is_logged('../index.php');
 ($_SESSION['status'] != 1 && $_SESSION['status'] != 3) && cp_session_exit('../index.php');
 
+cp_print_beginPage('nouveau','Rédiger un nouvel article',1,true);
 
-if(isset($_POST['btnNewArticle'])){
+if(isset($_POST['btnEditArticle'])){
+    
     $errors = cpl_newArticleProcess();
-    cpl_print_page(($errors)?$errors:0);
-    // Si pas d'erreur, afficher page success et liens
+    
+    if(!$errors){
+        $id = cpl_getNewArticleId();
+        cpl_print_newArticeSuccess($id);
+        exit(0);
+    }
+    
+    cp_print_editArticleSection('nouveau.php',cp_db_protect_outputs($_POST),$errors);
+    
 }else{
-    cpl_print_page();
+    cp_print_editArticleSection('nouveau.php',[]);
 }
+cp_print_endPage();

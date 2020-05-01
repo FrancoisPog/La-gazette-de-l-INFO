@@ -60,14 +60,24 @@ table.form input[type="text"],table.form input[type="password"], table.form inpu
     padding: 3px;
 }
 
-table.form tr.textarea{
+table.form tr.textarea, table.form.row tr{
     display: flex;
     flex-direction: column;
     align-items: center;
+
     td{
+        &:first-child{
+            padding-bottom: 0;
+        }
+        margin-top: 5px;
+        
         display: flex;
         justify-content: center;
         width: max-content;
+
+        &.input input[type="text"]{
+            width: 400px;
+        }
     }
 }
 

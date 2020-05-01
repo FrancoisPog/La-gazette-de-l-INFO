@@ -265,3 +265,49 @@ function cp_str_toDate($date){
     setlocale(LC_TIME, "fr_FR");
     return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
 }
+
+
+
+// ARTICLE
+
+function cp_article_isValid($data){
+    $errors = array();
+    $data = array_map('trim',$data);
+    $translate = ['title'=>'titre','abstract'=>'résumé','content'=>'contenu'];
+
+    foreach(['title','abstract','content'] as $element){
+        $french = $translate[$element];
+        
+        if($err = cp_isValid_articleElement($data[$element])){
+            if($err == 1){
+                $errors[] = "Le $french ne doit pas être vide";
+            }else{
+                $errors[] = "Le $french ne doit pas contenir de tags html";
+            }
+        }
+    }
+
+    return ($errors)?$errors:0;
+}
+
+function cp_print_editArticleSection($page,$data,$errors = [],$onSuccess = ''){
+    $title = (isset($data['title']))?$data['title']:'';
+    $abstract = (isset($data['abstract']))?$data['abstract']:'';
+    $content = (isset($data['content']))?$data['content']:'';
+
+    echo '<section>',
+            '<h2>Votre article</h2>',
+            '<p>Editer votre article ci dessous : </p>',
+            ($errors)?cp_print_errors($errors):$onSuccess,
+                '<form action="',$page,'" method="POST">',
+                    '<table class="form row">',
+                        cp_form_print_inputLine('Titre de l\'article : ','text','title',250,true,'',$title),
+                        cp_form_print_textAreaLine('Résumé de l\'article : ','abstract',$abstract,80,7,true,'La page d\'accueil afffiche les 300 premiers caractéres du résumé'),
+                        cp_form_print_textAreaLine('Contenu de l\'article :','content',$content,80,25,true),
+                        cp_form_print_buttonsLine(['Enregistrer','btnEditArticle'],'Réinitialiser',false,($page == 'nouveau'),'','Aucune sauvegarde n\'est encore effectuée, êtes-vous certain de vouloir réinitialiser l`\'article ?'),
+                    '</table>',
+                '</form>',
+
+
+          '</section>';
+}

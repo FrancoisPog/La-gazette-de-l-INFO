@@ -27,7 +27,7 @@ function cpl_print_articleLink($articleData){
         $picture = 'images/none.jpg';
     }
 
-    echo    '<a href="php/article.php?id=',urlencode($articleData['arID']),'">',
+    echo    '<a href="php/article.php?data=',cp_encrypt_url([$articleData['arID']]),'">',
                 
                 '<figure>',
                 '<aside><p>',$cutAbstarct,'</p></aside>',
