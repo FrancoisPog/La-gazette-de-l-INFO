@@ -104,6 +104,15 @@ function cp_str_isInt($str){
     return preg_match('/^[[:digit:]]+$/',$str);
 }
 
+/**
+ * Check if a string contains html tags
+ * @param String $str   The string to test
+ * @return boolean
+ */
+function cp_str_containsHTML($str){
+    return ($str != str_replace(['>','<'],'',$str));
+}
+
 
 
 // PARAMETERS
@@ -126,6 +135,9 @@ function cp_check_param($array, $mandatory_keys, $optional_keys = array()){
     
     return true;
 }
+
+
+
 
 // SESSION
 
@@ -171,6 +183,10 @@ function cp_is_logged($page_to_go_if_not = false){
     cp_session_exit($page_to_go_if_not);
 
 }
+
+
+
+
 
 // URL
 
@@ -250,10 +266,25 @@ function cp_intIsBetween($number,$min,$max){
 
 // PRINT
 
+/**
+ * Print a single button
+ * @param String $type  The button's type (submit,reset,button)
+ * @param String $value The button's value
+ * @param String $name  The button's name
+ */
 function cp_print_button($type,$value,$name){
     echo '<span class="btn-span"><input type="',$type,'" class="btn" value="',$value,'" name="',$name,'"></span>';
 }
 
+/**
+ * Print a confirmation popup
+ * @param String $firstbtnValue     The first button's value
+ * @param String $title             The popup title
+ * @param String $content           The popup content
+ * @param String $btnType  The button's type (submit,reset,button)
+ * @param String $btnValue The button's value
+ * @param String $btnName  The button's name
+ */
 function cp_print_popUp($firstBtnValue,$title,$content,$btnType,$btnValue,$btnName){
     echo    "<span class='btn-span'><label for='popup-first-btn' class='popup-btn btn'>$firstBtnValue</label></span>",
             '<input id="popup-first-btn" type="radio" name="popup-conf" class="popup-first-btn btn" value="none">',
@@ -266,4 +297,22 @@ function cp_print_popUp($firstBtnValue,$title,$content,$btnType,$btnValue,$btnNa
                     "<span class='btn-span'><input class='popup-final-btn btn' name='$btnName' value='$btnValue' type='$btnType'></span>",
                 '</div>',
             '</div> ';
+}
+
+/**
+ * Check if two array is equals for given keys
+ * @param Array $array1 The first array
+ * @param Array $array2 The second array
+ * @param Array $keys   The keys to check
+ * @return boolean
+ */
+function cp_arrayIsSame($array1, $array2,$keys){
+
+    foreach($keys as $key){
+        if($array1[$key] != $array2[$key]){
+            return false;
+        }
+    }
+
+    return true;
 }

@@ -129,3 +129,10 @@ table{
     font-weight: 600;
     align-self: center;
 }
+
+aside.link-banner{
+    @include block;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    padding : 4px 20px;
+}

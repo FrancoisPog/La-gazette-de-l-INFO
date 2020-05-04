@@ -53,7 +53,7 @@ function cpl_print_article($data,$isLogged){
 
     $urlID = cp_encrypt_url([$data[0]['arID']]);
     
-    echo    ($isLogged && $_SESSION['pseudo'] == $data[0]['arAuteur'])?"<aside>Vous êtes l'auteur de cet article, <a href='edition.php?data=$urlID'>cliquer ici pour le modifier ou le supprimer</a></aside>":"",
+    echo    ($isLogged && $_SESSION['pseudo'] == $data[0]['arAuteur'])?"<aside class='link-banner'>Vous êtes l'auteur de cet article, <a href='edition.php?data=$urlID'>cliquer ici pour le modifier ou le supprimer</a></aside>":"",
 
             '<article ',($pictureExist)?'class="with-picture"':'',' >',
                 '<h3>',$titre,'</h3>';

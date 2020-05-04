@@ -33,7 +33,6 @@ function cpl_fetch_userData(){
     }
 
     $userData = $userData[0];
-    $userData['bio'] = str_replace(["\r","\n"],"",$userData['bio']);
     $userData['birthday_d'] = substr($userData['birthday'],-2,2);
     $userData['birthday_m'] = substr($userData['birthday'],-4,2);
     $userData['birthday_y'] = substr($userData['birthday'],0,4);
@@ -164,7 +163,7 @@ function cpl_checkMistakes($processType){
         break;
         }
         case EDIT_EDITOR_DATA : {
-            if($_POST['function'] != strip_tags($_POST['function'])){
+            if(cp_str_containsHTML($_POST['function'])){
                 $errors[] = 'La fonction ne doit pas contenir de tags html';
             }
         
@@ -176,32 +175,13 @@ function cpl_checkMistakes($processType){
                 $errors[] = 'La biographie ne peut pas être vide';
             }
         
-            if($_POST['bio'] != str_replace(['<','>'],'',$_POST['bio'])){
+            if(cp_str_containsHTML($_POST['bio'])){
                 $errors[] = 'La biographie ne doit pas contenir de tags HTML';
             }
         break;
         }
         case EDIT_PICTURE : {
-            
-            switch($_FILES['picture']['error']){
-                case 1 : 
-                case 2 :
-                    $errors[] = 'Le fichier est trop volumineux';
-                break 2;
-                case 3 : 
-                    $errors[] = 'Erreur de transfert';
-                break 2;
-                case 4 : 
-                    $errors[] = 'Fichier introuvable';
-                break 2;
-            }
-
-            if($_FILES['picture']['type'] != 'image/jpeg'){
-                $errors[] = 'Le format de la photo doit être "jpeg"';
-            }
-            if(!is_uploaded_file($_FILES['picture']['tmp_name'])){
-                $errors[] = 'Erreur interne';
-            }
+            $errors = cp_picture_isValid($_FILES['picture']);
         break;
         }
         
@@ -267,7 +247,12 @@ function cpl_updateDatabase($processType){
     mysqli_close($db);
 }
 
-
+/**
+ * Check that at least one element has changed
+ * @param int $processType  The process type
+ * @param Array $userData   The user data
+ * @return boolean
+ */
 function cpl_nothingChange($processType, $userData){
     switch($processType){
         case EDIT_PERSONAL_DATA : {
@@ -286,7 +271,7 @@ function cpl_nothingChange($processType, $userData){
         }
     }
 
-    return cpl_arrayIsSame($_POST,$userData,$keys);
+    return cp_arrayIsSame($_POST,$userData,$keys);
 
 }
 
@@ -309,6 +294,7 @@ function cpl_editDataProcess($processType,$userData){
     if(cpl_nothingChange($processType,$userData)){
         return 0;
     }
+    echo '<script>console.log("db")</script>';
 
     if($processType < EDIT_PICTURE){
         // Update data on database
@@ -323,23 +309,11 @@ function cpl_editDataProcess($processType,$userData){
 
 
 
-function cpl_arrayIsSame($array1, $array2,$keys){
 
-    foreach($keys as $key){
-        if($array1[$key] != $array2[$key]){
-            return false;
-        }
-    }
-
-    return true;
-}
 
 
 
 // PRINT
-
-
-
 
 
 /**

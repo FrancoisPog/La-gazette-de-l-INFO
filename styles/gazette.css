@@ -216,6 +216,15 @@ table tbody {
       align-self: center;
 }
 
+aside.link-banner {
+  -webkit-box-shadow: 10px 10px 30px 5px black;
+          box-shadow: 10px 10px 30px 5px black;
+  background-color: white;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  padding: 4px 20px;
+}
+
 /* --- Section --- */
 section {
   position: relative;
@@ -645,6 +654,7 @@ div.popup-night div.popup-box h4 {
   font-size: 1.2em;
   font-weight: bold;
   margin: 5px;
+  text-align: center;
 }
 
 div.popup-night div.popup-box p {
@@ -764,15 +774,6 @@ div.popup-night div.popup-box p {
 
 #article section li {
   margin-left: 25px;
-}
-
-#article aside {
-  -webkit-box-shadow: 10px 10px 30px 5px black;
-          box-shadow: 10px 10px 30px 5px black;
-  background-color: white;
-  margin-bottom: 20px;
-  border-radius: 15px;
-  padding: 4px 20px;
 }
 
 /* --------------------- PAGE REDACTION ---------------------*/
@@ -979,7 +980,15 @@ div.popup-night div.popup-box p {
   margin: 10px;
 }
 
-/* --------------------- PAGE NOUVEAU---------------------*/
+/* --------------------- PAGE EDITION ---------------------*/
+#edition aside {
+  margin-bottom: 50px;
+}
+
+#edition form {
+  text-align: center;
+}
+
 /* --------------------- PAGE PROTEGEE ---------------------*/
 #protegee h3 {
   margin-top: 10px;

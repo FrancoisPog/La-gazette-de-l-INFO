@@ -188,7 +188,7 @@ function cp_isValid_name($name,$maxLength){
     if(strlen($name)==0){
         return 1;
     }
-    if($name != strip_tags($name)){
+    if(cp_str_containsHTML($name)){
         return 2;
     }
 
@@ -247,7 +247,7 @@ function cp_isValid_articleElement($element){
     if(strlen($element) == 0){
         return 1;
     }
-    if(strip_tags($element) != $element){
+    if(cp_str_containsHTML($element)){
         return 2;
     }
 
@@ -255,21 +255,13 @@ function cp_isValid_articleElement($element){
 }
 
 
-// STR
-/**
- * Parsing date from database to string 
- * @param int $date The date to parse
- * @return String   The date in correct format
- */
-function cp_str_toDate($date){
-    setlocale(LC_TIME, "fr_FR");
-    return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
-}
-
-
-
 // ARTICLE
 
+/**
+ * Check if an article is valid
+ * @param Array $data   The article data (title, abstract, content)
+ * @return Array|0        The errors list, 0 if no error
+ */
 function cp_article_isValid($data){
     $errors = array();
     $data = array_map('trim',$data);
@@ -287,27 +279,92 @@ function cp_article_isValid($data){
         }
     }
 
+    if($_FILES['picture']['name'] != ''){
+        $errors = cp_picture_isValid($_FILES['picture']);
+    }
+
+   
+
+    
+
     return ($errors)?$errors:0;
 }
 
+/**
+ * Check if a picture is valid
+ * @param FILE $picture The uploaded picture
+ * @return Array        The array of errors
+ */
+function cp_picture_isValid($picture){
+    $errors = array();
+    switch($picture['error']){
+        case 1 : 
+        case 2 :
+            $errors[] = 'Le fichier est trop volumineux';
+            return $errors;
+        case 3 : 
+            $errors[] = 'Erreur de transfert';
+            return $errors;
+        case 4 : 
+            $errors[] = 'Fichier introuvable';
+            return $errors;
+    }
+
+    if($picture['type'] != 'image/jpeg'){
+        $errors[] = 'Le format de la photo doit être "jpeg"';
+    }
+    if(!is_uploaded_file($picture['tmp_name'])){
+        $errors[] = 'Erreur interne';
+    }
+
+    return $errors;
+}
+
+
+/**
+ * Print a form to edit an article
+ * @param String $page      The form's page
+ * @param Array $data       An array with the optional default values
+ * @param Array $errors      An optional array with errors to display
+ * @param String $onSuccess Text to display in case of success
+ */
 function cp_print_editArticleSection($page,$data,$errors = [],$onSuccess = ''){
     $title = (isset($data['title']))?$data['title']:'';
     $abstract = (isset($data['abstract']))?$data['abstract']:'';
     $content = (isset($data['content']))?$data['content']:'';
+    $id = ($page != 'nouveau.php' && isset($_SESSION['articleID']))?$_SESSION['articleID']:'';
+    $pictures = ($id != '' && file_exists("../upload/$id.jpg")) ? "../upload/$id.jpg" : '';
 
     echo '<section>',
             '<h2>Votre article</h2>',
             '<p>Editer votre article ci dessous : </p>',
             ($errors)?cp_print_errors($errors):$onSuccess,
-                '<form action="',$page,'" method="POST">',
+                '<form action="',$page,'" method="POST" enctype="multipart/form-data">',
                     '<table class="form row">',
                         cp_form_print_inputLine('Titre de l\'article : ','text','title',250,true,'',$title),
                         cp_form_print_textAreaLine('Résumé de l\'article : ','abstract',$abstract,80,7,true,'La page d\'accueil afffiche les 300 premiers caractéres du résumé'),
                         cp_form_print_textAreaLine('Contenu de l\'article :','content',$content,80,25,true),
+                        cp_form_print_file('picture','Image d\'illustration : ',false,'Pour ne pas être déformé l\'image doit-être au format 4/3'),
+                        ($pictures != '')?'<tr><td colspan="2"><img title="Image d\'illustration actuelle" width="250" height="187" src="'.$pictures.'"></td></tr>':'',
                         cp_form_print_buttonsLine(['Enregistrer','btnEditArticle'],'Réinitialiser',false,($page == 'nouveau.php'),'','Aucune sauvegarde n\'est encore effectuée, êtes-vous certain de vouloir réinitialiser l`\'article ?'),
+                        
                     '</table>',
                 '</form>',
 
 
           '</section>';
+}
+
+
+
+
+// STR
+/**
+ * Parsing date from database to string 
+ * @param int $date The date to parse
+ * @return String   The date in correct format
+ */
+function cp_str_toDate($date){
+    setlocale(LC_TIME, "fr_FR");
+    return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
 }
