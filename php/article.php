@@ -27,11 +27,24 @@ function cpl_print_comments($articleData){
     echo '</ul>';
 }
 
+function cpl_print_addCommentSection($errors){
+    echo '<fieldset class="newComment" id="comment-form">',
+            '<legend>Ajouter un commentaire</legend>',
+            ($errors)?cp_print_errors($errors,'Veuillez corriger les erreurs suivantes avant de soumettre votre commeantaire :'):'',
+            '<form method="POST" action="article.php?data=',$_GET['data'],'">',
+                
+                '<textarea name="comment" id="comment" maxlength="256" cols="60" rows="6" required >',($errors)?cp_db_protect_outputs($_POST['comment']):'','</textarea>',
+                cp_print_button('submit','Publier ce commentaire ','btnNewComment'),
+            '</form>',
+        '</fieldset>';
+}
+
+
 /**
  * Print an article
  * @param Array $data The article data (not yet protected)
  */
-function cpl_print_article($data,$isLogged){
+function cpl_print_article($data,$isLogged,$errors){
     // author name formatting
     $auteur =  mb_strtoupper(mb_substr($data[0]['utPrenom'],0,1,ENCODE),ENCODE).'.'.mb_convert_case($data[0]['utNom'],MB_CASE_TITLE,ENCODE);
 
@@ -81,16 +94,56 @@ function cpl_print_article($data,$isLogged){
                 '</footer>',
             '</article>',
 
-            '<section>',
+            '<section id=comments>',
                 '<h2>Réactions</h2>',
                 cpl_print_comments($data),
-                '<p><a href="connexion.php"> Connectez-vous</a> ou <a href="inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p>',
+                ($isLogged)?cpl_print_addCommentSection($errors):'<p><a href="connexion.php"> Connectez-vous</a> ou <a href="inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p>',
             '</section>';
                 
 
            
 }
 
+
+function cpl_newCommentProcess($id){
+    cp_check_param($_POST,['btnNewComment','comment']) or cp_session_exit('../index.php');
+
+    $_POST = array_map('trim',$_POST);
+    $errors = array();
+    if(strlen($_POST['comment']) == 0){
+        $errors[] = 'Le commentaire ne peut pas être vide';
+    }elseif(strlen($_POST['comment']) > 256){
+        $errors[] = 'Le commentaire doit contenir moins de 256 caractères';
+    }
+
+    if(cp_str_containsHTML($_POST['comment'])){
+        $errors[] = 'Le commentaire ne doit pas contenir de tags HTML';
+    }
+
+    if($errors){
+        return $errors;
+    }
+
+    $db = cp_db_connecter();
+
+    $author = cp_db_protect_inputs($db,$_SESSION['pseudo']);
+    $content = cp_db_protect_inputs($db,$_POST['comment']);
+    date_default_timezone_set('Europe/Paris');
+    $date = date('YmdHi');
+
+
+    $query = "INSERT INTO commentaire 
+                SET coAuteur = '$author',
+                    coTexte = '$content',
+                    coDate = '$date',
+                    coArticle = '$id'";
+
+    cp_db_execute($db,$query,false,true);
+
+    mysqli_close($db);
+
+
+}
 
 // --- ID verification and database interactions ---
 
@@ -104,6 +157,8 @@ if(!isset($_GET['data'])){
 }
 
 
+
+
 $codeErr = 0;
 $id = cp_decrypt_url($_GET['data'],1)[0];
 
@@ -112,6 +167,14 @@ if(!$id){
 }else{
     $id = (int)$id;
     $db = cp_db_connecter();
+    $errorsComment = 0;
+
+    if(isset($_POST['btnNewComment'])){
+        $errorsComment = cpl_newCommentProcess($id);
+    }
+
+
+
     $query = 'SELECT * 
             FROM article INNER JOIN utilisateur
             ON utPseudo = arAuteur LEFT JOIN commentaire ON coArticle = arID
@@ -133,7 +196,10 @@ $isLogged = cp_is_logged();
 cp_print_beginPage('article','L\'actu',1,$isLogged);
 
     if($codeErr == 0){ // print article
-        cpl_print_article($data,$isLogged);
+        cpl_print_article($data,$isLogged,$errorsComment);
+        if(isset($_POST['btnNewComment'])){
+            echo '<script>window.location.replace("#',($errorsComment)?'comment-form':'comments','");</script>';
+        }
     }else{ // print error page
         $errorMsg = ($codeErr == 1) ? "Identifiant d'article invalide"  :"Aucun n'article ne correspond à cet identifiant";
         cp_print_errorSection($errorMsg);

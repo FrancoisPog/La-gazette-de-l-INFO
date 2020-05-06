@@ -223,7 +223,7 @@ function cpl_print_register_forms($errors = []){
     echo '<section>',
             '<h2>Formulaire d\'inscription</h2>',
             '<p>Pour vous inscrire, remplissez le formulaire ci-dessous.</p>',
-            (count($errors)!=0) ? cp_print_errors($errors):'',
+            (count($errors)!=0) ? cp_print_errors($errors,'Les erreurs suivantes ont été relevées lors de votre inscription :'):'',
             '<form method="POST" action="inscription.php">',
                 '<table class="form">',
                     cp_form_print_inputLine('Choisissez un pseudo :',"text",'pseudo',20,$required,'4 caractères minimum',($errors)?htmlentities($_POST['pseudo']):'',"Le pseudo doit contenir entre 4 et 20 chiffres ou lettres minuscules non-accentuées."),

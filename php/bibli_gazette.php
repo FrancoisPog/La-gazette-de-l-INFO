@@ -133,9 +133,9 @@ function cp_print_errorSection($msg){
  * Print the errors of registration 
  * @param Array $errors The errors to print
  */
-function cp_print_errors($errors){
+function cp_print_errors($errors,$label){
     echo '<div class="error">',
-            '<p>Les erreurs suivantes ont été relevées lors de votre inscription :</p>',
+            "<p>$label</p>",
             '<ul>';
                 foreach($errors as $error){
                     echo '<li>',$error,'</li>';
@@ -243,12 +243,15 @@ function cp_isValid_pass($passe1, $passe2 = true){
 }
 
 
-function cp_isValid_articleElement($element){
+function cp_isValid_articleElement($element,$maxLenght){
     if(strlen($element) == 0){
         return 1;
     }
     if(cp_str_containsHTML($element)){
         return 2;
+    }
+    if(strlen($element) > $maxLenght){
+        return 3;
     }
 
     return 0;
@@ -269,12 +272,20 @@ function cp_article_isValid($data){
 
     foreach(['title','abstract','content'] as $element){
         $french = $translate[$element];
-        
-        if($err = cp_isValid_articleElement($data[$element])){
+        if($element == 'title'){
+            $maxLenght = 250;
+        }elseif($element == 'abstract'){
+            $maxLenght = 500;
+        }else{
+            $maxLenght = 4000;
+        }
+        if($err = cp_isValid_articleElement($data[$element],$maxLenght)){
             if($err == 1){
                 $errors[] = "Le $french ne doit pas être vide";
-            }else{
+            }elseif($err == 2){
                 $errors[] = "Le $french ne doit pas contenir de tags html";
+            }else{
+                $errors[] = "Le $french doit contenir moins de $maxLenght caractères";
             }
         }
     }
@@ -338,7 +349,7 @@ function cp_print_editArticleSection($page,$data,$errors = [],$onSuccess = ''){
     echo '<section>',
             '<h2>Votre article</h2>',
             '<p>Editer votre article ci dessous : </p>',
-            ($errors)?cp_print_errors($errors):$onSuccess,
+            ($errors)?cp_print_errors($errors,'Les erreurs suivantes ont été relevées dans votre article :'):$onSuccess,
                 '<form action="',$page,'" method="POST" enctype="multipart/form-data">',
                     '<table class="form row">',
                         cp_form_print_inputLine('Titre de l\'article : ','text','title',250,true,'',$title),

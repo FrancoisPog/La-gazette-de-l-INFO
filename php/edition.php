@@ -40,7 +40,7 @@ function cpl_hackGuard($processType){
             $mandatoryKeys = ['popup-conf','btnDeleteArticle'];
             break;
     }
-    
+   
     cp_check_param($_POST,$mandatoryKeys) or cp_session_exit('../index.php');
 }
 

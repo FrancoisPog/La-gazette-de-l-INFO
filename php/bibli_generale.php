@@ -234,8 +234,9 @@ function cp_decrypt_url($url,$field){
     $tagLen = 16;
     $tag = substr($url,$initVectorLen,$tagLen);
     $data = substr($url,$tagLen+$initVectorLen);
-
+    
     $data = openssl_decrypt($data,$method,base64_decode(ENCRYPTION_KEY),OPENSSL_RAW_DATA,$initVector,$tag);
+    
     if(!$data){
         return false;
     }

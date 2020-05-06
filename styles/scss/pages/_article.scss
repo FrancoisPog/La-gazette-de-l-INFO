@@ -55,6 +55,29 @@
         li {
             margin-left: 25px;
         }
+        fieldset{
+            border : 1px solid grey;
+            padding: 10px;
+            
+            form{
+                display: flex;
+                flex-direction: column;
+
+                .btn-span,textarea{
+                    width: max-content;
+                    max-width: 800px;
+                }
+            }
+            
+        }
+
+        .error{
+            border: none;
+            padding: 0;
+            width: max-content;
+            margin-bottom: 5px;
+            margin-top: 0px;
+        }
     }
     
 }

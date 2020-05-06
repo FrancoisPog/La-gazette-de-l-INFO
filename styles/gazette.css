@@ -776,6 +776,38 @@ div.popup-night div.popup-box p {
   margin-left: 25px;
 }
 
+#article section fieldset {
+  border: 1px solid grey;
+  padding: 10px;
+}
+
+#article section fieldset form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#article section fieldset form .btn-span, #article section fieldset form textarea {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 800px;
+}
+
+#article section .error {
+  border: none;
+  padding: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
 /* --------------------- PAGE REDACTION ---------------------*/
 #redaction article img {
   float: left;
