@@ -14,9 +14,9 @@
   $res = cp_db_execute($db,$query);
 
   mysqli_close($db);
-  
+
   $numberArticle = count($res);
-  $activeButton = isset($_POST['buttonPage']) ? cp_str_isInt($_POST['buttonPage']) ? intval($_POST['buttonPage']) : 1 : 1;
+  $activeButton = isset($_GET['buttonPage']) ? cp_str_isInt(cp_decrypt_url($_GET['buttonPage'],1)[0]) ? intval(cp_decrypt_url($_GET['buttonPage'],1)[0]) : header("Location: ../index.php") : 1;
 
   cp_print_beginPage('actus','L\'actu',1,$isLogged);
   cpl_print_button_pages($numberArticle, $activeButton);
@@ -80,13 +80,17 @@
    */
   function cpl_print_button_pages($numArticle, $buttonSelected){
     if($numArticle != 0) {
-      echo '<section> <form method="POST" action="actus.php">',
+      echo '<section>',
       '<p>Pages : </p>';
-      for ($i=0; $i < $numArticle/4; $i++) { 
-        echo '<input type="submit" value="',$i+1,'" name="buttonPage" ',$i==($buttonSelected-1) ? 'disabled' : '','>';
+      for ($i=0; $i < $numArticle/4; $i++) {
+        if($i+1 == $buttonSelected) {
+          echo '<a id="linkDown">',$i+1,'</a>';
+        } else {
+          echo '<a href="actus.php?buttonPage=',cp_encrypt_url([$i+1]),'">',$i+1,'</a>';
+        }
       }
-      echo '</form> </section>';
-    } 
+      echo '</section>';
+    }
   }
 
   /**

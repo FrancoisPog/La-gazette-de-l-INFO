@@ -955,16 +955,23 @@ div.popup-night div.popup-box p {
   border-bottom-right-radius: 7px;
 }
 
-#actus input {
+#actus > section:first-of-type {
+  display: block;
+}
+
+#actus > section:first-of-type > a {
+  text-decoration: none;
+  color: black;
   display: inline;
   font-weight: bold;
   border: 1px solid black;
   border-radius: 5px;
   margin-right: 5px;
   margin-left: 5px;
+  padding: 1px 3px 1px 3px;
 }
 
-#actus input:disabled, #actus input:hover {
+#actus > section:first-of-type > a#linkDown, #actus > section:first-of-type > a:hover {
   background-color: red;
   color: white;
 }
