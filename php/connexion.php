@@ -88,7 +88,7 @@ function cpl_print_connection_form($errors = false){
                 '<table class="form">',
                     cp_form_print_inputLine('Pseudo :','text','pseudo',20,$required),
                     cp_form_print_inputLine('Mot de passe :','password','pass',255,$required),
-                    cp_form_print_buttonsLine(['Se connecter','connectBtn'],'Annuler'),
+                    cp_form_print_buttonsLine(2,['Se connecter','connectBtn'],'Annuler'),
                 '</table>',
             '</form>',
             '<p>Pas encore inscrit ? N\'attendez pas, <a href="inscription.php">inscrivez-vous</a> !</p> ',

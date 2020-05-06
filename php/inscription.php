@@ -246,7 +246,7 @@ function cpl_print_register_forms($errors = []){
                     
                     cp_form_print_checkboxLine('spam',"J'accepte de recevoir des tonnes de mails pourris",false,isset($_POST['spam']),'Vos données personnelles seront bien évidemment utilisées à des fins commerciales.'),
                     
-                    cp_form_print_buttonsLine(['S\'inscrire','inscriptionBtn'],'Réinitialiser'),
+                    cp_form_print_buttonsLine(2,['S\'inscrire','inscriptionBtn'],'Réinitialiser'),
                 '</table>',
             '</form>',
         '</section>';

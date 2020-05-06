@@ -211,15 +211,16 @@ function cp_form_print_checkboxLine($name,$label,$required = true, $checked = fa
 
 /**
  * Print a form array line with submit and (optional) reset buttons
+ * @param int $colspan          Value of the colspan
  * @param Array $submit         Value and name of submit button (0:value, 1:name)
  * @param String $resetValue    Value of reset button
  */ 
-function cp_form_print_buttonsLine($submit,$resetValue = '',$confirmSubmit = false, $confirmReset = false, $confirmSubmitLabel = '', $confirmResetLabel =''){
+function cp_form_print_buttonsLine($colspan, $submit,$resetValue = '',$confirmSubmit = false, $confirmReset = false, $confirmSubmitLabel = '', $confirmResetLabel =''){
     if(!is_array($submit)){
         throw new Exception('[cp_form_print_buttonsLine] : $submit must be an array ');
     }
     echo '<tr>',
-            '<td class="buttons" colspan="2">';
+            '<td class="buttons" colspan="',$colspan,'">';
             
                 if(!$confirmSubmit){
                     cp_print_button('submit',$submit[0],$submit[1]);

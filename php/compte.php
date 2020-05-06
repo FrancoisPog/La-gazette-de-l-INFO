@@ -349,7 +349,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
                     cp_form_print_DatesLine('Votre date de naissance :','birthday',1920,0,$birthday_d,$birthday_m,$birthday_y,1,'Vous devez avoir 18 ans pour être inscrire'),
                     cp_form_print_inputLine('Votre email :','email','email',255,$required,'',$email),
                     cp_form_print_checkboxLine('spam','J\'accepte de recevoir des tonnes de mails pourris',false,$spam,'Vos données personnelles seront bien évidemment utilisées à des fins commerciales'),
-                    cp_form_print_buttonsLine(['Enregistrer','btnEditData'],'Réinitialiser'),
+                    cp_form_print_buttonsLine(2,['Enregistrer','btnEditData'],'Réinitialiser'),
                 '</table>',
             '</form>',
             '</section>',
@@ -362,7 +362,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
                     '<table class="form">',
                         cp_form_print_inputLine('Choisissez un mot de passe :','password','pass1',255,$required),
                         cp_form_print_inputLine('Répétez le mot de passe :','password','pass2',255,$required),
-                        cp_form_print_buttonsLine(['Enregistrer','btnEditPass']),
+                        cp_form_print_buttonsLine(2,['Enregistrer','btnEditPass']),
                     '</table>',
                 '</form>',
             '</section>';
@@ -388,7 +388,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
                 '</table>',
                 '<table class="form">',
                     cp_form_print_textAreaLine('Votre biographie :','bio',$bio,60,6,true),
-                    cp_form_print_buttonsLine(['Enregistrer','btnEditBio'],'Réinitialiser'),
+                    cp_form_print_buttonsLine(2,['Enregistrer','btnEditBio'],'Réinitialiser'),
                 '</table>',
             '</form>',
 
@@ -403,7 +403,7 @@ function cpl_print_page_compte($userData = [], $errors = []){
             '<form method="POST" action="compte.php" enctype="multipart/form-data">',
                 '<table class="form" >',
                     cp_form_print_file('picture','',true,'Pour ne pas être déformée, la photo doit faire 150x200 pixels.'),
-                    cp_form_print_buttonsLine(['Enregistrer','btnEditPicture']),
+                    cp_form_print_buttonsLine(2,['Enregistrer','btnEditPicture']),
                 '</table>',
             '</form>',
 

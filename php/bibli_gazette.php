@@ -346,7 +346,7 @@ function cp_print_editArticleSection($page,$data,$errors = [],$onSuccess = ''){
                         cp_form_print_textAreaLine('Contenu de l\'article :','content',$content,80,25,true),
                         cp_form_print_file('picture','Image d\'illustration : ',false,'Pour ne pas être déformé l\'image doit-être au format 4/3'),
                         ($pictures != '')?'<tr><td colspan="2"><img title="Image d\'illustration actuelle" width="250" height="187" src="'.$pictures.'"></td></tr>':'',
-                        cp_form_print_buttonsLine(['Enregistrer','btnEditArticle'],'Réinitialiser',false,($page == 'nouveau.php'),'','Aucune sauvegarde n\'est encore effectuée, êtes-vous certain de vouloir réinitialiser l`\'article ?'),
+                        cp_form_print_buttonsLine(2,['Enregistrer','btnEditArticle'],'Réinitialiser',false,($page == 'nouveau.php'),'','Aucune sauvegarde n\'est encore effectuée, êtes-vous certain de vouloir réinitialiser l`\'article ?'),
                         
                     '</table>',
                 '</form>',
