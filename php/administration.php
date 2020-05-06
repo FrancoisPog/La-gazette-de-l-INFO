@@ -81,6 +81,7 @@
       '<td>',$users2[$value['utPseudo']]['nbCommentaireAr'],'</td>',
       '</tr>';
     }
+    cp_form_print_buttonsLine(5,['Envoyer','submit'],'Réinitialiser',false,false);
     echo '</tbody>',
     '</table>',
     '</form>',
