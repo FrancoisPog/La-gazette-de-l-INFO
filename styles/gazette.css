@@ -711,6 +711,17 @@ div.popup-night div.popup-box p {
           transform: scale(0) rotate(12deg);
 }
 
+/* --------------------- PAGE ADMINISTRATION ---------------------*/
+#administration tbody tr:last-child {
+  border-bottom: hidden;
+  border-left: hidden;
+  border-right: hidden;
+}
+
+#administration tr:last-child td {
+  text-align: center;
+}
+
 /* --------------------- PAGE ARTICLE ---------------------*/
 #article article {
   -webkit-box-shadow: 10px 10px 30px 5px black;

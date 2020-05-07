@@ -25,6 +25,7 @@
 
   cp_print_beginPage('administration', 'Administration',1,$isLogged);
   cpl_print_users_informations($res1, $res2);
+  cpl_print_statut_description();
   cp_print_endPage();
   ob_end_flush();
 
@@ -43,8 +44,12 @@
       $result[$value['utPseudo']]['nbArticle'] = (int)$value['nbArticle'] + (isset($result[$value['utPseudo']]['nbArticle']) ? (int)$result[$value['utPseudo']]['nbArticle'] : 0);
       $result[$value['utPseudo']]['nbCommentaireAr'] = (int)$value['nbCommentaireAr'] + (isset($result[$value['utPseudo']]['nbCommentaireAr']) ? (int)$result[$value['utPseudo']]['nbCommentaireAr'] : 0);
     }
-    foreach ($result as $value) {
-      $value['nbCommentaireAr'] = $value['nbArticle'] == 0 ? 0 : $value['nbCommentaireAr']/$value['nbArticle'];
+    foreach ($result as $pseudo => $value) {
+      if($result[$pseudo]['nbArticle'] == 0) {
+        $result[$pseudo]['nbCommentaireAr'] = 0;
+      } else {
+        $result[$pseudo]['nbCommentaireAr'] = round($result[$pseudo]['nbCommentaireAr']/$result[$pseudo]['nbArticle'],0,PHP_ROUND_HALF_UP);
+      }
     }
     return $result;
   }
@@ -102,5 +107,15 @@
       $result[] = "$i";
     }
     return $result; 
+  }
+
+  function cpl_print_statut_description() {
+    echo '<section>',
+    '<h2>Statut déscription</h2>',
+    '<p>Statut 0 : </p>',
+    '<p>Statut 1 : </p>',
+    '<p>Statut 2 : </p>',
+    '<p>Statut 3 : </p>',
+    '</section>';
   }
 ?>

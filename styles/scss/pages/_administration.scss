@@ -1,0 +1,11 @@
+/* --------------------- PAGE ADMINISTRATION ---------------------*/
+
+#administration tbody tr:last-child {
+  border-bottom: hidden;
+  border-left: hidden;
+  border-right: hidden;
+}
+
+#administration tr:last-child td {
+  text-align: center;
+}
