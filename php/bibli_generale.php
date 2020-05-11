@@ -274,7 +274,7 @@ function cp_intIsBetween($number,$min,$max){
  * @param String $name  The button's name
  */
 function cp_print_button($type,$value,$name){
-    echo '<span class="btn-span"><input type="',$type,'" class="btn" value="',$value,'" name="',$name,'"></span>';
+    return '<span class="btn-span"><input type="'.$type.'" class="btn" value="'.$value.'" name="'.$name.'"></span>';
 }
 
 /**

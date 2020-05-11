@@ -9,7 +9,7 @@ require_once("bibli_gazette.php");
  * Print article's comments
  * @param Array $articleData The article's data
  */
-function cpl_print_comments($articleData){
+function cpl_print_comments($articleData,$isLogged){
     if($articleData[0]['coID'] == null){
         echo '<p>Il n\'y a pas encore de commentaire pour cette article !</p>';
         return;
@@ -21,17 +21,27 @@ function cpl_print_comments($articleData){
         echo    '<li>',
                     '<p>Commentaire de <strong>',$comment['coAuteur'],'</strong>, le ',cp_str_toDate($comment['coDate']),'</p>',
                     '<blockquote>',cp_html_parseBbCode($comment['coTexte']),'</blockquote>',
+                    ($isLogged && $comment['coAuteur'] == $_SESSION['pseudo'])?cpl_print_deleteCommentBtn($comment['coID']):'',
                 '</li>';
     }
 
     echo '</ul>';
 }
 
+function cpl_print_deleteCommentBtn($id){
+    echo '<div class="comment-delete">',
+            '<form method="POST" action="article.php?data=',urlencode($_GET['data']),'">',
+                '<input type="hidden" value="',urldecode(cp_encrypt_url([$id])),'" name="commentID">',
+                cp_print_button('submit','Supprimer ce commentaire','btnDeleteComment'),
+            '</form>',
+        '</div>';
+}
+
 function cpl_print_addCommentSection($errors){
     echo '<fieldset class="newComment" id="comment-form">',
             '<legend>Ajouter un commentaire</legend>',
             ($errors)?cp_print_errors($errors,'Veuillez corriger les erreurs suivantes avant de soumettre votre commeantaire :'):'',
-            '<form method="POST" action="article.php?data=',$_GET['data'],'">',
+            '<form method="POST" action="article.php?data=',urlencode($_GET['data']),'">',
                 
                 '<textarea name="comment" id="comment" maxlength="256" cols="60" rows="6" required >',($errors)?cp_db_protect_outputs($_POST['comment']):'','</textarea>',
                 cp_print_button('submit','Publier ce commentaire ','btnNewComment'),
@@ -96,7 +106,7 @@ function cpl_print_article($data,$isLogged,$errors){
 
             '<section id=comments>',
                 '<h2>Réactions</h2>',
-                cpl_print_comments($data),
+                cpl_print_comments($data,$isLogged),
                 ($isLogged)?cpl_print_addCommentSection($errors):'<p><a href="connexion.php"> Connectez-vous</a> ou <a href="inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p>',
             '</section>';
                 
@@ -145,6 +155,29 @@ function cpl_newCommentProcess($id){
 
 }
 
+function cpl_deleteCommentProcess(){
+    cp_check_param($_POST,['btnDeleteComment'],['commentID']) or cp_session_exit('../index.php');
+    
+    $id = cp_decrypt_url($_POST['commentID'],1)[0];
+
+    $id or cp_session_exit('../index.php'); 
+
+    $db = cp_db_connecter();
+
+    $id = cp_db_protect_inputs($db,$id);
+    $pseudo = cp_db_protect_inputs($db,$_SESSION['pseudo']);
+
+    $query = "DELETE FROM commentaire
+                WHERE coID = '$id'
+                AND coAuteur = '$pseudo'";
+
+    cp_db_execute($db,$query,false,true);
+
+    mysqli_close($db);
+    
+    
+}
+
 // --- ID verification and database interactions ---
 
 // Only data can be here
@@ -169,11 +202,13 @@ if(!$id){
     $db = cp_db_connecter();
     $errorsComment = 0;
 
+    if(isset($_POST['btnDeleteComment'])){
+        cpl_deleteCommentProcess();
+    }
+
     if(isset($_POST['btnNewComment'])){
         $errorsComment = cpl_newCommentProcess($id);
     }
-
-
 
     $query = 'SELECT * 
             FROM article INNER JOIN utilisateur
@@ -187,8 +222,6 @@ if(!$id){
     mysqli_close($db);
 }
 
-
-
 // --- Page generation ---
 
 $isLogged = cp_is_logged();
@@ -197,7 +230,7 @@ cp_print_beginPage('article','L\'actu',1,$isLogged);
 
     if($codeErr == 0){ // print article
         cpl_print_article($data,$isLogged,$errorsComment);
-        if(isset($_POST['btnNewComment'])){
+        if(isset($_POST['btnNewComment']) || isset($_POST['btnDeleteComment'])){
             echo '<script>window.location.replace("#',($errorsComment)?'comment-form':'comments','");</script>';
         }
     }else{ // print error page

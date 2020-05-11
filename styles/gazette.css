@@ -128,7 +128,7 @@ body > header, body > footer, body main {
 blockquote {
   margin: 20px 30px;
   text-align: justify;
-  quotes: "« " " »" "‹" "›";
+  quotes: "«\00A0" "\00A0»" "‹" "›";
   font-style: italic;
 }
 
@@ -784,7 +784,86 @@ div.popup-night div.popup-box p {
 }
 
 #article section li {
-  margin-left: 25px;
+  margin-left: 35px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+#article section li::before {
+  content: "\1F4AC";
+  position: absolute;
+  left: 20px;
+}
+
+#article section li > p {
+  width: 100%;
+}
+
+#article section li blockquote {
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  quotes: none;
+  background-color: #22222208;
+  padding: 10px 13px;
+  border-radius: 10px 0px 0px 10px;
+  margin: 20px 0px 20px 20px;
+}
+
+#article section li blockquote:last-child {
+  border-radius: 10px;
+}
+
+#article section li div {
+  background-color: #22222208;
+  padding: 10px 13px;
+  border-radius: 0px 10px 10px 0px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 20px 0px;
+  width: 0px;
+}
+
+#article section li div span.btn-span {
+  opacity: 0;
+  margin: 0;
+}
+
+#article section li:hover div {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+#article section li:hover span.btn-span {
+  opacity: 1;
 }
 
 #article section fieldset {

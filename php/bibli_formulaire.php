@@ -223,17 +223,17 @@ function cp_form_print_buttonsLine($colspan, $submit,$resetValue = '',$confirmSu
             '<td class="buttons" colspan="',$colspan,'">';
             
                 if(!$confirmSubmit){
-                    cp_print_button('submit',$submit[0],$submit[1]);
+                    echo cp_print_button('submit',$submit[0],$submit[1]);
                 }else{
-                    cp_print_popUp($submit[0],'Vous êtes sûr ?',$confirmSubmitLabel,'submit','Oui je confirme','btnNewArticle');
+                    echo cp_print_popUp($submit[0],'Vous êtes sûr ?',$confirmSubmitLabel,'submit','Oui je confirme','btnNewArticle');
                 }
             
                 
                 if($resetValue != ''){
                     if(!$confirmReset){
-                        cp_print_button('reset',$resetValue,'reset');
+                        echo cp_print_button('reset',$resetValue,'reset');
                     }else{
-                        cp_print_popUp($resetValue,'Vous êtes sûr ?',$confirmResetLabel,'reset','Oui je confirme','reset');
+                        echo cp_print_popUp($resetValue,'Vous êtes sûr ?',$confirmResetLabel,'reset','Oui je confirme','reset');
                     }
                 }
         echo '</td>',
