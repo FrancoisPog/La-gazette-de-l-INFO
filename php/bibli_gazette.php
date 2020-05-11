@@ -257,6 +257,38 @@ function cp_isValid_articleElement($element,$maxLenght){
     return 0;
 }
 
+/**
+ * Check if the email or pseudo specified is already used 
+ * @param Object $db        The database connecter
+ * @param String $pseudo    The specified pseudo
+ * @param String $email     The specified email
+ * @return mixed            0 if there are no error, else it returning an array with the errors
+ */
+function cp_checkAlreadyUsed($db,$pseudo,$email){
+
+    $query = '('."SELECT utPseudo, 1 AS type
+                    FROM utilisateur
+                    WHERE utPseudo = '$pseudo') 
+                    UNION 
+                    (SELECT utPseudo, 2 AS type 
+                        FROM utilisateur
+                        WHERE utEmail = '$email' )";
+
+    $res = cp_db_execute($db,$query);
+
+    // if the pseudo of email is already used
+    if($res != null){
+        foreach($res as $value){
+            if($value['type'] == 1){
+                $errors[] = 'Le pseudo est déjà utilisé';
+            }else{
+                $errors[] = 'L\'adresse mail est déjà utilisée';
+            }
+        }
+        return $errors;
+    }
+    return 0;
+}
 
 // ARTICLE
 

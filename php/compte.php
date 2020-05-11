@@ -19,16 +19,14 @@ function cpl_fetch_userData(){
 
     $db = cp_db_connecter();
 
-    $query = '('.'SELECT utPseudo AS pseudo, utNom AS last_name, utPrenom AS first_name, utEmail AS email, utDateNaissance AS birthday, utCivilite AS civility, utMailsPourris AS spam, reBio AS bio, reCategorie AS category, reFonction AS function, 1 AS type 
+    $query = 'SELECT utPseudo AS pseudo, utNom AS last_name, utPrenom AS first_name, utEmail AS email, utDateNaissance AS birthday, utCivilite AS civility, utMailsPourris AS spam, reBio AS bio, reCategorie AS category, reFonction AS function, 1 AS type 
                 FROM utilisateur LEFT OUTER JOIN redacteur ON utPseudo = rePseudo
-                WHERE utPseudo="'. cp_db_protect_inputs($db,$_SESSION['pseudo']).'" ) UNION (SELECT 0,0,0, utEmail,0,0,0,0,0,0, 2 AS type FROM utilisateur WHERE utPseudo <> "'. cp_db_protect_inputs($db,$_SESSION['pseudo']).'" ) ORDER BY type';
+                WHERE utPseudo="'. cp_db_protect_inputs($db,$_SESSION['pseudo']).'"';
 
     $userData = cp_db_execute($db,$query,false);
 
-    if(isset($_POST['btnEditData'])){
-        // We keep all others user's email for check later if the user want to change
-        $GLOBALS['emails'] = array_slice($userData,1);
-    }else if(isset($_POST['btnEditBio']) && $userData[0]['bio'] == '' ){
+    
+    if(isset($_POST['btnEditBio']) && $userData[0]['bio'] == '' ){
         $GLOBALS['emptyBio'] = true;
     }
 
@@ -140,14 +138,6 @@ function cpl_checkMistakes($processType){
                 $errors[] = 'L\'adresse mail doit contenir moins de 256 caractères';
             }
 
-
-            foreach($GLOBALS['emails'] as $email){
-                if($email['email'] == $_POST['email'] ){
-                    $errors[] = 'L\'adresse mail est déjà utilisée';
-                    break;
-                }
-            }
-            unset($GLOBALS['emails']);
         break;
         }
         case EDIT_PASS : {
@@ -173,6 +163,10 @@ function cpl_checkMistakes($processType){
         
             if(strlen($_POST['bio']) == 0){
                 $errors[] = 'La biographie ne peut pas être vide';
+            }else{
+                if(strlen($_POST['bio']) > 1000){
+                    $errors[] = 'La biographie doit contenir moins de 1000 caractères';
+                }
             }
         
             if(cp_str_containsHTML($_POST['bio'])){
@@ -203,9 +197,14 @@ function cpl_updateDatabase($processType){
     switch($processType){
        
         case EDIT_PERSONAL_DATA : {
+            if(($error = cp_checkAlreadyUsed($db,'xx',$_POST['email'])) != 0){
+                return $error;
+            }
             extract($protected);
             $birthDate = $birthday_y*10000+$birthday_m*100+$birthday_d;
             $spam = (isset($spam)) ? 1:0;
+
+            
 
             $query = "UPDATE utilisateur
                         SET utCivilite = '$civility',
@@ -234,6 +233,8 @@ function cpl_updateDatabase($processType){
             $function =$protected['function'];
             $category = $protected['category'];
 
+           
+
             if(isset($GLOBALS['emptyBio'])){
                 $query = "INSERT INTO redacteur SET rePseudo = '$pseudo', reBio = '$bio', reFonction = '$function', reCategorie = '$category'"; 
             }else{
@@ -245,6 +246,7 @@ function cpl_updateDatabase($processType){
     }
     cp_db_execute($db,$query,false,true);
     mysqli_close($db);
+    return 0;
 }
 
 /**
@@ -294,11 +296,13 @@ function cpl_editDataProcess($processType,$userData){
     if(cpl_nothingChange($processType,$userData)){
         return 0;
     }
-    echo '<script>console.log("db")</script>';
+   
 
     if($processType < EDIT_PICTURE){
         // Update data on database
-        cpl_updateDatabase($processType);
+        if(($error = cpl_updateDatabase($processType)) != 0 ){
+            return $error;
+        }
     }else{
         $pseudo = $_SESSION['pseudo'];
         move_uploaded_file($_FILES['picture']['tmp_name'],realpath('..')."/upload/$pseudo.jpg");

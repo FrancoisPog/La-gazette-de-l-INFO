@@ -55,7 +55,6 @@ function cpl_updateArticle(){
     extract($protected);
 
     $id = $_SESSION['articleID'];
-   // unset($_SESSION['articleID']);
 
     date_default_timezone_set('Europe/Paris');
     $time = date('YmdHi');
