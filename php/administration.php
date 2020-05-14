@@ -22,7 +22,9 @@
   $res2 = cp_db_execute($db,$query2);
   mysqli_close($db);
   $res2 = cpl_organize_data($res2);
-
+  if(isset($_POST['submit'])) {
+    cpl_verification_statut($res1);
+  }
   cp_print_beginPage('administration', 'Administration',1,$isLogged);
   cpl_print_users_informations($res1, $res2);
   cpl_print_statut_description();
@@ -112,10 +114,27 @@
   function cpl_print_statut_description() {
     echo '<section>',
     '<h2>Statut déscription</h2>',
-    '<p>Statut 0 : </p>',
-    '<p>Statut 1 : </p>',
-    '<p>Statut 2 : </p>',
-    '<p>Statut 3 : </p>',
+    '<p>Statut 0 : Un simple utilisateur inscrit (valeur par défaut)</p>',
+    '<p>Statut 1 : Un utilisateur inscrit qui est uniquement rédacteur</p>',
+    '<p>Statut 2 : Un utilisateur inscrit qui est uniquement administrateur</p>',
+    '<p>Statut 3 : Un utilisateur inscrit qui est rédacteur et administrateur</p>',
     '</section>';
+  }
+
+  function cpl_verification_statut($tab) {
+    $db = cp_db_connecter();
+    foreach ($_POST as $key => $value) {
+      foreach ($tab as $row) {
+        if($key == $row['utPseudo']) {
+          if ($value != $row['utStatut']){
+            $query = "UPDATE utilisateur SET utStatut = $value WHERE utPseudo = '$key'";
+            cp_db_execute($db, $query, true, true);
+            $row['utStatut'] = $value;
+            break;
+          }
+        }
+      }
+    }
+    mysqli_close($db);
   }
 ?>
