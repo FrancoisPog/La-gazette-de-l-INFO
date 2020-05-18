@@ -1,0 +1,12 @@
+#search{
+    form{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        input[type="text"]{
+            width: 500px;
+            height: 20px;
+        }
+    }
+}

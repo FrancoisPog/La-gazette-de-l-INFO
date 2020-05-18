@@ -41,7 +41,7 @@
   }
 
   function cpl_print_section($articles, $date) {
-    echo '<section class="type1">',
+    echo '<section>',
    '<h2>',cpl_date_section($date),'</h2>';
     foreach ($articles as $article) {
       cpl_print_article($article['arID'],$article['arTitre'],$article['arResume']);
