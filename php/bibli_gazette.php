@@ -363,7 +363,6 @@ function cp_picture_isValid($picture){
     return $errors;
 }
 
-
 /**
  * Print a form to edit an article
  * @param String $page      The form's page
@@ -399,6 +398,43 @@ function cp_print_editArticleSection($page,$data,$errors = [],$onSuccess = ''){
 }
 
 
+/**
+ * Print article preview 
+ * 
+ * @param string $id      The article id
+ * @param string $title   The article title
+ * @param string $abstract The article abstract*
+ */
+function cp_print_articlePreview($id,$title,$abstract) {
+    if(file_exists("../upload/$id.jpg")){
+        $picture = "../upload/$id.jpg";
+    }else{
+        $picture = "../images/none.jpg";
+    }
+    echo '<article>',
+            '<img src="',$picture,'" alt="',$title,'" title="',$title,'">',
+            "<h3>$title</h3>",
+            "<p>$abstract</p>",
+            '<a href="../php/article.php?data=',cp_encrypt_url([$id]),'">Lire l\'article</a>',
+        '</article>';
+}
+
+/**
+ * Print a section of articles of specific month
+ * @param Array $articles   The articles array
+ * @param int $dat          The month and year (MMYYY) 
+ */
+function cp_print_sortedArticlesSection($articles, $date) {
+    echo '<section class="articlesList">',
+            '<h2>',cpl_date_section($date),'</h2>';
+
+            foreach ($articles as $article) {
+                cp_print_articlePreview($article['arID'],$article['arTitre'],$article['arResume']);
+            }
+
+    echo '</section>';
+}
+
 
 
 // STR
@@ -410,4 +446,18 @@ function cp_print_editArticleSection($page,$data,$errors = [],$onSuccess = ''){
 function cp_str_toDate($date){
     setlocale(LC_TIME, "fr_FR");
     return utf8_encode(strftime("%e %B %G &agrave; %Hh%M",strtotime($date)));
+}
+
+/**
+ * Parsing date for articles section
+ * @param int $date The date to parse (MMYYYY)
+ * @return String   The date in correct format for section
+ */
+function cpl_date_section($date) {
+    $monthTab = ['01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril',
+                '05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre',
+                '10'=>'Octobre','11'=>'Novembre','12'=>'Décembre'];
+    $month = substr($date,4);
+    $year = substr($date,0,4);
+    return $monthTab[$month] . ' ' . $year; 
 }

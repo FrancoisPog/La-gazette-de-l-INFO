@@ -1,0 +1,35 @@
+/* Articles list */
+.articlesList{
+    article{
+        position: relative;
+        background-color: #E5E5E5;
+        padding: 10px;
+
+        +article{
+            margin-top: 10px;
+        }
+
+        a{
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        img{
+            float: left;
+            width: 160px;
+            height: 120px;
+            margin-right: 10px;
+            margin-bottom: 15px;
+        }
+
+        &:first-of-type, &:first-of-type img {
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+        }
+        &:last-of-type, &:last-of-type img{
+            border-bottom-left-radius: 7px;
+            border-bottom-right-radius: 7px;
+        }
+    }
+}

@@ -98,13 +98,19 @@ function cpl_editingProcess(){
 function cpl_deleteArticle(){
     $db = cp_db_connecter();
 
-    $id = $_SESSION['articleID'];
+    $id = cp_db_protect_inputs($db,$_SESSION['articleID']);
 
-    $query = "DELETE FROM article
+    $query = "DELETE FROM commentaire
+                WHERE coArticle = $id;
+                DELETE FROM article
                 WHERE arID = $id ";
 
-    cp_db_execute($db,$query,false,true);
-
+    $res = mysqli_multi_query($db,$query);
+    
+    if(!$res){
+        cp_db_error($db,$query);
+    }
+    
     mysqli_close($db);
 
 

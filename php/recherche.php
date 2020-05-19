@@ -5,11 +5,16 @@ session_start();
 require_once('bibli_gazette.php');
 
 
-
+/**
+ * Print the search page
+ * @param boolean $isLogged True if the user is logged in, otherwise else
+ * @param String $error     The optional error message
+ * @param Array $articles   The optional array of sorted articles
+ */
 function cpl_print_search_page($isLogged, $error = '',$articles = []){
     cp_print_beginPage('recherche','Recherche',1,$isLogged);
 
-    echo '<section id="search">',
+    echo '<section id="searchSection">',
             '<h2>Rechercher des articles</h2>',
             '<p>Les critères de recherches doivent faire au moins 3 caractères pour être pris en compte.</p>',
             ($error != '')?'<p class="error">'.$error.'</p>':'',
@@ -19,33 +24,26 @@ function cpl_print_search_page($isLogged, $error = '',$articles = []){
             '</form>',
         '</section>';
 
-    
-    foreach($articles as $month => $articleByMonth){
-        echo '<section>',
-                '<h2>',cpl_date_section($month),'</h2>';
-        foreach($articleByMonth as $article){
-            $id = $article['arID'];
-            $titre = $article['arTitre'];
-            $resume = $article['arResume'];
-            if(file_exists("../upload/$id.jpg")){
-                $picture = "../upload/$id.jpg";
-              }else{
-                $picture = "../images/none.jpg";
-              }
-              echo '<article>',
-                    '<img src="',$picture,'" alt="',$titre,'" title="',$titre,'">',
-                    "<h3>$titre</h3>",
-                    "<p>$resume</p>",
-                    '<a href="../php/article.php?data=',cp_encrypt_url([$id]),'">Lire l\'article</a>',
-                  '</article>';
+    if(isset($_GET['btnSearch']) && $error == ''){
+        if($articles == null){
+            echo '<section>',
+                    '<h2>Aucun article trouvé</h2>',
+                    '<p>Aucun article ne correspond à vos critères de recherche.</p>',
+                '</section>';
         }
-        echo '</section>';
-    }
-        
 
+        foreach($articles as $month => $articleByMonth){
+           cp_print_sortedArticlesSection($articleByMonth,$month);
+        }
+    }
     cp_print_endPage();
 }
 
+/**
+ * Fetch articles in database
+ * @param Array $search_keys    The array of search keys
+ * @return Array                The array of articles resulting from search
+ */
 function cpl_fetch_article($search_keys){
     $db = cp_db_connecter();
 
@@ -67,46 +65,25 @@ function cpl_fetch_article($search_keys){
 }
 
  /**
-   * Group four article by date determined by the selected button
+   * Group articles by date
    * 
-   * @param array $articles All articles of gazette website
-   * @param int $button The button that is selected
+   * @param array $articles The articles to group
    * @return array Articles grouped by date
    */
-  function cpl_group_article_by_date($articles) {
+  function cpl_group_article($articles) {
     $result = [];
     foreach($articles as $article) {
-      $date = cpl_get_year_and_month($article['arDatePublication']);
-      $result[$date][] = $article;
+        $date = substr($article['arDatePublication'],0,6);
+        $result[$date][] = $article;
     }
     return $result;
   }
 
-  /**
-   * Get year and month of a date with this format YYYYMMDD
-   * 
-   * @param string $date The date
-   * @return string The month and the year or null
-   */
-  function cpl_get_year_and_month($date) {
-    if ($date == null) {
-      return null;
-    }
-    return substr($date,0,6);
-  }
-
-  /**
-   * Parsing date for section
-   * @param int $date The date to parse
-   * @return String   The date in correct format for section
-   */
-  function cpl_date_section($date) {
-    $moisTab = ['01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre'];
-    $mois = substr($date,4);
-    $annee = substr($date,0,4);
-    return $moisTab[$mois] . ' ' . $annee; 
-  }
-
+/**
+ * Execute the search process
+ * @return String The error message if failure
+ * @return Array  The grouped articles from search if success
+ */
 function cpl_search_process(){
     cp_check_param($_GET,['btnSearch','search_keys']) or cp_session_exit('../index.php');
 
@@ -121,22 +98,25 @@ function cpl_search_process(){
             return "Les critères de recherche doivent être composés d'au moins 3 caractères";
         }
     }
-
-
+    
     if(count($search_keys) == 0){
         return "Vous devez renseigner au moins un critère de recherche"; 
     }
 
     $articles = cpl_fetch_article($search_keys);
 
-    $articles = cpl_group_article_by_date($articles);
+    if($articles == null){
+        return array();
+    }
+
+    $articles = cpl_group_article($articles);
 
     return $articles;
 }
 
 
 
-
+// MAIN
 
 $isLogged = cp_is_logged();
 

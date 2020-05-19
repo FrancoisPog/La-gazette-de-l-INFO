@@ -711,6 +711,41 @@ div.popup-night div.popup-box p {
           transform: scale(0) rotate(12deg);
 }
 
+/* Articles list */
+.articlesList article {
+  position: relative;
+  background-color: #E5E5E5;
+  padding: 10px;
+}
+
+.articlesList article + article {
+  margin-top: 10px;
+}
+
+.articlesList article a {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+.articlesList article img {
+  float: left;
+  width: 160px;
+  height: 120px;
+  margin-right: 10px;
+  margin-bottom: 15px;
+}
+
+.articlesList article:first-of-type, .articlesList article:first-of-type img {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+
+.articlesList article:last-of-type, .articlesList article:last-of-type img {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+
 /* --------------------- PAGE ADMINISTRATION ---------------------*/
 #administration tbody tr:last-child {
   border-bottom: hidden;
@@ -1043,40 +1078,6 @@ div.popup-night div.popup-box p {
   display: inline;
 }
 
-#actus article {
-  position: relative;
-  background-color: #E5E5E5;
-  padding: 10px;
-}
-
-#actus article + article {
-  margin-top: 10px;
-}
-
-#actus article a {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-}
-
-#actus article img {
-  float: left;
-  width: 160px;
-  height: 120px;
-  margin-right: 10px;
-  margin-bottom: 15px;
-}
-
-#actus article:first-of-type, #actus article:first-of-type img {
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
-}
-
-#actus article:last-of-type, #actus article:last-of-type img {
-  border-bottom-left-radius: 7px;
-  border-bottom-right-radius: 7px;
-}
-
 #actus > section:first-of-type {
   display: block;
 }
@@ -1127,14 +1128,15 @@ div.popup-night div.popup-box p {
   margin-bottom: 10px;
 }
 
-#search .error {
+/* --------------------- PAGE ACTUS ---------------------*/
+#searchSection .error {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
   padding: 3px;
 }
 
-#search form {
+#searchSection form {
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1147,42 +1149,8 @@ div.popup-night div.popup-box p {
           align-items: center;
 }
 
-#search form input[type="text"] {
+#searchSection form input[type="text"] {
   width: 500px;
   height: 20px;
-}
-
-#recherche article {
-  position: relative;
-  background-color: #E5E5E5;
-  padding: 10px;
-}
-
-#recherche article + article {
-  margin-top: 10px;
-}
-
-#recherche article a {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-}
-
-#recherche article img {
-  float: left;
-  width: 160px;
-  height: 120px;
-  margin-right: 10px;
-  margin-bottom: 15px;
-}
-
-#recherche article:first-of-type, #recherche #actus article:first-of-type img {
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
-}
-
-#recherche article:last-of-type, #recherche #actus article:last-of-type img {
-  border-bottom-left-radius: 7px;
-  border-bottom-right-radius: 7px;
 }
 /*# sourceMappingURL=gazette.css.map */
