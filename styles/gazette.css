@@ -1127,6 +1127,13 @@ div.popup-night div.popup-box p {
   margin-bottom: 10px;
 }
 
+#search .error {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 3px;
+}
+
 #search form {
   width: 100%;
   display: -webkit-box;
@@ -1143,5 +1150,39 @@ div.popup-night div.popup-box p {
 #search form input[type="text"] {
   width: 500px;
   height: 20px;
+}
+
+#recherche article {
+  position: relative;
+  background-color: #E5E5E5;
+  padding: 10px;
+}
+
+#recherche article + article {
+  margin-top: 10px;
+}
+
+#recherche article a {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+#recherche article img {
+  float: left;
+  width: 160px;
+  height: 120px;
+  margin-right: 10px;
+  margin-bottom: 15px;
+}
+
+#recherche article:first-of-type, #recherche #actus article:first-of-type img {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+
+#recherche article:last-of-type, #recherche #actus article:last-of-type img {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
 }
 /*# sourceMappingURL=gazette.css.map */

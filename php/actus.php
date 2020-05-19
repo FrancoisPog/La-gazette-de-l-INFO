@@ -42,7 +42,7 @@
 
   function cpl_print_section($articles, $date) {
     echo '<section>',
-   '<h2>',cpl_date_section($date),'</h2>';
+    '<h2>',cpl_date_section($date),'</h2>';
     foreach ($articles as $article) {
       cpl_print_article($article['arID'],$article['arTitre'],$article['arResume']);
     }
@@ -133,4 +133,3 @@
     $annee = substr($date,0,4);
     return $moisTab[$mois] . ' ' . $annee; 
   }
-?>
