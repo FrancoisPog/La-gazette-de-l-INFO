@@ -131,7 +131,7 @@
   function cpl_verification_statut($tab) {
     $db = cp_db_connecter();
     foreach ($_POST as $index => $statut) {
-      if($index == 'submit') {
+      if($index === 'submit') {
         break;
       }
       if(!cp_str_isInt($index) || !cp_str_isInt($statut) || $statut < "0" || $statut > "3" || $statut > $_SESSION['status'] || $tab[$index]['utStatut'] >= $_SESSION['status']) {
@@ -141,7 +141,6 @@
         $query = "UPDATE utilisateur SET utStatut = $statut WHERE utPseudo = '".$tab[$index]['utPseudo']."'";
         cp_db_execute($db, $query, true, true);
         $tab[$index]['utStatut'] = $statut;
-        break;
       }
     }
     mysqli_close($db);
