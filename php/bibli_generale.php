@@ -176,6 +176,10 @@ function cp_session_exit($page){
                 $cookie_session_data['secure'],
                 $cookie_session_data['httponly']
             );
+
+    setcookie('pseudo','',time()-3600*24,'/');
+    setcookie('status','',time()-3600*24,'/');
+    setcookie('key','',time()-3600*24,'/');
         
     header("Location: $page");
     exit(0);
@@ -189,6 +193,25 @@ function cp_session_exit($page){
  */
 function cp_is_logged($page_to_go_if_not = false){
     $isLogged = (isset($_SESSION['pseudo']) && isset($_SESSION['status']));
+
+    if(!$isLogged){
+        if(isset($_COOKIE['pseudo']) && isset($_COOKIE['status']) && isset($_COOKIE['key'])){
+
+           
+            // mysqli_close($db);
+            if(!hash_equals($_COOKIE['key'],hash('sha256',$_COOKIE['pseudo']))){
+                // var_dump((hash('sha256',$_COOKIE['pseudo'])));
+                // var_dump($_COOKIE['key']);
+                // exit(0);
+                cp_session_exit('.');
+            }
+
+
+            $_SESSION['pseudo'] = $_COOKIE['pseudo'];
+            $_SESSION['status'] = $_COOKIE['status'];
+            return true;
+        }
+    }
     if($isLogged){
         return true;
     }

@@ -8,7 +8,7 @@ ob_start();
  * @return void|exit Exit the script if it's a hacking case
  */
 function cpl_hackGuard(){
-    cp_check_param($_POST,['pseudo','pass','connectBtn']) or cp_session_exit('../index.php');
+    cp_check_param($_POST,['pseudo','pass','connectBtn'],['stay']) or cp_session_exit('../index.php');
 }
 
 /**
@@ -72,7 +72,13 @@ function cpl_connection($userData){
     
     $page = $_SESSION['origin_page'];
     unset($_SESSION['origin_page']);
-   
+    
+    if(isset($_POST['stay'])){
+        setcookie('pseudo',$userData[0],time()+3600*24*365,'/');
+        setcookie('key',hash('sha256',$userData[0]),time()+24*365,'/');
+        setcookie('status',$userData[1],time()+3600*24*365,'/');
+    }
+
     $_SESSION['pseudo'] = $userData[0];
     $_SESSION['status'] = $userData[1];
 
@@ -95,6 +101,7 @@ function cpl_print_connection_form($errors = false){
                 '<table class="form">',
                     cp_form_print_inputLine('Pseudo :','text','pseudo',20,$required),
                     cp_form_print_inputLine('Mot de passe :','password','pass',255,$required),
+                    cp_form_print_checkboxLine('stay','Rester connecter',false),
                     cp_form_print_buttonsLine(2,['Se connecter','connectBtn'],'Annuler'),
                 '</table>',
             '</form>',
