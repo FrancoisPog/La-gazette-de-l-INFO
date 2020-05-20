@@ -23,7 +23,7 @@
   mysqli_close($db);
   $res2 = cpl_organize_data($res2);
   if(isset($_POST['submit'])) {
-    cpl_verification_statut($res1);
+    $res1 = cpl_verification_statut($res1);
   }
   cp_print_beginPage('administration', 'Administration',1,$isLogged);
   cpl_print_users_informations($res1, $res2);
@@ -77,16 +77,18 @@
         '</tr>',
       '</thead>',
     '<tbody>';
+    $i = 0;
     foreach ($users1 as $value) {
       echo '<tr>',
       '<td>',$value['utPseudo'],'</td>',
       '<td>';
-      echo $value['utStatut'] < $_SESSION['status'] ? cp_form_print_list($value['utPseudo'],cpl_create_array_number(0,(int)$_SESSION['status']),$value['utStatut']) : '<p>'.$value['utStatut'].'</p>';
+      echo $value['utStatut'] < $_SESSION['status'] ? cp_form_print_list($i,cpl_create_array_number(0,(int)$_SESSION['status']),$value['utStatut']) : '<p>'.$value['utStatut'].'</p>';
       echo '</td>',
       '<td>',$value['nbCommentaire'],'</td>',
       '<td>',$users2[$value['utPseudo']]['nbArticle'],'</td>',
       '<td>',$users2[$value['utPseudo']]['nbCommentaireAr'],'</td>',
       '</tr>';
+      $i++;
     }
     cp_form_print_buttonsLine(5,['Envoyer','submit'],'Réinitialiser',false,false);
     echo '</tbody>',
@@ -111,30 +113,38 @@
     return $result; 
   }
 
+  /**
+   * Print the description of each statut
+   * 
+   * @return void 
+   */
   function cpl_print_statut_description() {
     echo '<section>',
     '<h2>Statut déscription</h2>',
-    '<p>Statut 0 : Un simple utilisateur inscrit (valeur par défaut)</p>',
-    '<p>Statut 1 : Un utilisateur inscrit qui est uniquement rédacteur</p>',
-    '<p>Statut 2 : Un utilisateur inscrit qui est uniquement administrateur</p>',
-    '<p>Statut 3 : Un utilisateur inscrit qui est rédacteur et administrateur</p>',
+    '<p><strong>Statut 0</strong> : Un simple utilisateur inscrit (valeur par défaut)</p>',
+    '<p><strong>Statut 1</strong> : Un utilisateur inscrit qui est uniquement rédacteur</p>',
+    '<p><strong>Statut 2</strong> : Un utilisateur inscrit qui est uniquement administrateur</p>',
+    '<p><strong>Statut 3</strong> : Un utilisateur inscrit qui est rédacteur et administrateur</p>',
     '</section>';
   }
 
   function cpl_verification_statut($tab) {
     $db = cp_db_connecter();
-    foreach ($_POST as $key => $value) {
-      foreach ($tab as $row) {
-        if($key == $row['utPseudo']) {
-          if ($value != $row['utStatut']){
-            $query = "UPDATE utilisateur SET utStatut = $value WHERE utPseudo = '$key'";
-            cp_db_execute($db, $query, true, true);
-            $row['utStatut'] = $value;
-            break;
-          }
-        }
+    foreach ($_POST as $index => $statut) {
+      if($index == 'submit') {
+        break;
+      }
+      if(!cp_str_isInt($index) || !cp_str_isInt($statut) || $statut < "0" || $statut > "3" || $statut > $_SESSION['status'] || $tab[$index]['utStatut'] >= $_SESSION['status']) {
+        cp_session_exit('../index.php');
+      }
+      if ($statut != $tab[$index]['utStatut']) {
+        $query = "UPDATE utilisateur SET utStatut = $statut WHERE utPseudo = '".$tab[$index]['utPseudo']."'";
+        cp_db_execute($db, $query, true, true);
+        $tab[$index]['utStatut'] = $statut;
+        break;
       }
     }
     mysqli_close($db);
+    return $tab;
   }
 ?>
