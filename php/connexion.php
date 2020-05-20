@@ -41,13 +41,20 @@ function cpl_check_user_data(){
                 FROM utilisateur
                 WHERE utPseudo = "'.cp_db_protect_inputs($db,$_POST['pseudo']).'"';
 
-    $userData = cp_db_execute($db,$query,false)[0];
+
+    $userData = cp_db_execute($db,$query,false);
 
     mysqli_close($db);
+    
+    var_dump($userData);
+
 
     if($userData == null){
         return false;
     }
+
+    $userData = $userData[0];
+
    
     if(!password_verify($_POST['pass'],$userData['pass'])){
         return false;
