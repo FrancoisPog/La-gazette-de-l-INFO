@@ -95,7 +95,7 @@ function cpl_print_page_redac($isLogged){
                 'Passionnés par le journalisme d\'investigation depuis notre plus jeune âge, nous avons créé en 2019 ce site ',
                 'pour répondre à un réel besoin : celui de fournir une information fiable et précise sur la vie de la ',
                 '<abbr title="Licence Informatique">L-INFO</abbr> ',
-                'de <a href="https://http://www.univ-fcomte.fr/">l\'Université de Franche-Comté</a>.',
+                'de <a href="https://www.univ-fcomte.fr/">l\'Université de Franche-Comté</a>.',
             '</p>',
             '<p>',
                 'Découvrez les hommes et les femmes qui composent l\'équipe de choc de la Gazette de L-INFO.',

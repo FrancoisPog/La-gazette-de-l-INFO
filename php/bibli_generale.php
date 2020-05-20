@@ -26,32 +26,49 @@ require_once('bibli_database.php');
  * @param String $arg   The bbcode text to parse
  * @return String       The html text
  */
-function cp_html_parseBbCode($arg){
+function cp_html_parseBbCode($arg,$protect = false){
     $exp = array();
     $exp[] = '/\[(p|citation|gras|it|item|liste)\](.+?)\[\/\1\]/i';
-    $exp[] = '/\[(br|youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+( [^\]]*)?)\]/i';
-    $exp[] = '/\[(a):([^\]]*)\][^\[]+\[\/\1\]/i';
+    $exp[] = '/\[(br|youtube:\d+:\d+:https:\/\/www\.youtube\.com\/[^ \]]+( [^\]]*)?)\]/i';
+    $exp[] = '/\[(a):([^\]]*)\][^[]+\[\/\1\]/i';
     $exp[] = '/\[#x?[0-9a-fA-F]+\]/';
     
     if(is_string($arg)){
-        return preg_replace_callback($exp,'cp_html_parseBbCode',str_replace(array("\r","\n"),'',$arg));
+        return preg_replace_callback($exp,'cp_html_parseBbCode',str_replace(array("\r","\n"),'',($protect)?htmlentities($arg):$arg));
     }
     
     // youtube with legende
-    if(preg_match('/^\[youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+ [^\]]+\]$/i',$arg[0])){
-        return preg_replace('/youtube:(\d+):(\d+):((https:\/\/)?(www\.)?youtube\.com\/[^ \]]+) ([^\]]*)$/i','<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\6</figcaption></figure>',$arg[1]);
+    if(preg_match('/^\[youtube:\d+:\d+:https:\/\/www\.youtube\.com\/[^ \]]+ [^\]]+\]$/i',$arg[0])){
+        return preg_replace('/youtube:(\d+):(\d+):(https:\/\/www\.youtube\.com\/[^ \]]+) ([^\]]*)$/i','<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4</figcaption></figure>',$arg[1]);
         
     }
 
     // youtube without légende
-    if(preg_match('/^\[youtube:\d+:\d+:(https:\/\/)?(www\.)?youtube\.com\/[^ \]]+\]/i',$arg[0])){
-        return preg_replace('/youtube:(\d+):(\d+):((https:\/\/)?(www\.)?youtube\.com\/[^ \]]+)/i','<iframe width="\1" height="\2" src="\3" allowfullscreen></iframe>',$arg[1]);
+    if(preg_match('/^\[youtube:\d+:\d+:https:\/\/www\.youtube\.com\/[^ \]]+\]/i',$arg[0])){
+        return preg_replace('/youtube:(\d+):(\d+):(https:\/\/www\.youtube\.com\/[^ \]]+)/i','<iframe width="\1" height="\2" src="\3" allowfullscreen></iframe>',$arg[1]);
         
     }
 
     // Link
-    if(preg_match('/^\[a:([^\]])*\][^\[]+\[\/a\]$/i',$arg[0])){
-        return preg_replace_callback($exp,'cp_html_parseBbCode',preg_replace('/\[a:([^\]]*)\]([^\[]+)\[\/a\]/i','<a href="\1">\2</a>',$arg[0]));
+    if(preg_match('/^\[a:([^\]])*\][^[]+\[\/a\]$/i',$arg[0])){
+       $url_data = parse_url($arg[2]);
+
+       $extern = isset($url_data['scheme']); 
+
+        if($extern){
+            $isValid = filter_var($arg[2],FILTER_VALIDATE_URL);
+            if($isValid){
+                return preg_replace_callback($exp,'cp_html_parseBbCode',preg_replace('/\[a:([^\]]*)\]([^\[]+)\[\/a\]/i','<a target="_blank" href="\1">\2</a>',$arg[0]));
+            }
+            return $arg[0];
+            
+        }else{
+            if( isset($url_data['path']) && !file_exists($url_data['path']) ){
+                return $arg[0];
+            }
+            return preg_replace_callback($exp,'cp_html_parseBbCode',preg_replace('/\[a:([^\]]*)\]([^\[]+)\[\/a\]/i','<a href="\1">\2</a>',$arg[0]));
+        }
+            
        
     }
 

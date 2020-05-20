@@ -20,7 +20,7 @@ function cpl_print_comments($articleData,$isLogged){
     foreach($articleData as $comment){
         echo    '<li>',
                     '<p>Commentaire de <strong>',$comment['coAuteur'],'</strong>, le ',cp_str_toDate($comment['coDate']),'</p>',
-                    '<blockquote>',cp_html_parseBbCode($comment['coTexte']),'</blockquote>',
+                    '<blockquote>',cp_html_parseBbCode($comment['coTexte'],false),'</blockquote>',
                     ($isLogged && $comment['coAuteur'] == $_SESSION['pseudo'])?cpl_print_deleteCommentBtn($comment['coID']):'',
                 '</li>';
     }
@@ -70,7 +70,7 @@ function cpl_print_article($data,$isLogged,$errors){
     $dateM = ($dateM == null)?false:cp_str_toDate($dateM);
     
     $status = $data[0]['utStatut'];
-    $link = ($status == 3 || $status == 1) ? 'redaction.php#'.$data[0]['utPseudo']:false;
+    $link = (($status == 3 || $status == 1) && isset($data[0]['reBio']) ) ? 'redaction.php#'.$data[0]['utPseudo']:false;
 
     $pictureExist = (file_exists('../upload/'.$data[0]['arID'].'.jpg'));
 
@@ -85,7 +85,7 @@ function cpl_print_article($data,$isLogged,$errors){
                         echo '<img src="../upload/',$data[0]['arID'],'.jpg" width="250" height="187" alt="',$titre,'" >';
                     }
         
-                echo cp_html_parseBbCode($texte),
+                echo cp_html_parseBbCode($texte,false),
 
                 '<footer>',
                     '<p>';
@@ -211,8 +211,9 @@ if(!$id){
     }
 
     $query = 'SELECT * 
-            FROM article INNER JOIN utilisateur
-            ON utPseudo = arAuteur LEFT JOIN commentaire ON coArticle = arID
+            FROM (article INNER JOIN utilisateur
+            ON utPseudo = arAuteur LEFT JOIN commentaire ON coArticle = arID) 
+            LEFT JOIN redacteur ON utPseudo = rePseudo
             WHERE arID = '.mysqli_escape_string($db,$id).
             ' ORDER BY coDate DESC';
     $data = cp_db_execute($db,$query,false);
