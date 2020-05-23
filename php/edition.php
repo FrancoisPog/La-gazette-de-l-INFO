@@ -110,6 +110,10 @@ function cpl_deleteArticle(){
     if(!$res){
         cp_db_error($db,$query);
     }
+
+    if(file_exists("../upload/$id.jpg")){
+        unlink("../upload/$id.jpg");
+    }
     
     mysqli_close($db);
 
