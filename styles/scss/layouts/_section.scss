@@ -1,29 +1,4 @@
 /* --- Section --- */
-// section {
-//     position: relative;
-//     display: flex;
-//     flex-direction: column;
-//     border-radius: 0px 8px 8px 8px;
-//     @include block;
-//     margin-top: 30px ;
-//     padding:20px;
-
-//     h2{
-//         position: absolute;
-//         top: -29.3px;
-//         left: 0px;
-//         color: $color-text;
-//         background-color: $color-section-title;
-//         padding: 5px 10px ;
-//         font-weight: bold;
-//         border-top-right-radius: 12px;
-//     }
-
-//     &:not(:last-child){
-//         margin-bottom: 60px;
-//     }
-// }
-
 section {
     position: relative;
     display: flex;
@@ -35,17 +10,17 @@ section {
 
     h2{
         position: absolute;
-        top: -20px;
-        left: -10px;
+        top: -29.3px;
+        left: 0px;
         color: $color-text;
         background-color: $color-section-title;
         padding: 5px 10px ;
         font-weight: bold;
-        font-size: 19px;
-        border-radius: 12px;
+        border-top-right-radius: 12px;
     }
 
     &:not(:last-child){
         margin-bottom: 60px;
     }
 }
+

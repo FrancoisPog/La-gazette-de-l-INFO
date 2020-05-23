@@ -53,6 +53,11 @@ table {
   border-spacing: 0;
 }
 
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
 /*################################################################
  *
  *              STYLE SHEET FOR GAZETTE
@@ -177,10 +182,11 @@ table tbody {
 }
 
 .error {
+  list-style-type: circle;
   margin-top: 10px;
-  border: 2px red solid;
+  border: 2px #af1f1f solid;
   font-weight: 600;
-  color: red;
+  color: #af1f1f;
   padding: 10px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -195,6 +201,14 @@ table tbody {
   -ms-flex-item-align: center;
       align-self: center;
   width: 70%;
+}
+
+.error li {
+  display: list-item !important;
+}
+
+.error li:before {
+  content: '' !important;
 }
 
 .success {
@@ -238,14 +252,13 @@ section {
 
 section h2 {
   position: absolute;
-  top: -20px;
-  left: -10px;
+  top: -29.3px;
+  left: 0px;
   color: white;
   background-color: #af1f1f;
   padding: 5px 10px;
   font-weight: bold;
-  font-size: 19px;
-  border-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
 section:not(:last-child) {
@@ -506,24 +519,56 @@ table.form input[type="radio"] {
 }
 
 /* Button */
-.btn {
-  color: #af1f1f;
-  font-weight: bold;
-  font-size: 15px;
-  padding: 5px 8px;
-  margin: 3px;
-  background-color: transparent;
-  border: 2px #af1f1f solid;
-  border-radius: 10px;
+.btn-wrapper {
+  position: relative;
+  display: inline-block;
+  height: auto;
+  width: auto;
   -webkit-transition: -webkit-box-shadow 450ms;
   transition: -webkit-box-shadow 450ms;
   transition: box-shadow 450ms;
   transition: box-shadow 450ms, -webkit-box-shadow 450ms;
+  border-radius: 10px;
+  border: 2px #af1f1f solid;
+  margin: 3px;
+  z-index: 0;
 }
 
-.btn:hover {
+.btn-wrapper .btn {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  color: #af1f1f;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 5px 8px;
+  background-color: transparent;
+  border: none;
+}
+
+.btn-wrapper:before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  height: 100%;
+  width: 0;
+  background-color: rgba(175, 31, 31, 0.2);
+  border-radius: 10px;
+  border: 2px rgba(175, 31, 31, 0.5) solid;
+  -webkit-transition: all 450ms;
+  transition: all 450ms;
+  opacity: 0;
+}
+
+.btn-wrapper:hover {
   -webkit-box-shadow: 0px 0px 5px 2px #bababa;
           box-shadow: 0px 0px 5px 2px #bababa;
+}
+
+.btn-wrapper:hover:before {
+  width: 100%;
+  opacity: 1;
 }
 
 /* Pop up */
@@ -542,7 +587,7 @@ table.form input[type="radio"] {
           transform: scale(1);
   z-index: 5000;
   display: block;
-  width: 26%;
+  width: 30%;
   -webkit-transition: width 0s,opacity 0.3s 0.2s, -webkit-transform 0.3s 0.2s;
   transition: width 0s,opacity 0.3s 0.2s, -webkit-transform 0.3s 0.2s;
   transition: width 0s,opacity 0.3s 0.2s, transform 0.3s 0.2s;
@@ -803,6 +848,8 @@ div.popup-night div.popup-box p {
 }
 
 #article section li blockquote {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
   -webkit-box-flex: 3;
       -ms-flex: 3;
           flex: 3;
@@ -829,7 +876,7 @@ div.popup-night div.popup-box p {
 }
 
 #article section li div {
-  background-color: #22222208;
+  background-color: rgba(40, 40, 40, 0.05);
   padding: 10px 13px;
   border-radius: 0px 10px 10px 0px;
   display: -webkit-box;
@@ -845,7 +892,7 @@ div.popup-night div.popup-box p {
   width: 0px;
 }
 
-#article section li div .btn {
+#article section li div .btn-wrapper {
   opacity: 0;
   margin: 0;
 }
@@ -856,7 +903,7 @@ div.popup-night div.popup-box p {
           flex: 1;
 }
 
-#article section li:hover .btn {
+#article section li:hover .btn-wrapper {
   opacity: 1;
 }
 
@@ -875,7 +922,7 @@ div.popup-night div.popup-box p {
           flex-direction: column;
 }
 
-#article section fieldset form .btn, #article section fieldset form textarea {
+#article section fieldset form .btn-wrapper, #article section fieldset form textarea {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -1054,7 +1101,7 @@ div.popup-night div.popup-box p {
 }
 
 #actus > section:first-of-type > a#linkDown, #actus > section:first-of-type > a:hover {
-  background-color: red;
+  background-color: #af1f1f;
   color: white;
 }
 

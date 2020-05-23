@@ -58,7 +58,7 @@ blockquote {
     padding: 10px;
     font-style: italic;
     border-radius: 10px;
-    background-color: rgba(40,40,40,0.05)
+    background-color: rgba(40,40,40,0.05);
 }
 
 figcaption{
@@ -104,16 +104,24 @@ table{
 }
 
 .error{
+    list-style-type: circle;
     margin-top: 10px;
-    border: 2px red solid;
+    border: 2px $color-button solid;
     font-weight: 600;
-    color : red;
+    color : $color-button;
     padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-self: center;
     width: 70%;
+
+    li{
+        display: list-item !important;
+        &:before{
+            content: '' !important;
+        }
+    }
 }
 
 .success{
