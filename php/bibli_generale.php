@@ -314,7 +314,7 @@ function cp_intIsBetween($number,$min,$max){
  * @param String $name  The button's name
  */
 function cp_print_button($type,$value,$name){
-    return '<span class="btn-span"><input type="'.$type.'" class="btn" value="'.$value.'" name="'.$name.'"></span>';
+    return '<input type="'.$type.'" class="btn" value="'.$value.'" name="'.$name.'">';
 }
 
 /**
@@ -327,7 +327,7 @@ function cp_print_button($type,$value,$name){
  * @param String $btnName  The button's name
  */
 function cp_print_popUp($firstBtnValue,$title,$content,$btnType,$btnValue,$btnName){
-    echo    "<span class='btn-span'><label for='popup-first-btn' class='popup-btn btn'>$firstBtnValue</label></span>",
+    echo    "<label for='popup-first-btn' class='popup-btn btn'>$firstBtnValue</label>",
             '<input id="popup-first-btn" type="radio" name="popup-conf" class="popup-first-btn btn" value="none">',
             '<div class="popup-night">',
                 '<div class="popup-box" >',
@@ -335,7 +335,7 @@ function cp_print_popUp($firstBtnValue,$title,$content,$btnType,$btnValue,$btnNa
                     "<p>$content</p>",
                     '<input id="popup-exit" type="radio" name="popup-conf">',
                     '<label for="popup-exit">&times;</label>',
-                    "<span class='btn-span'><input class='popup-final-btn btn' name='$btnName' value='$btnValue' type='$btnType'></span>",
+                    "<input class='popup-final-btn btn' name='$btnName' value='$btnValue' type='$btnType'>",
                 '</div>',
             '</div> ';
 }

@@ -1,50 +1,17 @@
 /* Button */
 
-.btn {
-    border : 0px;
-    background-color: transparent;
+.btn{
+    color: $color-button;
     font-weight: bold;
     font-size: 15px;
-    margin: 0px 14px;
-    transition: transform 0.5s;
-    color: $color-text;
-    display: inline-block;
-    padding: 6px 4px;
-    cursor: pointer;
-}
+    padding: 5px 8px;
+    margin: 3px;
+    background-color: transparent;
+    border: 2px $color-button solid;
+    border-radius: 10px;
+    transition: box-shadow 450ms;
 
-span.btn-span:hover .btn{
-    transform: translate(-10px,0);
-    left: 0px;
-    
-}
-
-span.btn-span{
-    margin: 5px;
-    position: relative;
-    display: inline-block;
-    background-color:$color-button;
-    border-radius: 5px;
-    padding: 0px;
-    transition: transform 0.5s;
-    text-align: center;
-    
-}
-
-span.btn-span:hover::after{
-    opacity: 1;
-    color: white;
-    transform: translate(-50%,0);
-}
-
-span.btn-span::after{
-    opacity: 0;
-    right: 5%;
-    top: 1px;
-    position: absolute;
-    content: "\00bb";
-    color: $color-text;
-    transition: opacity 0.5s, transform 0.5s;
-    font-size: 1.3em;
-   
+    &:hover{
+        box-shadow: 0px 0px 5px 2px darken(lightgrey,10%);
+    }
 }

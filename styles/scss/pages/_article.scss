@@ -52,6 +52,9 @@
     section {
         margin-top: 50px;
         border-radius: 0px 10px 10px 10px;
+        >p{
+            margin-bottom: 6px;
+        }
         li {
             margin-left: 35px;
             display: flex;
@@ -75,9 +78,8 @@
                 align-items: flex-start;
                 flex-direction: column;
                 quotes: none;
-                background-color: #22222208;
                 padding: 10px 13px;
-                border-radius: 10px 0px 0px 10px;
+                
                 margin: 20px 0px 20px 20px;
 
                 &:last-child{
@@ -95,8 +97,7 @@
                 margin: 20px 0px;
                 width: 0px;
                 
-                span.btn-span{
-                    //transition: opacity 100ms ease-out;
+                .btn{
                     opacity: 0;
                     margin: 0;
                 }
@@ -106,7 +107,7 @@
                 div{
                     flex: 1;
                 }
-                span.btn-span{
+                .btn{
                     opacity: 1;
                 }
             }
@@ -120,7 +121,7 @@
                 display: flex;
                 flex-direction: column;
 
-                .btn-span,textarea{
+                .btn,textarea{
                     width: max-content;
                     max-width: 800px;
                 }

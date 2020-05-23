@@ -55,15 +55,10 @@ body{
 blockquote {
     margin: 20px 30px;
     text-align: justify;
-    quotes: "«\00A0" "\00A0»" "‹" "›";
+    padding: 10px;
     font-style: italic;
-
-    &:before{
-        content: open-quote;
-    }
-    &:after{
-        content: close-quote;
-    }
+    border-radius: 10px;
+    background-color: rgba(40,40,40,0.05)
 }
 
 figcaption{
