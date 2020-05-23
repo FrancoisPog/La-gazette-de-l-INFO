@@ -264,7 +264,9 @@ function cp_isValid_articleElement($element,$maxLenght){
  * @param String $email     The specified email
  * @return mixed            0 if there are no error, else it returning an array with the errors
  */
-function cp_checkAlreadyUsed($db,$pseudo,$email){
+function cp_checkAlreadyUsed($db,$pseudo,$email,$skipEmail= ''){
+    $email = cp_db_protect_inputs($db,$email);
+    $skipEmail = cp_db_protect_inputs($db,$skipEmail);
 
     $query = '('."SELECT utPseudo, 1 AS type
                     FROM utilisateur
@@ -272,7 +274,9 @@ function cp_checkAlreadyUsed($db,$pseudo,$email){
                     UNION 
                     (SELECT utPseudo, 2 AS type 
                         FROM utilisateur
-                        WHERE utEmail = '$email' )";
+                        WHERE utEmail = '$email' ". (($skipEmail!=='')?"AND utEmail <> '$skipEmail'":''). "  )";
+
+    
 
     $res = cp_db_execute($db,$query);
 
@@ -285,6 +289,7 @@ function cp_checkAlreadyUsed($db,$pseudo,$email){
                 $errors[] = 'L\'adresse mail est déjà utilisée';
             }
         }
+        
         return $errors;
     }
     return 0;

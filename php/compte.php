@@ -188,7 +188,7 @@ function cpl_checkMistakes($processType){
  * Update data on database
  * @param int $processType  The type of process
  */
-function cpl_updateDatabase($processType){
+function cpl_updateDatabase($processType,$userData){
     $db = cp_db_connecter();
     $protected = array_slice($_POST,0,null,true); // clone $_POST to $protected (important because otherwise, the value displayed after the update will be escaped on the html form) -> *1
     $protected = cp_db_protect_inputs($db,$protected);
@@ -197,7 +197,8 @@ function cpl_updateDatabase($processType){
     switch($processType){
        
         case EDIT_PERSONAL_DATA : {
-            if(($error = cp_checkAlreadyUsed($db,'xx',$_POST['email'])) != 0){
+            if(($error = cp_checkAlreadyUsed($db,'xx',$_POST['email'],$userData['email'])) != 0){
+                
                 return $error;
             }
             extract($protected);
@@ -300,7 +301,7 @@ function cpl_editDataProcess($processType,$userData){
 
     if($processType < EDIT_PICTURE){
         // Update data on database
-        if(($error = cpl_updateDatabase($processType)) != 0 ){
+        if(($error = cpl_updateDatabase($processType,$userData)) != 0 ){
             return $error;
         }
     }else{
