@@ -72,6 +72,7 @@
             }
 
             blockquote{
+                position: relative;
                 border-top-right-radius: 0px;
                 border-bottom-right-radius: 0px;
                 flex: 3;
@@ -87,28 +88,30 @@
                 &:last-child{
                     border-radius: 10px;
                 }
-            }
 
-            div{
-                background-color: rgba(40,40,40,0.05);
-                padding: 10px 13px;
-                border-radius: 0px 10px 10px 0px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin: 20px 0px;
-                width: 0px;
-                
-                .btn-wrapper{
-                    opacity: 0;
-                    margin: 0;
+                div{
+                    position: absolute;
+                    right: 100px;
+                    padding: 10px 13px;
+                    border-radius: 0px 10px 10px 0px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 20px 0px;
+                    width: 0px;
+                    
+                    .btn-wrapper{
+                        opacity: 0;
+                        margin: 0;
+                        background-color: $blockquote-bg;
+                        
+                    }
                 }
             }
+
+           
 
             &:hover{
-                div{
-                    flex: 1;
-                }
                 .btn-wrapper{
                     opacity: 1;
                 }

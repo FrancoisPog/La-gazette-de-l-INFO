@@ -45,8 +45,6 @@ function cpl_check_user_data(){
     $userData = cp_db_execute($db,$query,false);
 
     mysqli_close($db);
-    
-    var_dump($userData);
 
 
     if($userData == null){

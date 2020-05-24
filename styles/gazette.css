@@ -135,7 +135,7 @@ blockquote {
   padding: 10px;
   font-style: italic;
   border-radius: 10px;
-  background-color: rgba(40, 40, 40, 0.05);
+  background-color: #f4f4f4;
 }
 
 figcaption {
@@ -848,6 +848,7 @@ div.popup-night div.popup-box p {
 }
 
 #article section li blockquote {
+  position: relative;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
   -webkit-box-flex: 3;
@@ -875,8 +876,9 @@ div.popup-night div.popup-box p {
   border-radius: 10px;
 }
 
-#article section li div {
-  background-color: rgba(40, 40, 40, 0.05);
+#article section li blockquote div {
+  position: absolute;
+  right: 100px;
   padding: 10px 13px;
   border-radius: 0px 10px 10px 0px;
   display: -webkit-box;
@@ -892,15 +894,10 @@ div.popup-night div.popup-box p {
   width: 0px;
 }
 
-#article section li div .btn-wrapper {
+#article section li blockquote div .btn-wrapper {
   opacity: 0;
   margin: 0;
-}
-
-#article section li:hover div {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  background-color: #f4f4f4;
 }
 
 #article section li:hover .btn-wrapper {

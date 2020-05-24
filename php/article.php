@@ -20,8 +20,10 @@ function cpl_print_comments($articleData,$isLogged){
     foreach($articleData as $comment){
         echo    '<li>',
                     '<p>Commentaire de <strong>',$comment['coAuteur'],'</strong>, le ',cp_str_toDate($comment['coDate']),'</p>',
-                    '<blockquote>',cp_html_parseBbCode($comment['coTexte'],false),'</blockquote>',
-                    ($isLogged && $comment['coAuteur'] == $_SESSION['pseudo'])?cpl_print_deleteCommentBtn($comment['coID']):'',
+                    '<blockquote>',
+                        cp_html_parseBbCode($comment['coTexte'],false),
+                        ($isLogged && ($comment['coAuteur'] == $_SESSION['pseudo']) || $_SESSION['status'] == 1 || $_SESSION['status'] == 3)?cpl_print_deleteCommentBtn($comment['coID']):'',
+                    '</blockquote>',
                 '</li>';
     }
 
@@ -43,7 +45,7 @@ function cpl_print_addCommentSection($errors){
             ($errors)?cp_print_errors($errors,'Veuillez corriger les erreurs suivantes avant de soumettre votre commeantaire :'):'',
             '<form method="POST" action="article.php?data=',urlencode($_GET['data']),'">',
                 
-                '<textarea name="comment" id="comment" maxlength="256" cols="60" rows="6" required >',($errors)?cp_db_protect_outputs($_POST['comment']):'','</textarea>',
+                '<textarea name="comment" id="comment" maxlength="255" cols="60" rows="6" required >',($errors)?cp_db_protect_outputs($_POST['comment']):'','</textarea>',
                 cp_print_button('submit','Publier ce commentaire ','btnNewComment'),
             '</form>',
         '</fieldset>';
@@ -122,7 +124,7 @@ function cpl_newCommentProcess($id){
     $errors = array();
     if(strlen($_POST['comment']) == 0){
         $errors[] = 'Le commentaire ne peut pas être vide';
-    }elseif(strlen($_POST['comment']) > 256){
+    }elseif(strlen($_POST['comment']) > 255){
         $errors[] = 'Le commentaire doit contenir moins de 256 caractères';
     }
 
@@ -168,8 +170,7 @@ function cpl_deleteCommentProcess(){
     $pseudo = cp_db_protect_inputs($db,$_SESSION['pseudo']);
 
     $query = "DELETE FROM commentaire
-                WHERE coID = '$id'
-                AND coAuteur = '$pseudo'";
+                WHERE coID = '$id'";
 
     cp_db_execute($db,$query,false,true);
 

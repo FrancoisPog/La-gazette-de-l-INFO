@@ -47,6 +47,8 @@ function cpl_print_search_page($isLogged, $error = '',$articles = []){
 function cpl_fetch_article($search_keys){
     $db = cp_db_connecter();
 
+    $search_keys = cp_db_protect_inputs($db, $search_keys);
+
     $query = 'SELECT * 
                 FROM article
                 WHERE 1 ';
