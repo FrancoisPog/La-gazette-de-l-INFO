@@ -10,21 +10,25 @@
 
   $db = cp_db_connecter();
 
-  $query1 = 'SELECT utPseudo,utStatut,COUNT(coID) as nbCommentaire 
+  $query = 'SELECT utPseudo,utStatut,COUNT(coID) as nbCommentaire 
             FROM utilisateur LEFT OUTER JOIN commentaire ON utPseudo=coAuteur 
             GROUP BY utPseudo
-            ORDER BY utPseudo, utStatut';
-  $query2 = 'SELECT utPseudo,utStatut,COUNT(DISTINCT arID) as nbArticle, COUNT(coID) as nbCommentaireAr 
+            ORDER BY utPseudo, utStatut;
+            SELECT utPseudo,utStatut,COUNT(DISTINCT arID) as nbArticle, COUNT(coID) as nbCommentaireAr 
             FROM (utilisateur LEFT OUTER JOIN article ON utPseudo=arAuteur) LEFT OUTER JOIN commentaire ON arID=coArticle 
             GROUP BY utPseudo, utStatut, arID';
   
-  $res1 = cp_db_execute($db,$query1);
-  $res2 = cp_db_execute($db,$query2);
+  $res = cp_db_execute($db,$query,true,false,true);
+  $res1 = $res[0];
+  $res2 = $res[1];
+
   mysqli_close($db);
+
   $res2 = cpl_organize_data($res2);
   if(isset($_POST['submit'])) {
     $res1 = cpl_verification_statut($res1);
   }
+  
   cp_print_beginPage('administration', 'Administration',1,$isLogged);
   cpl_print_users_informations($res1, $res2);
   cpl_print_statut_description();
@@ -129,21 +133,28 @@
   }
 
   function cpl_verification_statut($tab) {
-    $db = cp_db_connecter();
-    foreach ($_POST as $index => $statut) {
-      if($index === 'submit') {
-        break;
+      
+      $query = '';
+      foreach ($_POST as $index => $statut) {
+        if($index === 'submit') {
+          break;
+        }
+        if(!cp_str_isInt($index) || !cp_str_isInt($statut) || $statut < "0" || $statut > "3" || $statut > $_SESSION['status'] || $tab[$index]['utStatut'] >= $_SESSION['status']) {
+          cp_session_exit('../index.php');
+        }
+        if ($statut != $tab[$index]['utStatut']) {
+          $query .= "UPDATE utilisateur SET utStatut = $statut WHERE utPseudo = '".$tab[$index]['utPseudo']."';";
+          $tab[$index]['utStatut'] = $statut;
+        }
       }
-      if(!cp_str_isInt($index) || !cp_str_isInt($statut) || $statut < "0" || $statut > "3" || $statut > $_SESSION['status'] || $tab[$index]['utStatut'] >= $_SESSION['status']) {
-        cp_session_exit('../index.php');
+      if($query == ''){
+        return $tab;
       }
-      if ($statut != $tab[$index]['utStatut']) {
-        $query = "UPDATE utilisateur SET utStatut = $statut WHERE utPseudo = '".$tab[$index]['utPseudo']."'";
-        cp_db_execute($db, $query, true, true);
-        $tab[$index]['utStatut'] = $statut;
-      }
-    }
-    mysqli_close($db);
-    return $tab;
+
+      $db = cp_db_connecter();
+
+      cp_db_execute($db,$query,true,false,true);
+      
+      mysqli_close($db);
+      return $tab;
   }
-?>

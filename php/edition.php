@@ -105,11 +105,7 @@ function cpl_deleteArticle(){
                 DELETE FROM article
                 WHERE arID = $id ";
 
-    $res = mysqli_multi_query($db,$query);
-    
-    if(!$res){
-        cp_db_error($db,$query);
-    }
+    cp_db_execute($db,$query,false,true,true);
 
     if(file_exists("../upload/$id.jpg")){
         unlink("../upload/$id.jpg");

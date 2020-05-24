@@ -104,9 +104,41 @@ function cp_db_error($bd, $sql) {
  * @param String $query         The query 
  * @param bool $protect_outputs If true, the outputs results will be protected (for 'select' query)
  * @param bool $insert          If true, is an insertion query
+ * @param bool $multi           If there are severals query in $query
  * @return Array                The result in an array
  */
-function cp_db_execute($db,$query,$protect_outputs = true,$insert = false){
+function cp_db_execute($db,$query,$protect_outputs = true,$insert = false,$multi = false){
+    $array = null;
+    if($multi){ // Multi query
+        $res = mysqli_multi_query($db,$query);
+        if(!$res){
+            cp_db_error($db,$query);
+        }
+
+        if($insert){
+            return $res;
+        }
+
+        $i = 0;
+        do {
+            if ($result = mysqli_store_result($db,0)) {
+                while ($data = mysqli_fetch_assoc($result)) {
+                    $array[$i][] = ($protect_outputs) ? cp_db_protect_outputs($data) : $data;
+                }
+                mysqli_free_result($result);
+            }
+            
+            if (!mysqli_more_results($db)) {
+                break;
+            }
+            $i++;
+        } while (mysqli_next_result($db));
+
+        return $array;
+    }
+
+    // Single query
+
     $res = mysqli_query($db,$query);
 
     if(!$res){
@@ -117,7 +149,6 @@ function cp_db_execute($db,$query,$protect_outputs = true,$insert = false){
         return $res;
     }
 
-    $array = null;
     while($data = mysqli_fetch_assoc($res)){
         $array[] = ($protect_outputs) ? cp_db_protect_outputs($data) : $data;
     }
