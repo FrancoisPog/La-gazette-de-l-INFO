@@ -4,7 +4,10 @@
   session_start();
   ob_start();
 
-  $isLogged = cp_is_logged("../index.php");
+  cp_is_logged("../index.php");
+  if($_SESSION['status'] < 2){
+    cp_session_exit('../index.php');
+  }
 
   // --- Database interactions  --- 
 
@@ -28,8 +31,8 @@
   if(isset($_POST['submit'])) {
     $res1 = cpl_verification_statut($res1);
   }
-  
-  cp_print_beginPage('administration', 'Administration',1,$isLogged);
+
+  cp_print_beginPage('administration', 'Administration',1,true);
   cpl_print_users_informations($res1, $res2);
   cpl_print_statut_description();
   cp_print_endPage();

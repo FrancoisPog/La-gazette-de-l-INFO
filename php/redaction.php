@@ -22,6 +22,10 @@ function cpl_fetch_editor_data(){
 
     $sorted_result = array();
 
+    if($result == null){
+        return null;
+    }
+
     foreach($result as $data){
         $sorted_result[$data['catID']][] = $data;
     }
@@ -104,9 +108,10 @@ function cpl_print_page_redac($isLogged){
         '</section>';
 
         $editorData = cpl_fetch_editor_data();
-
-        foreach($editorData as $category){
-            cpl_print_category($category);
+        if($editorData != null){
+            foreach($editorData as $category){
+                cpl_print_category($category);
+            }
         }
 
     echo '<section class="type1">',

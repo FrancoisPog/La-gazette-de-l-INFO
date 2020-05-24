@@ -124,6 +124,9 @@ function cpl_print_horoscope(){
  * @return Array Articles distributed in three array
  */
 function cpl_select_articles($articles) {
+    if($articles == null){
+        return null;
+    }
     $result = array([],[],[]);
     $idAlreadyUsed = array();
 
@@ -183,9 +186,14 @@ $isLogged = cp_is_logged();
 
 cp_print_beginPage('accueil',"Le site de désinformation n°1 des étudiants en Licence info",0,$isLogged);
     
-cpl_print_articleBlock($articles[0],"&Agrave; la une");
-cpl_print_articleBlock($articles[1],"L'info brûlante");
-cpl_print_articleBlock($articles[2],"Les incontournables");
+if($articles != null){
+    cpl_print_articleBlock($articles[0],"&Agrave; la une");
+    cpl_print_articleBlock($articles[1],"L'info brûlante");
+    if(count($articles[2]) != 0){
+        cpl_print_articleBlock($articles[2],"Les incontournables");
+    }
+}
+    
 cpl_print_horoscope();
 
 cp_print_endPage();

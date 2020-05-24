@@ -14,13 +14,15 @@
   $res = cp_db_execute($db,$query);
 
   mysqli_close($db);
-
-  $numberArticle = count($res);
-  $activeButton = isset($_GET['buttonPage']) ? cp_str_isInt(cp_decrypt_url($_GET['buttonPage'],1)[0]) ? intval(cp_decrypt_url($_GET['buttonPage'],1)[0]) : header("Location: ../index.php") : 1;
-
   cp_print_beginPage('actus','L\'actu',1,$isLogged);
-  cpl_print_button_pages($numberArticle, $activeButton);
-  cpl_print_actus($res, $activeButton, $numberArticle);
+  if($res != null){
+    $numberArticle = count($res);
+    $activeButton = isset($_GET['buttonPage']) ? cp_str_isInt(cp_decrypt_url($_GET['buttonPage'],1)[0]) ? intval(cp_decrypt_url($_GET['buttonPage'],1)[0]) : header("Location: ../index.php") : 1;
+
+    
+    cpl_print_button_pages($numberArticle, $activeButton);
+    cpl_print_actus($res, $activeButton, $numberArticle);
+  }
   cp_print_endPage();
 
   // #####################################################################################################################
