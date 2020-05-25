@@ -135,6 +135,11 @@
     '</section>';
   }
 
+  /**
+   * Check and change the user status
+   * @param Array $tab  All users status
+   * @return Array The users status updated
+   */
   function cpl_verification_statut($tab) {
       
       $query = '';

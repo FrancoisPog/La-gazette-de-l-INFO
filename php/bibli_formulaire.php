@@ -214,6 +214,10 @@ function cp_form_print_checkboxLine($name,$label,$required = true, $checked = fa
  * @param int $colspan          Value of the colspan
  * @param Array $submit         Value and name of submit button (0:value, 1:name)
  * @param String $resetValue    Value of reset button
+ * @param bool $confirmSubmit    If true, the form submit will have to be confirmed
+ * @param String $confirmSubmitLabel    Message to display in the confirmation box
+ * @param bool $confirmReset     If true, the form reset will have to be confirmed
+ * @param String $confirmResetLabel    Message to display in the confirmation box
  */ 
 function cp_form_print_buttonsLine($colspan, $submit,$resetValue = '',$confirmSubmit = false, $confirmReset = false, $confirmSubmitLabel = '', $confirmResetLabel =''){
     if(!is_array($submit)){

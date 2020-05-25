@@ -242,7 +242,12 @@ function cp_isValid_pass($passe1, $passe2 = true){
     return 0;
 }
 
-
+/**
+ * Test if an article element is valid
+ * @param $element  The element content
+ * @param $maxLenght    The element max length
+ * @return int The error number
+ */
 function cp_isValid_articleElement($element,$maxLenght){
     if(strlen($element) == 0){
         return 1;

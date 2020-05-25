@@ -30,6 +30,10 @@ function cpl_print_comments($articleData,$isLogged){
     echo '</ul>';
 }
 
+/**
+ * Print the btn to delete a comment
+ * @param $id   The comment id
+ */
 function cpl_print_deleteCommentBtn($id){
     echo '<div class="comment-delete">',
             '<form method="POST" action="article.php?data=',urlencode($_GET['data']),'">',
@@ -39,6 +43,10 @@ function cpl_print_deleteCommentBtn($id){
         '</div>';
 }
 
+/**
+ * Print the section to add a comments
+ * @param Array $errors The optional errors to print
+ */
 function cpl_print_addCommentSection($errors){
     echo '<fieldset class="newComment" id="comment-form">',
             '<legend>Ajouter un commentaire</legend>',
@@ -116,7 +124,11 @@ function cpl_print_article($data,$isLogged,$errors){
            
 }
 
-
+/**
+ * Execute the process to add a now comment
+ * @param int $id The article id
+ * @return Array|void   Void on success, an array of errors on failure
+ */
 function cpl_newCommentProcess($id){
     cp_check_param($_POST,['btnNewComment','comment']) or cp_session_exit('../index.php');
 
@@ -157,6 +169,9 @@ function cpl_newCommentProcess($id){
 
 }
 
+/**
+ * Execute the process to delete a comment
+ */
 function cpl_deleteCommentProcess(){
     cp_check_param($_POST,['btnDeleteComment'],['commentID']) or cp_session_exit('../index.php');
     
@@ -167,7 +182,6 @@ function cpl_deleteCommentProcess(){
     $db = cp_db_connecter();
 
     $id = cp_db_protect_inputs($db,$id);
-    $pseudo = cp_db_protect_inputs($db,$_SESSION['pseudo']);
 
     $query = "DELETE FROM commentaire
                 WHERE coID = '$id'";
