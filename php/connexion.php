@@ -92,7 +92,7 @@ function cpl_print_connection_form($errors = false){
     cp_print_beginPage('connexion','Connexion',1,false);
     $required = true;
     echo '<section>',
-            '<h2>Formuaire de connexion</h2>',
+            '<h2>Formulaire de connexion</h2>',
             '<p>Pour vous identifier, remplissez le formulaire ci-dessous :</p>',
             ($errors) ? '<p class="error">Echec d\'authentification. Utilisateur inconnu ou mot de passe incorrect.</p>':'',
             '<form method="POST" action="connexion.php">',

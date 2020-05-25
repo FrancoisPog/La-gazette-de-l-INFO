@@ -26,7 +26,7 @@ cp_print_beginPage('protegee','Page accessible uniquement aux utilisateurs authe
 echo '<section>',
         '<h2>Utilisateur : ',$userData['utPseudo'],'</h2>',
         '<p>SID : ',session_id(),'</p>',
-        '<h3>Données mémorisées dans le table utilisateur</h3>',
+        '<h3>Données mémorisées dans la table utilisateur</h3>',
         '<ul>';
         foreach($userData as $key => $value){
             echo '<li>',$key,' : ',$value,'</li>';

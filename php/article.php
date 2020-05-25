@@ -22,7 +22,7 @@ function cpl_print_comments($articleData,$isLogged){
                     '<p>Commentaire de <strong>',$comment['coAuteur'],'</strong>, le ',cp_str_toDate($comment['coDate']),'</p>',
                     '<blockquote>',
                         cp_html_parseBbCode($comment['coTexte'],false),
-                        ($isLogged && ($comment['coAuteur'] == $_SESSION['pseudo']) || $_SESSION['status'] == 1 || $_SESSION['status'] == 3)?cpl_print_deleteCommentBtn($comment['coID']):'',
+                        ($isLogged && ($comment['coAuteur'] == $_SESSION['pseudo'] || $_SESSION['status'] == 1 || $_SESSION['status'] == 3))?cpl_print_deleteCommentBtn($comment['coID']):'',
                     '</blockquote>',
                 '</li>';
     }
@@ -42,7 +42,7 @@ function cpl_print_deleteCommentBtn($id){
 function cpl_print_addCommentSection($errors){
     echo '<fieldset class="newComment" id="comment-form">',
             '<legend>Ajouter un commentaire</legend>',
-            ($errors)?cp_print_errors($errors,'Veuillez corriger les erreurs suivantes avant de soumettre votre commeantaire :'):'',
+            ($errors)?cp_print_errors($errors,'Veuillez corriger les erreurs suivantes avant de soumettre votre commentaire :'):'',
             '<form method="POST" action="article.php?data=',urlencode($_GET['data']),'">',
                 
                 '<textarea name="comment" id="comment" maxlength="255" cols="60" rows="6" required >',($errors)?cp_db_protect_outputs($_POST['comment']):'','</textarea>',
