@@ -200,9 +200,6 @@ function cp_is_logged($page_to_go_if_not = false){
            
             // mysqli_close($db);
             if(!hash_equals($_COOKIE['key'],hash('sha256',$_COOKIE['pseudo']))){
-                // var_dump((hash('sha256',$_COOKIE['pseudo'])));
-                // var_dump($_COOKIE['key']);
-                // exit(0);
                 cp_session_exit('.');
             }
 

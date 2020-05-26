@@ -1,15 +1,6 @@
-# html files
-*.html
-
-# pictures 
-*.png
-*.jpeg
-*.jpg
-*.gif
-
-#test
-test.php
-
 #scss
 *.css.map
 *old.css
+
+#sql
+*.sql
