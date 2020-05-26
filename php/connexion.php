@@ -73,7 +73,7 @@ function cpl_connection($userData){
     
     if(isset($_POST['stay'])){
         setcookie('pseudo',$userData[0],time()+3600*24*365,'/');
-        setcookie('key',hash('sha256',$userData[0]),time()+24*365,'/');
+        setcookie('key',(hash('sha256',$userData[0]).hash('sha256',$userData[1])),time()+24*365,'/');
         setcookie('status',$userData[1],time()+3600*24*365,'/');
     }
 
