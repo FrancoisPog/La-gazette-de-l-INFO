@@ -17,14 +17,7 @@
 
 /* Constants and includes */
 
-define("BD_SERVER","localhost");
-define("BD_NAME","poguet_gazette");
-define("BD_USER","poguet_u");
-define("BD_PASS","poguet_p");
-
-define("ENCODE","UTF-8");
-define("ENCRYPTION_KEY","lJ4sMUKYK2DvDXMFr5lyCw==");
-
+require_once('private_data.php');
 require_once('bibli_generale.php');
 
 
