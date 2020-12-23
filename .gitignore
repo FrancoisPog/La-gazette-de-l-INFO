@@ -2,8 +2,8 @@
 *.css.map
 *old.css
 
-#sql
-*.sql
+
+
 
 # private data
 private_data.php
