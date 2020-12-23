@@ -19,7 +19,7 @@ function cpl_fetch_userData(){
 
     $db = cp_db_connecter();
 
-    $query = 'SELECT utPseudo AS pseudo, utNom AS last_name, utPrenom AS first_name, utEmail AS email, utDateNaissance AS birthday, utCivilite AS civility, utMailsPourris AS spam, reBio AS bio, reCategorie AS category, reFonction AS function, 1 AS type 
+    $query = 'SELECT utPseudo AS pseudo, utNom AS last_name, utPrenom AS first_name, utEmail AS email, utDateNaissance AS birthday, utCivilite AS civility, utMailsPourris AS spam, reBio AS bio, reCategorie AS category, reFonction AS function_, 1 AS type_ 
                 FROM utilisateur LEFT OUTER JOIN redacteur ON utPseudo = rePseudo
                 WHERE utPseudo="'. cp_db_protect_inputs($db,$_SESSION['pseudo']).'"';
 
@@ -77,7 +77,7 @@ function cpl_hackGuard($processType){
 
         
         case EDIT_EDITOR_DATA : {
-            $mandatoryKeys = ['btnEditBio','category','function','bio'];
+            $mandatoryKeys = ['btnEditBio','category','function_','bio'];
             cp_check_param($_POST,$mandatoryKeys) or cp_session_exit('../index.php');
             cp_intIsBetween($_POST['category'],1,3) or cp_session_exit('../index.php');
             return ;
@@ -231,7 +231,7 @@ function cpl_updateDatabase($processType,$userData){
         
         case EDIT_EDITOR_DATA : {
             $bio = $protected['bio'];
-            $function =$protected['function'];
+            $function =$protected['function_'];
             $category = $protected['category'];
 
            
@@ -266,7 +266,7 @@ function cpl_nothingChange($processType, $userData){
         break;
         }
         case EDIT_EDITOR_DATA : {
-            $keys = ['function','bio','category'];
+            $keys = ['function_','bio','category'];
         break;
         }
         default : {
